@@ -197,9 +197,12 @@ body{flex-direction:column;overflow:auto}
 .login-box .err{color:#ef4444;font-size:12px;text-align:center;margin-top:10px;min-height:18px}
 .login-box .linfo{color:#2d6a4f;font-size:11px;text-align:center;margin-top:12px}
 /* Visibility & user */
-.vis-badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500}
-.vis-team{background:#dcfce722;color:#16a34a;border:1px solid #16a34a44}
-.vis-private{background:#dbeafe22;color:#2563eb;border:1px solid #2563eb44}
+.vis-badge{font-size:10px;padding:3px 10px;border-radius:100px;font-weight:600;letter-spacing:0.3px}
+.vis-team{background:#dcfce7;color:#16a34a}
+.vis-private{background:#ede9fe;color:#7c3aed}
+/* Private task row - subtle diagonal pattern */
+.tr.priv{background:repeating-linear-gradient(135deg,#f5f0ff,#f5f0ff 8px,#faf8ff 8px,#faf8ff 16px);border-color:#c4b5fd}
+.tr.priv:hover{box-shadow:0 4px 16px rgba(124,58,237,0.1)}
 .user-info{padding:8px 14px;display:flex;align-items:center;gap:8px;color:#9dc3ab;font-size:12px;border-top:1px solid rgba(45,106,79,0.25)}
 .user-info .avatar{width:28px;height:28px;border-radius:50%;background:#2d6a4f;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
 .user-info button{background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;margin-left:auto;font-weight:600}
@@ -343,9 +346,9 @@ h+='<span style="margin-left:auto;font-weight:600">'+f.length+' tarefa'+(f.lengt
 if(!f.length)h+='<div class="empty"><div class="big">📭</div><div>Nenhuma tarefa</div><button onclick="addT()">➕ Criar</button></div>';
 else{var idx=0;pn.forEach(function(t){h+=tRow(t,idx++);});if(dn.length){h+='<div class="ds"><button class="dt2" onclick="shDn=!shDn;rnd()"><span>'+(shDn?"▼":"▶")+'</span><span>Concluídas ('+dn.length+')</span></button>';if(shDn)dn.forEach(function(t){h+=tRow(t,idx++);});h+='</div>'}}
 l.innerHTML=h;shDet()}
-function tRow(t,i){var od=isOD(t),cl="tr"+(od?" od":""),isDn=["Concluído","Faturado"].indexOf(t.status)>=0;
+function tRow(t,i){var od=isOD(t),cl="tr"+(od?" od":"")+(t._vis==="private"?" priv":""),isDn=["Concluído","Faturado"].indexOf(t.status)>=0;
 var tg='<span class="tag" style="background:'+(FC[t.status]||"#6b7280")+'22;color:'+(FC[t.status]||"#6b7280")+'">'+t.status+'</span>';
-tg+='<span class="vis-badge '+(t._vis==="private"?"vis-private":"vis-team")+'">'+(t._vis==="private"?"🔒":"👥")+'</span>';
+tg+='<span class="vis-badge '+(t._vis==="private"?"vis-private":"vis-team")+'">'+(t._vis==="private"?"🔒 Privada":"👥 Equipa")+'</span>';
 if(t.type)tg+='<span class="tag" style="background:#f0f4f1;color:var(--sub)">'+t.type+'</span>';
 if(t.deadline)tg+='<span style="color:'+(od?"#ef4444":"var(--sub)")+'">📅 '+fD(t.deadline)+(t.deadlineTime?" "+t.deadlineTime:"")+'</span>';
 if(t.client)tg+='<span style="color:var(--sub)">👤 '+esc(t.client)+'</span>';
@@ -373,7 +376,7 @@ function shDet(){var el=document.getElementById("det");if(!el){eId=null;return}v
 var so=function(a,v){return a.map(function(o){return'<option value="'+o+'"'+(v===o?" selected":"")+">"+o+"</option>"}).join("")};
 var h='<div class="dh"><span>Detalhes</span><div><button onclick="togF2(\'myDay\')" style="background:'+(t.myDay?"#fbbf24":"")+'">☀️</button><button onclick="togF2(\'important\')" style="background:'+(t.important?"#fbbf24":"")+'">⭐</button><button onclick="dupT(\''+t.id+'\')">📋</button><button class="del" onclick="delT(\''+t.id+'\')">🗑️</button><button onclick="eId=null;shDet()">✕</button></div></div>';
 if(od)h+='<div class="odb">⚠️ ATRASADO</div>';
-if(canSetPrivate()){h+='<div class="fl"><label>👁️ Visibilidade</label><select onchange="changeVis(this.value)"><option value="team"'+(t._vis!=="private"?" selected":"")+'>👥 Equipa</option><option value="private"'+(t._vis==="private"?" selected":"")+'>🔒 Privada</option></select></div>'}else{h+='<div style="margin-bottom:8px"><span class="vis-badge vis-team">👥 Equipa</span></div>'}
+if(canSetPrivate()){var visCo=t._vis==="private"?"#7c3aed":"#16a34a";var visBg=t._vis==="private"?"#f5f0ff":"#f0fdf4";h+='<div style="padding:10px 14px;border-radius:10px;background:'+visBg+';border:1px solid '+visCo+'44;margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="font-size:14px">'+(t._vis==="private"?"🔒":"👥")+'</span><select onchange="changeVis(this.value)" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid '+visCo+'44;background:#fff;font-size:13px;font-weight:600;color:'+visCo+'"><option value="team"'+(t._vis!=="private"?" selected":"")+'>👥 Equipa — todos vêem</option><option value="private"'+(t._vis==="private"?" selected":"")+'>🔒 Privada — só eu vejo</option></select></div>'}else{h+='<div style="margin-bottom:10px"><span class="vis-badge vis-team">👥 Equipa</span></div>'}
 h+='<div class="fl"><label>📝 Título</label><input value="'+esc(t.title)+'" onchange="upd(\'title\',this.value)"></div>';
 h+='<div class="g2"><div class="fl"><label>📋 Tipo</label><select onchange="upd(\'type\',this.value)">'+so(TY,t.type)+'</select></div><div class="fl"><label>🔄 Estado</label><select onchange="upd(\'status\',this.value)">'+so(ST,t.status)+'</select></div><div class="fl"><label>🔥 Prioridade</label><select onchange="upd(\'priority\',this.value)">'+so(PR,t.priority)+'</select></div><div class="fl"><label>💻 Plataforma</label><select onchange="upd(\'platform\',this.value)">'+so(PL,t.platform)+'</select></div><div class="fl"><label>🌍 Origem</label><select onchange="upd(\'srcLang\',this.value)">'+so(LN,t.srcLang)+'</select></div><div class="fl"><label>🎯 Destino</label><select onchange="upd(\'tgtLang\',this.value)">'+so(LN,t.tgtLang)+'</select></div></div>';
 h+='<div class="fl ac2"><label>👤 Cliente</label><input id="clI" value="'+esc(t.client)+'" oninput="clSg(this.value)" onchange="upd(\'client\',this.value)" autocomplete="off"><div class="sg" id="clS"></div></div>';
@@ -389,10 +392,12 @@ h+='<div class="fl"><label>🏷️ Tags</label><input value="'+esc(t.tags)+'" on
 h+='<div class="fl"><label>🔗 Links</label><input value="'+esc(t.links)+'" onchange="upd(\'links\',this.value)"></div>';
 if(t.links&&t.links.indexOf("http")===0)h+='<a href="'+esc(t.links)+'" target="_blank" style="font-size:11px;color:var(--acc);display:block;margin-bottom:8px">Abrir ↗</a>';
 h+='<div class="fl"><label>📝 Notas</label><textarea rows="3" onchange="upd(\'notes\',this.value)">'+esc(t.notes)+'</textarea></div>';
-h+='<div class="fl"><label>✅ Passos</label><div id="stA"></div><button onclick="addStp()" style="font-size:11px;color:var(--acc);background:0;border:0;cursor:pointer;margin-top:4px">+ Passo</button></div>';
+h+='<div class="fl"><label>✅ Passos</label><div id="stA"></div><button onclick="addStp()" style="font-size:12px;color:var(--acc);background:var(--input);border:1px dashed var(--brd);border-radius:8px;cursor:pointer;margin-top:6px;padding:8px 14px;width:100%;text-align:left;font-weight:500">+ Adicionar passo</button></div>';
 el.innerHTML=h;el.scrollTop=sc;rStp()}
-function rStp(){var t=tasks.find(function(x){return x.id===eId});if(!t)return;var a=document.getElementById("stA");if(!a)return;a.innerHTML="";(t.steps||[]).forEach(function(s,i){var d=document.createElement("div");d.style.cssText="display:flex;align-items:center;gap:6px;margin-bottom:4px";d.innerHTML='<input type="checkbox" '+(s.done?"checked":"")+'><input type="text" value="'+esc(s.text)+'" style="flex:1;padding:4px 6px;border-radius:4px;border:1px solid var(--brd);background:0;color:var(--text);font-size:12px;'+(s.done?"text-decoration:line-through":"")+'"><button style="background:0;border:0;color:#ef4444;cursor:pointer;font-size:14px">×</button>';d.querySelector("input[type=checkbox]").onchange=function(){t.steps[i].done=!t.steps[i].done;saveTask(t);rStp()};d.querySelector("input[type=text]").onchange=function(){t.steps[i].text=this.value;saveTask(t)};d.querySelector("button").onclick=function(){t.steps.splice(i,1);saveTask(t);rStp()};a.appendChild(d)})}
-function addStp(){var t=tasks.find(function(x){return x.id===eId});if(!t)return;if(!t.steps)t.steps=[];t.steps.push({text:"",done:false});saveTask(t);rStp()}
+function rStp(){var t=tasks.find(function(x){return x.id===eId});if(!t)return;var a=document.getElementById("stA");if(!a)return;a.innerHTML="";(t.steps||[]).forEach(function(s,i){var d=document.createElement("div");d.style.cssText="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:6px 8px;background:var(--input);border-radius:8px";d.innerHTML='<input type="checkbox" style="accent-color:var(--acc);width:18px;height:18px;cursor:pointer;flex-shrink:0" '+(s.done?"checked":"")+'><input type="text" value="'+esc(s.text)+'" placeholder="Descreve o passo..." style="flex:1;padding:6px 8px;border-radius:6px;border:1px solid var(--brd);background:var(--card);color:var(--text);font-size:13px;outline:none;'+(s.done?"text-decoration:line-through;color:var(--sub)":"")+'"><button style="background:0;border:0;color:#ef4444;cursor:pointer;font-size:16px;padding:2px 4px;flex-shrink:0">×</button>';d.querySelector("input[type=checkbox]").onchange=function(){t.steps[i].done=!t.steps[i].done;saveTask(t);rStp()};d.querySelector("input[type=text]").onchange=function(){t.steps[i].text=this.value;saveTask(t)};d.querySelector("button").onclick=function(){t.steps.splice(i,1);saveTask(t);rStp()};a.appendChild(d)})}
+function addStp(){var t=tasks.find(function(x){return x.id===eId});if(!t)return;if(!t.steps)t.steps=[];t.steps.push({text:"",done:false});saveTask(t);rStp();
+// Scroll para o fundo e foco no novo campo
+setTimeout(function(){var el=document.getElementById("det");if(el)el.scrollTop=el.scrollHeight;var inputs=document.querySelectorAll("#stA input[type=text]");if(inputs.length)inputs[inputs.length-1].focus()},100)}
 function clSg(v){var sg=document.getElementById("clS");if(!v){sg.style.display="none";return}var f=allCl().filter(function(c){return c.toLowerCase().indexOf(v.toLowerCase())>=0}).slice(0,8);if(!f.length){sg.style.display="none";return}sg.style.display="block";sg.innerHTML="";f.forEach(function(c){var d=document.createElement("div");d.textContent=c;d.onmousedown=function(){upd("client",c);document.getElementById("clI").value=c;sg.style.display="none"};sg.appendChild(d)})}
 // KANBAN — 4 colunas fixas que agrupam estados
 var _kanDragId=null;
