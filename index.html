@@ -213,7 +213,6 @@ var auth = firebase.auth();
 var db = firebase.database();
 // Enable offline persistence - data syncs when back online
 db.goOnline();
-firebase.database().ref().keepSynced(true);
 
 // ==================== USER / ROLES ====================
 var currentUser = null;
