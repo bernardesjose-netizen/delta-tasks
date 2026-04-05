@@ -298,9 +298,9 @@ body{flex-direction:column;overflow:hidden}
 <h2>Delta Língua</h2>
 <div class="lsub">Gestão de Tarefas — Entrar</div>
 <label>Email</label>
-<input type="email" id="loginEmail" placeholder="email@exemplo.com">
+<input type="email" id="loginEmail" name="email" placeholder="email@exemplo.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" style="font-size:16px">
 <label>Palavra-passe</label>
-<input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+<input type="password" id="loginPass" name="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" style="font-size:16px">
 <button onclick="doLogin()">Entrar</button>
 <div class="err" id="loginErr"></div>
 <div class="linfo">🔒 Acesso restrito à equipa</div>
@@ -339,8 +339,9 @@ body{flex-direction:column;overflow:hidden}
 firebase.initializeApp({apiKey:"AIzaSyDW5laLTKibjtk3t5LpnxHdwNlzJ0RT-dU",authDomain:"delta-tasks.firebaseapp.com",databaseURL:"https://delta-tasks-default-rtdb.europe-west1.firebasedatabase.app",projectId:"delta-tasks",storageBucket:"delta-tasks.firebasestorage.app",messagingSenderId:"765765101808",appId:"1:765765101808:web:6cb189b04f4301f6d43a35"});
 var auth=firebase.auth(),db=firebase.database();
 var currentUser=null,currentRole=null;
-function doLogin(){var email=document.getElementById("loginEmail").value.trim(),pass=document.getElementById("loginPass").value,errEl=document.getElementById("loginErr");errEl.textContent="";if(!email||!pass){errEl.textContent="Preenche email e palavra-passe.";return}
-auth.signInWithEmailAndPassword(email,pass).catch(function(err){var msg="Erro ao entrar.";if(err.code==="auth/user-not-found"||err.code==="auth/wrong-password"||err.code==="auth/invalid-credential")msg="Email ou palavra-passe incorretos.";else if(err.code==="auth/invalid-email")msg="Email inválido.";else if(err.code==="auth/too-many-requests")msg="Demasiadas tentativas.";errEl.textContent=msg})}
+function doLogin(){var emailEl=document.getElementById("loginEmail"),passEl=document.getElementById("loginPass"),errEl=document.getElementById("loginErr");var email=(emailEl.value||"").trim(),pass=passEl.value||"";errEl.textContent="";if(!email||!pass){errEl.textContent="Preenche email e palavra-passe.";return}
+errEl.textContent="A entrar...";errEl.style.color="#2d6a4f";
+auth.signInWithEmailAndPassword(email,pass).then(function(){errEl.textContent=""}).catch(function(err){errEl.style.color="#dc2626";var msg="Erro ao entrar.";if(err.code==="auth/user-not-found"||err.code==="auth/wrong-password"||err.code==="auth/invalid-credential")msg="Email ou palavra-passe incorretos.";else if(err.code==="auth/invalid-email")msg="Email inválido.";else if(err.code==="auth/too-many-requests")msg="Demasiadas tentativas. Espera um pouco.";else if(err.code==="auth/network-request-failed")msg="Sem ligação à internet.";else msg="Erro: "+err.message;errEl.textContent=msg})}
 auth.onAuthStateChanged(function(user){if(user){currentUser=user;db.ref("roles").once("value").then(function(snap){currentRole=(snap.val()||{})[user.uid]||"member";startApp()})}else{currentUser=null;currentRole=null;document.getElementById("loginScreen").style.display="flex";document.getElementById("sb").style.display="none";document.getElementById("mn").style.display="none"}});
 function startApp(){document.getElementById("loginScreen").style.display="none";document.getElementById("sb").style.display="flex";document.getElementById("mn").style.display="flex";
 if(window.innerWidth<=768){document.getElementById("sb").classList.remove("mob-open");document.getElementById("sb").style.display="flex"}
