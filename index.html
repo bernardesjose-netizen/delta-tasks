@@ -138,39 +138,94 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .spin{animation:sp 1s linear infinite}@keyframes sp{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .empty{text-align:center;padding:60px;color:var(--sub)}.empty .big{font-size:48px;margin-bottom:12px}
 .empty button{margin-top:12px;padding:10px 24px;background:var(--acc);color:#fff;border:none;border-radius:100px;cursor:pointer;font-weight:500}
+/* ===== MOBILE ===== */
+/* Hamburger button - hidden on desktop, shown on mobile */
+#mobMenu{display:none!important}
 @media(max-width:768px){
-body{flex-direction:column;overflow:auto}
-#sb{width:100%!important;min-width:100%!important;height:auto;max-height:0;overflow:hidden;transition:max-height .3s ease;position:relative}
-#sb.mob-open{max-height:100vh;overflow-y:auto}
-#sb.c{max-height:0}
+#mobMenu{display:flex!important;align-items:center;justify-content:center}
+/* Layout base */
+body{flex-direction:column;overflow:hidden}
+/* Sidebar como drawer overlay */
+#sb{position:fixed!important;top:0;left:0;bottom:0;width:280px!important;min-width:280px!important;max-width:80vw;height:100%!important;z-index:2000;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:none;overflow-y:auto}
+#sb.mob-open{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,.4)}
+#sb.c{transform:translateX(-100%)}
 #sb .sh{padding:14px 16px 10px}
-#sb .snv{max-height:40vh;overflow-y:auto;display:block;padding:4px 10px}
+#sb .snv{max-height:none;overflow-y:auto;display:block;padding:4px 10px;flex:1}
 #sb .ssc{padding:12px 14px 4px}
-#sb .si{padding:8px 12px;font-size:13px}
-#sb .sbt{padding:8px 12px 12px;gap:4px}
-#sb .sbt .bt{padding:8px 12px;font-size:12px}
-#sb .srw .bt{padding:6px 10px}
-#mn{overflow-y:auto}
-.tb{padding:12px 16px 0;flex-direction:row;align-items:center;gap:10px}
-.tb h2{font-size:18px}
-.fbar{padding:4px 16px 8px;flex-wrap:wrap;gap:6px}
-.fbar input[type=text]{width:100%;flex:1}
-.fbar select{flex:1;min-width:0;max-width:none;font-size:11px;padding:6px 8px}
-.fbar label{font-size:10px}
-#ct{flex-direction:column!important}
-#det{width:100%!important;min-width:100%!important;max-height:70vh;border-left:none!important;border-top:1px solid var(--brd);overflow-y:auto}
-.tr{padding:12px 14px;gap:10px;border-radius:12px;margin-bottom:6px}
-.tt{font-size:14px}
+#sb .si{padding:11px 14px;font-size:14px;-webkit-tap-highlight-color:transparent}
+#sb .sbt{padding:8px 12px 16px;gap:6px}
+#sb .sbt .bt{padding:10px 12px;font-size:13px}
+#sb .srw .bt{padding:8px 10px}
+/* Overlay escuro atrás do drawer */
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1999;-webkit-tap-highlight-color:transparent}
+.mob-overlay.show{display:block}
+/* Main area */
+#mn{flex:1;overflow:hidden;display:flex;flex-direction:column}
+/* Toolbar */
+.tb{padding:10px 14px 0;flex-direction:row;align-items:center;gap:8px;border-bottom:none}
+.tb h2{font-size:16px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb .dt{font-size:11px}
+/* Filter bar */
+.fbar{padding:4px 14px 8px;flex-wrap:wrap;gap:5px}
+.fbar input[type=text]{width:100%;flex:1 1 100%;font-size:14px;padding:8px 12px}
+.fbar select{flex:1 1 calc(50% - 4px);min-width:0;max-width:none;font-size:12px;padding:7px 6px}
+.fbar label{font-size:11px;width:100%}
+/* Content area */
+#ct{flex-direction:column!important;flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+/* Task list padding */
+#lst{padding:8px 12px 80px!important;overflow:visible!important}
+/* Detail panel como modal overlay */
+#det{position:fixed!important;top:0;right:0;bottom:0;width:100%!important;min-width:100%!important;max-width:100%!important;height:100%!important;max-height:100%!important;z-index:2500;border-left:none!important;border-top:none!important;overflow-y:auto;background:var(--card);padding:16px!important;-webkit-overflow-scrolling:touch}
+#det:not(.open){display:none!important}
+/* Task rows */
+.tr{padding:12px 12px;gap:8px;border-radius:10px;margin-bottom:6px;-webkit-tap-highlight-color:transparent}
+.tt{font-size:14px;white-space:normal}
+.tg{gap:4px}
 .tg span{font-size:10px}
-.kan{display:flex!important;flex-direction:column!important;gap:10px;padding:12px;overflow-y:auto}
-.kan .kcol{max-width:100%!important;min-width:100%!important;min-height:auto;padding:10px}
-.sgrid{grid-template-columns:repeat(2,1fr)!important}
-.g2{grid-template-columns:1fr!important}
-.fl input,.fl select,.fl textarea{font-size:16px;padding:10px}
-.ha{display:flex!important}
-.mo .mi,.mo .mi.wide{width:95vw!important;padding:16px;max-height:85vh}
+.tag{font-size:10px;padding:2px 7px}
+.star{font-size:16px;padding:2px}
+.pdot{width:4px;min-width:4px}
+/* Quick add */
+#qA{font-size:14px!important}
+/* Sort bar scroll */
+.sb2{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.sb2 button{white-space:nowrap;flex-shrink:0}
+/* Progress % */
 .pct{display:none}
+/* Hover actions always visible on mobile */
+.ha{display:flex!important}
+/* Kanban - stack vertical */
+.kan{display:flex!important;flex-direction:column!important;gap:10px;padding:12px;overflow-y:auto;overflow-x:hidden}
+.kan .kcol{max-width:100%!important;min-width:100%!important;min-height:auto;padding:10px}
+/* Calendar - smaller cells */
+.cal{padding:12px}
+.cgrid{gap:2px}
+.cd{min-height:52px;padding:3px}
+.cd>div:first-child{font-size:11px}
+.ct2{font-size:8px;padding:2px 4px}
+/* Dashboard */
+.sgrid{grid-template-columns:repeat(2,1fr)!important;gap:8px}
+.sc{padding:10px}
+.dash{padding:12px}
+.db{padding:12px}
+/* Form fields - bigger touch targets */
+.g2{grid-template-columns:1fr!important}
+.fl input,.fl select,.fl textarea{font-size:16px;padding:10px 12px}
+.fl label{font-size:12px;margin-bottom:5px}
+/* Modals */
+.mo .mi,.mo .mi.wide{width:95vw!important;padding:16px;max-height:85vh}
+/* Login */
 .login-box{padding:24px;width:95vw}
+/* Visibility badge */
+.vis-badge{font-size:9px;padding:2px 7px}
+/* User info */
+.user-info{font-size:11px;flex-wrap:wrap}
+/* Kanban card actions */
+.kcd .kcd-acts{display:flex!important}
+/* Detail back button visible on mobile */
+.det-back{display:inline-block!important}
+/* Detail header on mobile */
+.dh{flex-wrap:wrap;gap:8px}
 }
 .bk-ind{display:flex;align-items:center;gap:6px;padding:6px 14px;font-size:10px;color:#5da87a;border-top:1px solid rgba(45,106,79,0.15);margin-top:4px}
 .bk-ind .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;animation:pulse 2s ease infinite}
@@ -233,6 +288,7 @@ body{flex-direction:column;overflow:auto}
 </div>
 </div>
 <!-- APP -->
+<div class="mob-overlay" id="mobOverlay" onclick="closeMobMenu()"></div>
 <div id="sb" style="display:none">
 <div class="sh"><div class="slogo" onclick="togSb()" title="Recolher">DL</div><div id="sbB"><div class="sbr">Delta Língua</div><div class="sbs">Gestão de Tarefas</div></div><button id="sbClose" onclick="togSb()" style="margin-left:auto;background:none;border:none;color:#5da87a;font-size:22px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:all .15s" title="Fechar menu">✕</button></div>
 <div class="snv" id="snv"></div>
@@ -247,7 +303,7 @@ body{flex-direction:column;overflow:auto}
 </div>
 </div>
 <div id="mn" style="display:none">
-<div class="tb"><button id="mobMenu" onclick="togSb()" style="display:none;background:var(--acc);border:none;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:16px;color:#fff;flex-shrink:0">☰</button><h2 id="vT">☀️ O Meu Dia</h2><span class="dt" id="vD"></span></div>
+<div class="tb"><button id="mobMenu" onclick="togSb()" style="background:var(--acc);border:none;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:16px;color:#fff;flex-shrink:0;display:none">☰</button><h2 id="vT">☀️ O Meu Dia</h2><span class="dt" id="vD"></span></div>
 <div class="fbar">
 <input type="text" id="sBx" placeholder="🔍 Pesquisar..." oninput="rnd()">
 <select id="fTy" onchange="rnd()"><option value="">Tipo</option></select>
@@ -268,6 +324,7 @@ function doLogin(){var email=document.getElementById("loginEmail").value.trim(),
 auth.signInWithEmailAndPassword(email,pass).catch(function(err){var msg="Erro ao entrar.";if(err.code==="auth/user-not-found"||err.code==="auth/wrong-password"||err.code==="auth/invalid-credential")msg="Email ou palavra-passe incorretos.";else if(err.code==="auth/invalid-email")msg="Email inválido.";else if(err.code==="auth/too-many-requests")msg="Demasiadas tentativas.";errEl.textContent=msg})}
 auth.onAuthStateChanged(function(user){if(user){currentUser=user;db.ref("roles").once("value").then(function(snap){currentRole=(snap.val()||{})[user.uid]||"member";startApp()})}else{currentUser=null;currentRole=null;document.getElementById("loginScreen").style.display="flex";document.getElementById("sb").style.display="none";document.getElementById("mn").style.display="none"}});
 function startApp(){document.getElementById("loginScreen").style.display="none";document.getElementById("sb").style.display="flex";document.getElementById("mn").style.display="flex";
+if(window.innerWidth<=768){document.getElementById("sb").classList.remove("mob-open");document.getElementById("sb").style.display="flex"}
 var ui=document.getElementById("userInfo"),ini=(currentUser.email||"").substring(0,2).toUpperCase();
 ui.innerHTML='<div class="avatar">'+ini+'</div><span>'+currentUser.email+'</span><button onclick="auth.signOut()">Sair</button>';
 listenTasks();loadClients()}
@@ -316,12 +373,12 @@ h+=a("bydate","week","📆","Esta Semana",0);
 h+=a("bydate","nodate","❓","Sem Data",tasks.filter(function(t){return!t.deadline}).length);
 document.getElementById("snv").innerHTML=h}
 function go(v,s2){vw=v;sf=unescape(s2||"");eId=null;var d=document.getElementById("det");if(d){d.className="";d.innerHTML=""}
-// Close sidebar on mobile after navigation
-if(window.innerWidth<=768){var sb=document.getElementById("sb");sb.classList.remove("mob-open")}
+closeMobMenu();
 rAll()}
+function closeMobMenu(){var sb=document.getElementById("sb");sb.classList.remove("mob-open");document.getElementById("mobOverlay").classList.remove("show")}
 function togSb(){var sb=document.getElementById("sb");var isMob=window.innerWidth<=768;
-if(isMob){sb.classList.toggle("mob-open");sb.classList.remove("c")}
-else{sb.classList.toggle("c");sb.classList.remove("mob-open");var closed=sb.classList.contains("c");document.querySelectorAll(".lbl,#sbB,.ssc,.srw,.user-info,#sbClose").forEach(function(e){e.style.display=closed?"none":""})}}
+if(isMob){var isOpen=sb.classList.contains("mob-open");if(isOpen){closeMobMenu()}else{sb.classList.add("mob-open");sb.classList.remove("c");document.getElementById("mobOverlay").classList.add("show")}}
+else{sb.classList.toggle("c");sb.classList.remove("mob-open");document.getElementById("mobOverlay").classList.remove("show");var closed=sb.classList.contains("c");document.querySelectorAll(".lbl,#sbB,.ssc,.srw,.user-info,#sbClose").forEach(function(e){e.style.display=closed?"none":""})}}
 // FILTERS+TITLE
 function rFl(){["fTy","fPr","fCl","fSt"].forEach(function(id){var el=document.getElementById(id),v=el.value,o;if(id==="fTy")o=TY;else if(id==="fPr")o=PR;else if(id==="fCl"){o=usV("client");if(o.length>50)o=o.slice(0,50)}else o=ST;el.innerHTML='<option value="">'+{fTy:"Tipo",fPr:"Prioridade",fCl:"Cliente",fSt:"Estado"}[id]+'</option>';o.forEach(function(x){el.innerHTML+='<option value="'+esc(x)+'"'+(v===x?' selected':'')+'>'+x+'</option>'})})}
 function rTi(){var t=document.getElementById("vT"),d=document.getElementById("vD");d.textContent="";var m={myday:"☀️ O Meu Dia",important:"⭐ Importante",planned:"📅 Planeado",tasks:"📋 Todas as Tarefas",overdue:"⚠️ Atrasadas",kanban:"📊 Kanban",calendar:"📅 Calendário",dashboard:"📈 Dashboard"};if(m[vw])t.textContent=m[vw];else if(vw==="bytype")t.textContent="📋 "+sf;else if(vw==="bystatus")t.textContent="🔄 "+sf;else if(vw==="bydate"){var dm={today:"Hoje",week:"Esta Semana",nodate:"Sem Data"};t.textContent="📅 "+(dm[sf]||"Por Data")}if(vw==="myday")d.textContent=new Date().toLocaleDateString("pt-PT",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
@@ -373,7 +430,7 @@ function changeVis(vis){var t=tasks.find(function(x){return x.id===eId});if(!t||
 // DETAIL
 function shDet(){var el=document.getElementById("det");if(!el){eId=null;return}var sc=el.scrollTop;if(!eId){el.className="";el.innerHTML="";return}var t=tasks.find(function(x){return x.id===eId});if(!t){eId=null;el.className="";return}el.className="open";var od=isOD(t);
 var so=function(a,v){return a.map(function(o){return'<option value="'+o+'"'+(v===o?" selected":"")+">"+o+"</option>"}).join("")};
-var h='<div class="dh"><span>Detalhes</span><div><button onclick="togF2(\'myDay\')" style="background:'+(t.myDay?"#fbbf24":"")+'">☀️</button><button onclick="togF2(\'important\')" style="background:'+(t.important?"#fbbf24":"")+'">⭐</button><button onclick="dupT(\''+t.id+'\')">📋</button><button class="del" onclick="delT(\''+t.id+'\')">🗑️</button><button onclick="eId=null;shDet()">✕</button></div></div>';
+var h='<div class="dh"><button onclick="eId=null;shDet()" class="det-back" style="background:var(--input);border:1px solid var(--brd);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);display:none">← Voltar</button><span>Detalhes</span><div><button onclick="togF2(\'myDay\')" style="background:'+(t.myDay?"#fbbf24":"")+'">☀️</button><button onclick="togF2(\'important\')" style="background:'+(t.important?"#fbbf24":"")+'">⭐</button><button onclick="dupT(\''+t.id+'\')">📋</button><button class="del" onclick="delT(\''+t.id+'\')">🗑️</button><button onclick="eId=null;shDet()">✕</button></div></div>';
 if(od)h+='<div class="odb">⚠️ ATRASADO</div>';
 if(canSetPrivate()){var visCo=t._vis==="private"?"#7c3aed":"#16a34a";var visBg=t._vis==="private"?"#f5f0ff":"#f0fdf4";h+='<div style="padding:10px 14px;border-radius:10px;background:'+visBg+';border:1px solid '+visCo+'44;margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="font-size:14px">'+(t._vis==="private"?"🔒":"👥")+'</span><select onchange="changeVis(this.value)" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid '+visCo+'44;background:#fff;font-size:13px;font-weight:600;color:'+visCo+'"><option value="team"'+(t._vis!=="private"?" selected":"")+'>👥 Equipa — todos vêem</option><option value="private"'+(t._vis==="private"?" selected":"")+'>🔒 Privada — só eu vejo</option></select></div>'}else{h+='<div style="margin-bottom:10px"><span class="vis-badge vis-team">👥 Equipa</span></div>'}
 h+='<div class="fl"><label>📝 Título</label><input value="'+esc(t.title)+'" onchange="upd(\'title\',this.value)"></div>';
@@ -490,9 +547,13 @@ var bom="\uFEFF";var bl=new Blob([bom+rows.join("\n")],{type:"text/csv;charset=u
 // KEYBOARD
 document.addEventListener("keydown",function(e){if(e.ctrlKey&&e.key==="n"){e.preventDefault();addT()}if(e.key==="Escape"&&eId){eId=null;var d=document.getElementById("det");if(d){d.className="";d.innerHTML=""}}if(e.ctrlKey&&e.shiftKey&&e.key==="E"){e.preventDefault();expCSV()}else if(e.ctrlKey&&e.key==="e"){e.preventDefault();expJ()}if(e.ctrlKey&&e.key==="k"){e.preventDefault();go("kanban","")}});
 // RENDER ALL
-function rAll(){rSb();rTi();rFl();rnd();
-// Show hamburger on mobile
-var mm=document.getElementById("mobMenu");if(mm)mm.style.display=window.innerWidth<=768?"inline-flex":"none"}
+function rAll(){rSb();rTi();rFl();rnd()}
+// Mobile: close drawer on resize to desktop
+window.addEventListener("resize",function(){if(window.innerWidth>768){closeMobMenu();document.getElementById("sb").classList.remove("mob-open")}});
+// Mobile: handle back button to close detail/drawer
+window.addEventListener("popstate",function(e){if(window.innerWidth<=768){if(eId){eId=null;var d=document.getElementById("det");if(d){d.className="";d.innerHTML=""}return}var sb=document.getElementById("sb");if(sb.classList.contains("mob-open")){closeMobMenu();return}}});
+// Push state when opening details on mobile
+var _origOpT=opT;opT=function(id){if(window.innerWidth<=768)history.pushState({detail:true},"");_origOpT(id)};
 </script>
 </body>
 </html>
