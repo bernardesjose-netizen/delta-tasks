@@ -145,7 +145,7 @@ h1, h2, h3, p { margin: 0; }
 .btn:disabled { filter: grayscale(.8) opacity(.55); cursor: default; }
 .btn.laranja { --cor: var(--marca); --cor-escura: var(--marca-escura); }
 .btn.verde { --cor: var(--verde); --cor-escura: var(--verde-escuro); }
-.btn.roxo { --cor: var(--roxo); --cor-escura: var(--roxo-escuro); }
+.btn.roxo { --cor: #558b2f; --cor-escura: #33691e; }
 .btn.claro { --cor: #fff; --cor-escura: var(--linha); color: var(--texto); border: 2px solid var(--linha); }
 .btn.grande { min-height: 76px; font-size: 1.15rem; padding: 16px 26px; }
 .btn.largo { width: 100%; }
@@ -799,6 +799,49 @@ h1, h2, h3, p { margin: 0; }
 .creditos { font-size: .85rem; }
 .creditos li { margin-bottom: 4px; }
 .creditos a { color: var(--marca-escura); }
+
+/* ---------- Dominó ---------- */
+.icone.com-desenho .pedra-svg { width: 26px; height: 52px; }
+.icone-grande.com-desenho { display: flex; justify-content: center; }
+.icone-grande.com-desenho .pedra-svg { width: 40px; height: 80px; }
+.dom {
+  flex: 1; display: flex; flex-direction: column;
+  background: radial-gradient(ellipse at 50% 30%, #23905a, var(--mesa) 55%, var(--mesa-escura));
+  border-radius: 18px 18px 0 0; overflow: hidden; height: calc(100dvh - 80px); min-height: 500px;
+}
+.dom-topo { display: flex; align-items: center; gap: 10px; padding: 6px 14px; color: #e6f5ec; font-weight: 800; flex-wrap: wrap; }
+.dom-mao-dele { display: flex; gap: 4px; flex-wrap: wrap; }
+.dom-costas { width: 16px; height: 30px; border-radius: 4px; background: repeating-linear-gradient(45deg, #2b2b2b 0 4px, #444 4px 8px); border: 2px solid #fffdf4; }
+.dom-mesa { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px; min-height: 120px; overflow: auto; }
+.dom-cadeia { --u: 34px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; gap: 3px; max-width: 1060px; }
+.dom-peca-mesa { display: inline-flex; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .35)); }
+.dom-peca-mesa .pedra-svg { width: calc(var(--u) * 2); height: var(--u); }
+.dom-peca-mesa.dobro .pedra-svg { width: var(--u); height: calc(var(--u) * 2); }
+.dom-peca-mesa.nova { animation: pulsar .5s 2; }
+.dom-peca-mesa.nova .pedra-svg rect { fill: #fff7c2; }
+.dom-ponta { background: #ffd84d; color: #3d2c00; font-weight: 900; font-size: 1.1rem; padding: 6px 12px; border-radius: 999px; box-shadow: 0 2px 4px rgba(0, 0, 0, .3); }
+.dom-vazia { color: rgba(255, 255, 255, .7); font-weight: 800; font-size: 1.1rem; }
+.dom-estado { background: rgba(0, 0, 0, .28); color: #fff; font-weight: 800; font-size: 1.1rem; text-align: center; padding: 10px 14px; min-height: 52px; }
+.dom-acoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; padding: 10px; background: rgba(0, 0, 0, .18); }
+.dom-acoes:empty { display: none; }
+.dom-acoes .btn { flex: 0 1 auto; }
+.dom-baixo { background: #f4efe3; padding: 12px 8px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.dom-mao { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.dom-peca { border: 0; background: none; padding: 0; cursor: pointer; border-radius: 12px; transition: transform .15s, opacity .15s, box-shadow .15s; }
+.dom-peca .pedra-svg { width: clamp(40px, 9vw, 70px); height: clamp(80px, 18vw, 140px); display: block; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .3)); }
+@media (max-width: 520px) {
+  .dom-mao { gap: 6px; }
+  .dom-topo { padding: 2px 10px; font-size: .85rem; }
+  .dom-costas { width: 12px; height: 22px; }
+  .dom-estado { font-size: 1rem; padding: 8px 10px; min-height: 44px; }
+  .dom-acoes { padding: 6px; }
+  .dom-acoes .btn { min-height: 52px; padding: 8px 14px; font-size: .9rem; }
+  .dom-ponta { font-size: .95rem; padding: 4px 9px; }
+}
+.dom-peca.jogavel { transform: translateY(-8px); box-shadow: 0 0 0 4px #ffd84d, 0 0 16px 4px rgba(255, 216, 77, .9); }
+.dom-peca.apagada { opacity: .5; }
+.dom-peca.escolhida { box-shadow: 0 0 0 5px var(--marca); transform: translateY(-14px); }
+.dom-peca.sugerida { animation: pulsar .5s 4; }
 
 /* ---------- Diversos ---------- */
 .esconder { display: none !important; }

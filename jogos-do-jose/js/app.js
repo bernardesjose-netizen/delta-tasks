@@ -46,6 +46,14 @@ const JOGOS = {
     niveis: ['Todas as cartas à vista. Tira-se 1 carta de cada vez.', 'A paciência de sempre. Tira-se 1 carta de cada vez.', 'Tiram-se 3 cartas de cada vez, como antigamente.'],
     carregar: () => import('./jogos/paciencia.js').then(m => m.paciencia),
   },
+  domino: {
+    seccao: 'cartas', nome: 'Dominó', icone: '🎲', cor: '#5d4037',
+    desenho: () => import('./jogos/domino.js').then(m => m.pedraSVG([6, 6], false)),
+    desc: 'O dominó de sempre, contra o computador.',
+    ajuda: 'Toque numa pedra que brilha para a jogar. Se não tiver pedra, compre ao monte. Ganha quem ficar primeiro sem pedras!',
+    niveis: ['O computador joga ao acaso e há sugestões.', 'O computador joga as pedras mais pesadas.', 'O computador pensa e tenta fechar o jogo.'],
+    carregar: () => import('./jogos/domino.js').then(m => m.domino),
+  },
   memoria: {
     seccao: 'cartas', nome: 'Jogo da Memória', icone: '🎴', cor: '#1d5fd1',
     desc: 'Vire as cartas e encontre os pares iguais.',
@@ -162,7 +170,7 @@ const JOGOS = {
 
 const SECCOES = {
   fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Algarve, monumentos, cidades e muitos outros temas.' },
-  cartas: { titulo: 'Jogos de Cartas', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
+  cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
   cabeca: { titulo: 'Treino da Cabeça', icone: '🧠', sub: 'Perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
 
@@ -240,7 +248,7 @@ function inicio() {
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, feito ? '✅' : '☀️'), el('div', {}, el('b', {}, feito ? 'Feito!' : 'Por fazer'), el('span', {}, 'treino de hoje')))),
     el('div', { class: 'menu-principal' },
       botaoMenu('laranja destaque', '☀️', 'Treino do Dia', feito ? 'Já está feito! Pode repetir se quiser.' : '4 exercícios rápidos, diferentes todos os dias.', '#/treino', feito ? '✅' : null),
-      botaoMenu('verde', '🃏', 'Jogos de Cartas', 'Paciência, jogo da memória e maior ou menor.', '#/cartas'),
+      botaoMenu('verde', '🃏', 'Cartas e Dominó', 'Paciência, dominó, memória e maior ou menor.', '#/cartas'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
       botaoMenu('azul', '🧠', 'Treino da Cabeça', 'Cultura geral, contas, sopa de letras, desenhos…', '#/cabeca'),
       botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Estrelas, dias seguidos e vitórias.', '#/progresso'),
@@ -261,6 +269,13 @@ function botaoMenu(cor, icone, titulo, texto, rota, extra) {
     extra ? el('div', { class: 'feito', 'aria-hidden': 'true' }, extra) : null);
 }
 
+/* ---------- Ícone de um jogo (texto ou desenho) ---------- */
+function iconeJogo(j, classe, estilo) {
+  const caixa = el('div', { class: `${classe}${j.desenho ? ' com-desenho' : ''}`, style: estilo, 'aria-hidden': 'true' }, j.desenho ? '' : j.icone);
+  if (j.desenho) j.desenho().then(n => caixa.append(n)).catch(() => { caixa.textContent = j.icone; });
+  return caixa;
+}
+
 /* ---------- Secções ---------- */
 function seccao(id) {
   const s = SECCOES[id];
@@ -272,7 +287,7 @@ function seccao(id) {
     const reg = dados.jogos[jid];
     const melhor = reg ? Math.max(0, ...Object.values(reg.melhor || {})) : 0;
     grelha.append(el('button', { class: 'ficha-jogo', type: 'button', style: { '--cor': j.cor }, onclick: () => ir(`#/jogo/${jid}`) },
-      el('div', { class: 'icone', style: { background: j.cor }, 'aria-hidden': 'true' }, j.icone),
+      iconeJogo(j, 'icone', { background: j.cor }),
       el('div', {},
         el('b', {}, j.nome),
         el('span', {}, j.desc),
@@ -291,7 +306,7 @@ function escolherNivel(jid) {
   const ultimo = reg ? reg.ultimoNivel : null;
   a.append(
     el('div', { class: 'cabeca-jogo' },
-      el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, j.icone),
+      iconeJogo(j, 'icone-grande'),
       el('h2', {}, j.nome),
       el('p', {}, j.ajuda)),
     el('div', { class: 'niveis' },
@@ -502,6 +517,9 @@ function progresso() {
       el('table', { class: 'tabela-prog' }, el('tbody', {}, [1, 2, 3].map(n => el('tr', {},
         el('td', {}, `${NIVEIS[n].icone} ${NIVEIS[n].nome}`),
         el('td', {}, `${dados.pac.ganhos[n] || 0} ${dados.pac.ganhos[n] === 1 ? 'vitória' : 'vitórias'} em ${dados.pac.jogados[n] || 0} ${dados.pac.jogados[n] === 1 ? 'jogo' : 'jogos'}`)))))),
+    dados.domino ? el('div', { class: 'painel' },
+      el('h3', {}, '🎲 Dominó'),
+      el('p', {}, `Ganhou ${dados.domino.ganhos} ${dados.domino.ganhos === 1 ? 'vez' : 'vezes'}; o computador ganhou ${dados.domino.perdidos}.`)) : null,
     el('div', { class: 'painel' },
       el('h3', {}, '🎲 Jogos'),
       jogados.length

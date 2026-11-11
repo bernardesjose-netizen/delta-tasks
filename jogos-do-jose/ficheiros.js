@@ -1,5 +1,5 @@
 // Gerado por ferramentas/gerar-lista.mjs — não editar à mão.
-self.VERSAO = 'jogos-do-jose-10e1a6c56a';
+self.VERSAO = 'jogos-do-jose-1b2a88c847';
 self.FICHEIROS = [
  "./",
  "./css/estilo.css",
@@ -391,6 +391,7 @@ self.FICHEIROS = [
  "./js/jogos/cartas.js",
  "./js/jogos/cerebro.js",
  "./js/jogos/desenhos.js",
+ "./js/jogos/domino.js",
  "./js/jogos/fotos.js",
  "./js/jogos/paciencia.js",
  "./js/jogos/palavras.js",
