@@ -29,9 +29,11 @@ export async function memoriaFotos(alvo, { tema, pares, nivel, aoTerminar }) {
   const temas = await carregarTemas();
   const fotos = fotosDoTema(temas, tema);
   const itens = fotos.map(f => ({ chave: f.f, nome: f.nome, foto: f.f }));
-  // No tema do Sporting, as cartas têm o primeiro emblema do clube nas costas.
-  const costas = tema === 'sporting' ? 'fotos/sporting/emblema-1906.jpg' : undefined;
-  return memoria(alvo, { nivel, aoTerminar, itens, costas, pares: pares || (nivel === 1 ? 4 : nivel === 2 ? 6 : 8) });
+  // No tema do Sporting, as cartas têm nas costas o emblema clássico (1945–2001).
+  const costas = tema === 'sporting' ? 'fotos/sporting/emblema-costas.png' : undefined;
+  // A carta do emblema clássico ficaria igual às costas e confundia: aqui não entra.
+  const cartas = costas ? itens.filter(i => !i.foto.endsWith('emblema-1945-2001.jpg')) : itens;
+  return memoria(alvo, { nivel, aoTerminar, itens: cartas, costas, pares: pares || (nivel === 1 ? 4 : nivel === 2 ? 6 : 8) });
 }
 
 /* ---------- Que fotografia é? ---------- */
