@@ -554,6 +554,8 @@ h1, h2, h3, p { margin: 0; }
   font-size: calc(var(--tam, 110px) * .35);
   font-weight: 900;
 }
+.mem-carta .costas.com-img { background: repeating-linear-gradient(0deg, #00703c 0 12%, #fff 12% 24%); outline-color: #00703c; }
+.mem-carta .costas.com-img img { width: 62%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .3); }
 .mem-carta .face { background: #fff; transform: rotateY(180deg); font-size: calc(var(--tam, 110px) * .55); border: 3px solid var(--linha); }
 .mem-carta.par .face { background: var(--verde-claro); border-color: var(--verde); }
 .info-jogo { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; font-weight: 700; color: var(--texto-suave); }

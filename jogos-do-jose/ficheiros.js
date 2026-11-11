@@ -1,5 +1,5 @@
 // Gerado por ferramentas/gerar-lista.mjs — não editar à mão.
-self.VERSAO = 'jogos-do-jose-927f381dec';
+self.VERSAO = 'jogos-do-jose-787b59e838';
 self.FICHEIROS = [
  "./",
  "./css/estilo.css",
@@ -347,6 +347,7 @@ self.FICHEIROS = [
  "./fotos/sporting/bruno-fernandes.jpg",
  "./fotos/sporting/carlos-lopes.jpg",
  "./fotos/sporting/cristiano-ronaldo.jpg",
+ "./fotos/sporting/emblema-1906.jpg",
  "./fotos/sporting/estadio-jose-alvalade.jpg",
  "./fotos/sporting/fernando-peyroteo.jpg",
  "./fotos/sporting/hector-yazalde.jpg",

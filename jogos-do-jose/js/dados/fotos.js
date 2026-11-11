@@ -2,6 +2,7 @@
 // Cada foto tem autor, licença e fonte; a lista completa de créditos aparece no jogo.
 export const TEMAS_FOTOS = [
   { id: "sporting", tema: "Sporting Clube de Portugal", icone: "🦁", fotos: [
+    { f: "fotos/sporting/emblema-1906.jpg", nome: "Emblema de 1906", autor: "Autor desconhecido", licenca: "Domínio público", fonte: "https://commons.wikimedia.org/wiki/File:First_Sporting_Clube_de_Portugal_Crest.jpg" },
     { f: "fotos/sporting/fernando-peyroteo.jpg", nome: "Fernando Peyroteo", autor: "MikeBriosa20", licenca: "CC BY-SA 4.0", fonte: "https://commons.wikimedia.org/wiki/File:FernandoPeyroteo.jpg" },
     { f: "fotos/sporting/hector-yazalde.jpg", nome: "Héctor Yazalde", autor: "Autor desconhecido", licenca: "Domínio público", fonte: "https://commons.wikimedia.org/wiki/File:H%C3%A9ctor_Yazalde.jpg" },
     { f: "fotos/sporting/rui-jordao.jpg", nome: "Rui Jordão", autor: "Bert Verhoeff for Anefo", licenca: "CC0", fonte: "https://commons.wikimedia.org/wiki/File:Rui_Jord%C3%A3o_%281972%29.jpg" },

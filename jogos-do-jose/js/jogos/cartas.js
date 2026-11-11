@@ -26,7 +26,7 @@ function melhorGrelha(n, largura, altura, proporcao, folga = 12) {
  * itens (opcional): [{ chave, nome, foto }] — fotografias com legenda. Sem itens, usa desenhos.
  * pares (opcional): quantos pares; por omissão depende do nível.
  */
-export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos }) {
+export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, costas }) {
   const pares = paresPedidos || (nivel === 1 ? 6 : nivel === 2 ? 8 : 10);
   const comFotos = Array.isArray(itens);
   const escolhidos = comFotos
@@ -53,7 +53,9 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos })
   const infoT = el('span', {}, 'Tentativas: 0');
   const infoP = el('span', {}, `Pares: 0 de ${escolhidos.length}`);
   const cartas = baralho.map((it, k) => el('button', { class: 'mem-carta', type: 'button', 'aria-label': `Carta ${k + 1}`, onclick: () => virar(k) },
-    el('div', { class: 'lado costas', 'aria-hidden': 'true' }, 'J'),
+    costas
+      ? el('div', { class: 'lado costas com-img', 'aria-hidden': 'true' }, el('img', { src: costas, alt: '', draggable: 'false' }))
+      : el('div', { class: 'lado costas', 'aria-hidden': 'true' }, 'J'),
     comFotos
       ? el('div', { class: 'lado face', 'aria-hidden': 'true' },
         el('img', { src: it.foto, alt: '', loading: 'eager', draggable: 'false' }),
