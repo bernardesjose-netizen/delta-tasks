@@ -1,5 +1,5 @@
 // Guarda os jogos no aparelho para funcionarem mesmo sem internet.
-const VERSAO = 'jogos-do-jose-v1';
+const VERSAO = 'jogos-do-jose-v4';
 const FICHEIROS = [
   './',
   './index.html',

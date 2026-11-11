@@ -729,3 +729,8 @@ h1, h2, h3, p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* O Netlify injeta um selo «Powered by Netlify» nos sites gratuitos. A política de segurança
+   (_headers) já impede o selo de aparecer; isto esconde a moldura vazia que sobra, para não
+   tapar nenhum botão. O interruptor oficial está em Project configuration > General. */
+#nl-badge-frame { display: none !important; }

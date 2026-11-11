@@ -114,8 +114,12 @@ export async function sopa(alvo, { nivel, curto, aoTerminar }) {
   function tentar(r0, c0, r1, c1) {
     const cells = celulasEntre(r0, c0, r1, c1);
     if (!cells) return false;
-    const idx = colocadas.findIndex((p, i) => !achadas.has(i) && (
+    // Aceita a palavra onde quer que as letras a formem (pode aparecer mais do que uma vez por acaso).
+    const texto = cells.map(([r, c]) => g[r][c]).join('');
+    const aoContrario = [...texto].reverse().join('');
+    let idx = colocadas.findIndex((p, i) => !achadas.has(i) && (
       (p.r0 === r0 && p.c0 === c0 && p.r1 === r1 && p.c1 === c1) || (p.r0 === r1 && p.c0 === c1 && p.r1 === r0 && p.c1 === c0)));
+    if (idx < 0) idx = colocadas.findIndex((p, i) => !achadas.has(i) && (p.limpa === texto || p.limpa === aoContrario));
     if (idx < 0) return false;
     achadas.add(idx);
     const cor = CORES[achadas.size % CORES.length];
