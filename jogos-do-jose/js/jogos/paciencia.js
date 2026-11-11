@@ -5,12 +5,7 @@
 // Em todos: desfazer ilimitado, ajudas e voltas ao baralho sem limite.
 import { el, limpar, baralhar, som, aviso, festa, duracao, dados, guardar } from '../util.js';
 
-const NAIPES = ['♥', '♦', '♣', '♠'];
-const NOMES_NAIPES = ['copas', 'ouros', 'paus', 'espadas'];
-const VAL = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'V', 'D', 'R'];
-const NOMES = ['Ás', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis', 'Sete', 'Oito', 'Nove', 'Dez', 'Valete', 'Dama', 'Rei'];
-const FIG = { 11: '💂', 12: '👸', 13: '🤴' };
-const vermelho = s => s < 2;
+import { NAIPES, NOMES_NAIPES, NOMES, vermelho, faceCarta, letra } from '../baralho.js';
 
 /* ---------- Distribuição e verificação de solução ---------- */
 function distribuir() {
@@ -110,7 +105,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
   const mesa = el('div', { class: 'pac-mesa' });
   const btnDesfazer = el('button', { class: 'btn claro', type: 'button', onclick: desfazer }, '↶ Desfazer');
   const btnAjuda = el('button', { class: 'btn', type: 'button', onclick: ajuda }, '💡 Ajuda');
-  const btnNovo = el('button', { class: 'btn roxo', type: 'button', onclick: pedirNovo }, '🔄 Novo jogo');
+  const btnNovo = el('button', { class: 'btn laranja', type: 'button', onclick: pedirNovo }, '🔄 Novo jogo');
   const btnTerminar = el('button', { class: 'btn laranja esconder', type: 'button', onclick: terminarAuto }, '✨ Terminar');
   alvo.append(el('div', { class: 'pac' },
     el('div', { class: 'pac-info' }, infoNivel, el('span', {}, '✔ Este jogo tem solução'), infoJogadas),
@@ -120,7 +115,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
   // lugares vazios
   const lugarBaralho = el('div', { class: 'lugar baralho', 'data-tipo': 'stock', 'aria-label': 'Baralho: toque para tirar cartas' }, '↻');
   const lugaresFund = NAIPES.map((n, s) => el('div', { class: 'lugar', 'data-tipo': 'found', 'data-s': s }, n));
-  const lugaresCol = Array.from({ length: 7 }, (_, k) => el('div', { class: 'lugar', 'data-tipo': 'tab', 'data-k': k }, 'R'));
+  const lugaresCol = Array.from({ length: 7 }, (_, k) => el('div', { class: 'lugar', 'data-tipo': 'tab', 'data-k': k }, letra(13)));
   mesa.append(lugarBaralho, ...lugaresFund, ...lugaresCol);
 
   // cartas
@@ -129,8 +124,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
       class: `carta ${vermelho(c.s) ? 'vermelha' : 'preta'}`, 'data-id': c.id,
       'aria-label': `${NOMES[c.r - 1]} de ${NOMES_NAIPES[c.s]}`,
     },
-    el('div', { class: 'canto' }, VAL[c.r - 1], el('small', {}, NAIPES[c.s])),
-    el('div', { class: `centro${FIG[c.r] ? ' figura-carta' : ''}` }, FIG[c.r] || NAIPES[c.s]));
+    faceCarta(c.r, c.s));
     mesa.append(e);
     return e;
   });

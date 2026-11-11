@@ -355,7 +355,7 @@ export async function proverbios(alvo, { nivel, curto, aoTerminar }) {
     etiqueta: 'Complete o provérbio',
     enunciado: `«${q.inicio}…»`,
     ler: `Complete o provérbio: ${q.inicio}…`,
-    opcoes: [q.certa, ...q.erradas],
+    opcoes: [q.certa, ...(nivel === 1 ? amostra(q.erradas, 2) : q.erradas)],
     certa: q.certa,
     explicacao: `«${q.inicio} ${q.certa}.»`,
   }));

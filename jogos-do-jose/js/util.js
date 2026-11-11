@@ -163,18 +163,70 @@ function nota(freq, inicio, dur, tipo = 'sine', vol = 0.18) {
   o.type = tipo;
   o.frequency.value = freq;
   g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+  g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g).connect(a.destination);
+  o.connect(g).connect(saida(a));
   o.start(t);
   o.stop(t + dur + 0.05);
 }
+// Saída com um eco suave, para os sons ficarem mais «redondos».
+let mistura = null;
+function saida(a) {
+  if (mistura && mistura.ctx === a) return mistura.no;
+  const entrada = a.createGain();
+  const atraso = a.createDelay(1);
+  const retorno = a.createGain();
+  const filtro = a.createBiquadFilter();
+  atraso.delayTime.value = 0.13;
+  retorno.gain.value = 0.22;
+  filtro.type = 'lowpass';
+  filtro.frequency.value = 2600;
+  entrada.connect(a.destination);
+  entrada.connect(atraso);
+  atraso.connect(filtro).connect(retorno).connect(atraso);
+  retorno.connect(a.destination);
+  mistura = { ctx: a, no: entrada };
+  return entrada;
+}
+// Sino: fundamental + harmónicos que se apagam depressa.
+function sino(freq, inicio = 0, vol = 0.16, dur = 0.9) {
+  nota(freq, inicio, dur, 'sine', vol);
+  nota(freq * 2, inicio, dur * 0.6, 'sine', vol * 0.35);
+  nota(freq * 3.01, inicio, dur * 0.35, 'sine', vol * 0.12);
+}
+// Estalido curto de ruído (cartas a deslizar).
+function ruido(inicio, dur, freq, vol) {
+  const a = audio();
+  if (!a) return;
+  const t = a.currentTime + inicio;
+  const n = Math.floor(a.sampleRate * dur);
+  const buf = a.createBuffer(1, n, a.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n) ** 2;
+  const src = a.createBufferSource();
+  src.buffer = buf;
+  const f = a.createBiquadFilter();
+  f.type = 'bandpass';
+  f.frequency.value = freq;
+  f.Q.value = 0.9;
+  const g = a.createGain();
+  g.gain.value = vol;
+  src.connect(f).connect(g).connect(a.destination);
+  src.start(t);
+}
 export const som = {
-  certo() { nota(784, 0, 0.18); nota(1047, 0.1, 0.3); },
-  quase() { nota(330, 0, 0.25, 'triangle', 0.12); },
-  clique() { nota(660, 0, 0.06, 'triangle', 0.08); },
-  carta() { nota(520, 0, 0.07, 'triangle', 0.07); },
-  vitoria() { [523, 659, 784, 1047, 1319].forEach((f, i) => nota(f, i * 0.12, 0.35)); },
+  certo() { sino(1046.5, 0, 0.13); sino(1568, 0.09, 0.12, 1.1); },
+  quase() { nota(392, 0, 0.18, 'triangle', 0.09); nota(330, 0.12, 0.28, 'triangle', 0.08); },
+  clique() { ruido(0, 0.03, 3200, 0.18); },
+  carta() { ruido(0, 0.07, 2400, 0.35); nota(880, 0, 0.05, 'triangle', 0.025); },
+  par() { sino(784, 0, 0.12); sino(988, 0.07, 0.11); sino(1175, 0.14, 0.11, 1.2); },
+  estrela(k = 0) { sino([1046.5, 1318.5, 1568][k] || 1568, 0, 0.14, 1.1); nota(([1046.5, 1318.5, 1568][k] || 1568) * 4, 0.02, 0.25, 'sine', 0.02); },
+  vitoria() {
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => sino(f, i * 0.11, 0.12, 0.7));
+    [1318.5, 1568, 2093].forEach((f, i) => sino(f, 0.5 + i * 0.09, 0.09, 1.2));
+    nota(261.6, 0.5, 1.4, 'triangle', 0.06);
+    nota(392, 0.5, 1.4, 'triangle', 0.05);
+  },
 };
 
 /* ---------- Voz ---------- */

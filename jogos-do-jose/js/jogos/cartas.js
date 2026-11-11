@@ -1,5 +1,6 @@
-// Jogo da memória (pares) e Maior ou Menor.
-import { el, limpar, baralhar, amostra, som, elogio, aviso, duracao, inteiro, consolo } from '../util.js';
+// Jogo da memória (com desenhos ou fotografias) e Maior ou Menor.
+import { el, limpar, baralhar, amostra, som, elogio, aviso, duracao, inteiro, consolo, falar, dados } from '../util.js';
+import { cartaSolta } from '../baralho.js';
 
 /* ================= Jogo da memória ================= */
 const TEMAS_MEMORIA = [
@@ -9,11 +10,30 @@ const TEMAS_MEMORIA = [
   ['🌻', '🌷', '🌹', '🌳', '🍄', '🌵', '🍀', '🌙', '⭐', '☀️', '🌈', '❄️'],
 ];
 
-export function memoria(alvo, { nivel, aoTerminar }) {
-  const pares = nivel === 1 ? 6 : nivel === 2 ? 8 : 10;
-  const colunas = nivel === 1 ? 4 : nivel === 2 ? 4 : 5;
-  const figuras = amostra(TEMAS_MEMORIA[inteiro(0, TEMAS_MEMORIA.length - 1)], pares);
-  const baralho = baralhar([...figuras, ...figuras]);
+// Escolhe o número de colunas que dá cartas maiores no espaço disponível.
+function melhorGrelha(n, largura, altura, proporcao, folga = 12) {
+  let melhor = { colunas: 4, tam: 60 };
+  for (let colunas = 2; colunas <= 8; colunas++) {
+    const linhas = Math.ceil(n / colunas);
+    const tam = Math.min((largura - (colunas - 1) * folga) / colunas, (altura - (linhas - 1) * folga) / (linhas * proporcao));
+    if (tam > melhor.tam) melhor = { colunas, tam };
+  }
+  melhor.tam = Math.floor(Math.min(melhor.tam, 190));
+  return melhor;
+}
+
+/**
+ * itens (opcional): [{ chave, nome, foto }] — fotografias com legenda. Sem itens, usa desenhos.
+ * pares (opcional): quantos pares; por omissão depende do nível.
+ */
+export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos }) {
+  const pares = paresPedidos || (nivel === 1 ? 6 : nivel === 2 ? 8 : 10);
+  const comFotos = Array.isArray(itens);
+  const escolhidos = comFotos
+    ? amostra(itens, Math.min(pares, itens.length))
+    : amostra(TEMAS_MEMORIA[inteiro(0, TEMAS_MEMORIA.length - 1)], pares).map(e => ({ chave: e, emoji: e }));
+  const baralho = baralhar([...escolhidos, ...escolhidos]);
+  const proporcao = comFotos ? 1.22 : 1.2;
   let abertas = [];
   let encontrados = 0;
   let tentativas = 0;
@@ -22,22 +42,23 @@ export function memoria(alvo, { nivel, aoTerminar }) {
   let vivo = true;
 
   limpar(alvo);
-  const grelha = el('div', { class: 'memoria', style: { gridTemplateColumns: `repeat(${colunas}, auto)` } });
-  const linhas = Math.ceil(baralho.length / colunas);
+  const grelha = el('div', { class: `memoria${comFotos ? ' com-fotos' : ''}` });
   function tamanho() {
-    const largura = Math.min((alvo.clientWidth || window.innerWidth) - 24, 900);
-    const altura = window.innerHeight - 260;
-    const t = Math.floor(Math.min((largura - (colunas - 1) * 12) / colunas, (altura - (linhas - 1) * 12) / (linhas * 1.2), 150));
-    grelha.style.setProperty('--tam', `${Math.max(58, t)}px`);
+    const largura = Math.min((alvo.clientWidth || window.innerWidth) - 8, 1100);
+    const altura = Math.max(320, window.innerHeight - 230);
+    const { colunas, tam } = melhorGrelha(baralho.length, largura, altura, proporcao);
+    grelha.style.gridTemplateColumns = `repeat(${colunas}, auto)`;
+    grelha.style.setProperty('--tam', `${Math.max(64, tam)}px`);
   }
   const infoT = el('span', {}, 'Tentativas: 0');
-  const infoP = el('span', {}, `Pares: 0 de ${pares}`);
-  const cartas = baralho.map((f, k) => {
-    const b = el('button', { class: 'mem-carta', type: 'button', 'aria-label': `Carta ${k + 1}`, onclick: () => virar(k) },
-      el('div', { class: 'lado costas', 'aria-hidden': 'true' }, 'J'),
-      el('div', { class: 'lado face', 'aria-hidden': 'true' }, f));
-    return b;
-  });
+  const infoP = el('span', {}, `Pares: 0 de ${escolhidos.length}`);
+  const cartas = baralho.map((it, k) => el('button', { class: 'mem-carta', type: 'button', 'aria-label': `Carta ${k + 1}`, onclick: () => virar(k) },
+    el('div', { class: 'lado costas', 'aria-hidden': 'true' }, 'J'),
+    comFotos
+      ? el('div', { class: 'lado face', 'aria-hidden': 'true' },
+        el('img', { src: it.foto, alt: '', loading: 'eager', draggable: 'false' }),
+        el('span', { class: 'legenda' }, it.nome))
+      : el('div', { class: 'lado face', 'aria-hidden': 'true' }, it.emoji)));
   grelha.append(...cartas);
   alvo.append(
     el('p', { class: 'dica', style: { marginBottom: '10px' } }, 'Vire duas cartas de cada vez e encontre os pares iguais.'),
@@ -51,19 +72,22 @@ export function memoria(alvo, { nivel, aoTerminar }) {
     if (bloqueado || c.classList.contains('virada')) return;
     som.carta();
     c.classList.add('virada');
-    c.setAttribute('aria-label', `Carta ${k + 1}: ${baralho[k]}`);
+    c.setAttribute('aria-label', `Carta ${k + 1}: ${baralho[k].nome || baralho[k].emoji}`);
     abertas.push(k);
     if (abertas.length < 2) return;
     tentativas++;
     infoT.textContent = `Tentativas: ${tentativas}`;
     const [a, b] = abertas;
     abertas = [];
-    if (baralho[a] === baralho[b]) {
+    if (baralho[a].chave === baralho[b].chave) {
       encontrados++;
-      infoP.textContent = `Pares: ${encontrados} de ${pares}`;
-      setTimeout(() => { cartas[a].classList.add('par'); cartas[b].classList.add('par'); som.certo(); }, 300);
-      if (encontrados % 2 === 0 && encontrados < pares) aviso(elogio(), 1500);
-      if (encontrados === pares) setTimeout(fim, 1000);
+      infoP.textContent = `Pares: ${encontrados} de ${escolhidos.length}`;
+      setTimeout(() => { cartas[a].classList.add('par'); cartas[b].classList.add('par'); som.par(); }, 300);
+      if (comFotos) {
+        aviso(`${baralho[a].nome}! ${encontrados < escolhidos.length ? elogio() : ''}`, 2000);
+        if (dados.def.voz) falar(baralho[a].nome);
+      } else if (encontrados % 2 === 0 && encontrados < escolhidos.length) aviso(elogio(), 1500);
+      if (encontrados === escolhidos.length) setTimeout(fim, 1100);
       return;
     }
     bloqueado = true;
@@ -74,15 +98,17 @@ export function memoria(alvo, { nivel, aoTerminar }) {
       cartas[a].setAttribute('aria-label', `Carta ${a + 1}`);
       cartas[b].setAttribute('aria-label', `Carta ${b + 1}`);
       bloqueado = false;
-    }, 1300);
+    }, comFotos ? 1600 : 1300);
   }
 
   function fim() {
-    const estrelas = tentativas <= pares * 1.6 ? 3 : tentativas <= pares * 2.4 ? 2 : 1;
+    const n = escolhidos.length;
+    const estrelas = tentativas <= n * 1.6 ? 3 : tentativas <= n * 2.4 ? 2 : 1;
     aoTerminar({
       estrelas,
       numeros: [
         { valor: String(tentativas), rotulo: 'tentativas' },
+        { valor: `${n}`, rotulo: 'pares encontrados' },
         { valor: duracao(Date.now() - t0), rotulo: 'tempo' },
       ],
     });
@@ -92,18 +118,6 @@ export function memoria(alvo, { nivel, aoTerminar }) {
 }
 
 /* ================= Maior ou Menor ================= */
-const NAIPES = [['♥', 'vermelha', 'copas'], ['♦', 'vermelha', 'ouros'], ['♣', 'preta', 'paus'], ['♠', 'preta', 'espadas']];
-const VALORES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'V', 'D', 'R'];
-const NOMES = ['Ás', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis', 'Sete', 'Oito', 'Nove', 'Dez', 'Valete', 'Dama', 'Rei'];
-
-function desenharCarta(c) {
-  if (!c) return el('div', { class: 'mm-carta costas', 'aria-label': 'Carta virada para baixo' });
-  const [s, cor] = NAIPES[c.s];
-  return el('div', { class: `mm-carta ${cor}`, 'aria-label': `${NOMES[c.r - 1]} de ${NAIPES[c.s][2]}` },
-    el('div', { class: 'mm-canto' }, VALORES[c.r - 1], el('br'), s),
-    el('div', { class: 'mm-centro' }, c.r > 10 ? ['💂', '👸', '🤴'][c.r - 11] : s));
-}
-
 export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
   const total = curto ? 6 : nivel === 1 ? 8 : nivel === 2 ? 10 : 12;
   const baralho = baralhar(Array.from({ length: 52 }, (_, k) => ({ s: k % 4, r: Math.floor(k / 4) + 1 })));
@@ -113,6 +127,7 @@ export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
   let seguidas = 0;
   let melhorSeguidas = 0;
   const t0 = Date.now();
+  const largura = () => Math.min(150, Math.floor((window.innerWidth - 120) / 2));
 
   function mostrar(proxima, texto, tipo) {
     limpar(alvo);
@@ -124,13 +139,13 @@ export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
       el('div', { class: 'cartao-pergunta' },
         el('div', { class: 'etiqueta' }, 'Maior ou Menor'),
         el('div', { class: 'enunciado centrado' }, proxima ? 'Vamos ver…' : 'A próxima carta vai ser maior ou menor?'),
-        el('div', { class: 'mm-mesa' }, desenharCarta(atual), el('div', { class: 'mm-seta', 'aria-hidden': 'true' }, '➜'), desenharCarta(proxima)),
-        el('p', { class: 'dica' }, 'Ordem: Ás (o mais baixo), 2 … 10, Valete, Dama, Rei (o mais alto). Se sair igual, ganha na mesma!')),
+        el('div', { class: 'mm-mesa' }, cartaSolta(atual, largura()), el('div', { class: 'mm-seta', 'aria-hidden': 'true' }, '➜'), cartaSolta(proxima, largura())),
+        el('p', { class: 'dica' }, 'Ás é a mais baixa e o Rei a mais alta. Se sair igual, ganha na mesma!')),
       zona));
     if (!proxima) {
       zona.append(el('div', { class: 'fila-botoes' },
         el('button', { class: 'btn verde grande', type: 'button', onclick: () => apostar(1) }, '⬆ Maior'),
-        el('button', { class: 'btn roxo grande', type: 'button', onclick: () => apostar(-1) }, '⬇ Menor')));
+        el('button', { class: 'btn grande', type: 'button', onclick: () => apostar(-1) }, '⬇ Menor')));
       return;
     }
     zona.append(
