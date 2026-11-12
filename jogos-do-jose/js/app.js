@@ -972,21 +972,25 @@ async function lerLista(cat) {
     el('span', { class: 'txt' }, el('b', {}, t.titulo), t.autor || t.origem ? el('small', {}, t.autor || t.origem) : null)))));
 }
 
+// Botão «Ouvir», no topo de cada texto: lê em voz alta e, a meio, serve para parar.
 function botaoOuvir(texto) {
   if (!vozDisponivel()) return null;
-  const b = el('button', { class: 'btn claro grande', type: 'button' }, '🔊 Ouvir');
+  const b = el('button', { class: 'btn claro btn-ouvir-texto', type: 'button' }, '🔊 Ouvir');
   let aLer = false;
+  let vez = 0; // cada leitura tem o seu número: um «fim» atrasado de uma leitura antiga não mexe no botão
   const parar = () => { aLer = false; b.textContent = '🔊 Ouvir'; };
   b.addEventListener('click', () => {
+    vez++;
     if (aLer) { calar(); parar(); return; }
+    const minha = vez;
     aLer = true;
     b.textContent = '⏹ Parar';
-    falarLongo(texto, () => { if (b.isConnected) parar(); });
+    falarLongo(texto, () => { if (minha === vez && b.isConnected) parar(); });
   });
   return b;
 }
 
-// Um texto: parágrafos (ou versos, nos poemas), moral nas fábulas, ouvir, anterior e seguinte.
+// Um texto: «Ouvir» no topo, parágrafos (ou versos, nos poemas), moral nas fábulas, anterior e seguinte.
 async function lerTexto(cat, id) {
   const c = LER[cat];
   const a = ecra(c.nome, `#/ler/${cat}`);
@@ -1010,11 +1014,11 @@ async function lerTexto(cat, id) {
   a.append(el('article', { class: 'leitura' },
     el('div', { class: 'etiqueta' }, cat === 'fabulas' ? `Fábula · ${t.autor}` : (t.autor || t.origem || c.tipo)),
     el('h2', {}, t.titulo),
+    vozDisponivel() ? el('div', { class: 'leitura-ouvir' }, botaoOuvir(falado)) : null,
     corpo,
     t.moral ? el('div', { class: 'moral' }, el('b', {}, '💡 Moral da história: '), t.moral) : null,
     t.fonte ? el('p', { class: 'fonte' }, 'Texto: ', el('a', { href: t.fonte, target: '_blank', rel: 'noopener' }, 'ver a fonte')) : null),
   el('div', { class: 'fila-botoes leitura-botoes' },
-    botaoOuvir(falado),
     seguinte ? el('button', { class: 'btn verde grande', type: 'button', onclick: () => ir(`#/ler/${cat}/${seguinte.id}`) }, 'Seguinte ▶') : null,
     anterior ? el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir(`#/ler/${cat}/${anterior.id}`) }, '◀ Anterior') : null,
     el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir(`#/ler/${cat}`) }, '📋 Ver a lista')));
@@ -1038,11 +1042,12 @@ async function lerAnedotas() {
   function mostrar(k) {
     const an = todas[k];
     if (!vistas.includes(k)) { vistas.push(k); guardar(); }
-    limpar(cartao).append(el('div', { class: 'etiqueta' }, an.c), el('div', { class: 'leitura-texto poema' }, an.t.split(/\n{2,}/).map(p => el('p', {}, p))));
+    limpar(cartao).append(
+      el('div', { class: 'leitura-topo' }, el('div', { class: 'etiqueta' }, an.c), botaoOuvir(an.t)),
+      el('div', { class: 'leitura-texto poema' }, an.t.split(/\n{2,}/).map(p => el('p', {}, p))));
     contador.textContent = `Já leu ${vistas.length} de ${todas.length} anedotas.`;
     limpar(zonaBotoes).append(
       el('button', { class: 'btn verde grande', type: 'button', onclick: outra }, '😄 Outra!'),
-      botaoOuvir(an.t),
       pos > 0 ? el('button', { class: 'btn claro grande', type: 'button', onclick: () => { pos--; mostrar(historico[pos]); } }, '◀ Anterior') : null);
     som.carta();
     // Se a pessoa deslizou para baixo para tocar no botão, volta a mostrar o início da anedota.

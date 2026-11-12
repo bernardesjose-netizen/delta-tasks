@@ -373,20 +373,25 @@ export async function leitura(alvo, { nivel, aoTerminar }) {
   const zona = el('div', { class: 'fila-botoes' });
   const comecar = el('button', { class: 'btn verde grande', type: 'button', onclick: iniciar }, '▶ Começar a ler');
   const instrucao = el('p', { class: 'dica' }, 'Quando estiver pronto, carregue em «Começar» e leia o texto em voz alta, com calma. No fim, carregue em «Terminei».');
+  // Os botões ficam no topo, logo antes do texto; no fim do texto há só um «Terminei» de reserva.
+  const fimTexto = el('div', { class: 'fila-botoes leitura-fim', hidden: true },
+    el('button', { class: 'btn verde grande', type: 'button', onclick: terminar }, '✔ Terminei'));
+  const controlos = el('div', { class: 'leitura-controlos' }, el('div', { class: 'progresso' }, tempo), zona);
   alvo.append(el('div', { class: 'ronda' },
     el('div', { class: 'cartao-pergunta' },
       el('div', { class: 'etiqueta' }, 'Leitura em Voz Alta'),
       el('div', { class: 'enunciado' }, t.titulo),
       el('p', { class: 'autor-texto' }, `${t.autor} · ${nPalavras} palavras`),
       instrucao,
+      controlos,
       corpo),
-    el('div', { class: 'progresso' }, tempo),
-    zona));
+    fimTexto));
   zona.append(comecar);
 
   function iniciar() {
     corpo.hidden = false;
     instrucao.hidden = true;
+    fimTexto.hidden = false;
     rel = relogio();
     intervalo = setInterval(() => { tempo.textContent = `⏱ ${mmss(rel.ms())}`; }, 250);
     limpar(zona).append(el('button', { class: 'btn verde grande', type: 'button', onclick: terminar }, '✔ Terminei'));
@@ -414,9 +419,12 @@ export async function leitura(alvo, { nivel, aoTerminar }) {
         ],
       });
     } }, 'Continuar ▶');
+    fimTexto.hidden = true;
     limpar(zona).append(
       el('button', { class: 'btn claro grande', type: 'button', onclick: () => falar(t.texto) }, '🔊 Ouvir o texto'),
       continuar);
+    // volta ao topo do texto, onde estão agora «Ouvir» e «Continuar»
+    if (controlos.getBoundingClientRect().top < 70) window.scrollTo(0, Math.max(0, controlos.getBoundingClientRect().top + window.pageYOffset - 90));
     aviso(`Leu ${nPalavras} palavras em ${segundos(ms)}. ${elogio()}`, 3500);
   }
 

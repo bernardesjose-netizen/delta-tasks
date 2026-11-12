@@ -1,5 +1,5 @@
 // Gerado por ferramentas/gerar-lista.mjs — não editar à mão.
-self.VERSAO = 'jogos-do-jose-f2-319887e44e';
+self.VERSAO = 'jogos-do-jose-f2-b3cfa3321f';
 self.FICHEIROS = [
  "./",
  "./css/estilo.css",

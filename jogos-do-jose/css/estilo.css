@@ -1113,6 +1113,10 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .leitura.anedota .leitura-texto p { font-size: 1.2rem; }
 .leitura .moral { margin-top: 16px; padding: 12px 14px; border-radius: 14px; background: #fff7e0; border: 2px solid #f3d68a; font-size: 1.05rem; line-height: 1.45; }
 .leitura .fonte { margin-top: 12px; font-size: .8rem; color: var(--texto-suave); }
+.leitura-ouvir { margin: -2px 0 14px; }
+.leitura-topo { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.leitura-topo .etiqueta { margin-bottom: 0; }
+.btn-ouvir-texto { width: auto; min-height: 52px; padding: 8px 20px; font-size: 1rem; }
 .leitura-botoes { max-width: 680px; margin: 16px auto 0; flex-wrap: wrap; justify-content: center; }
 @media (max-width: 420px) {
   .leitura { padding: 16px 14px 14px; border-radius: 18px; }
@@ -1135,3 +1139,8 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .pessoa .btn { flex: 1 1 220px; justify-content: flex-start; text-align: left; }
 .pessoa.atual .btn { border-color: var(--verde); }
 .pessoa small { font-weight: 600; color: var(--texto-suave); }
+/* Leitura em Voz Alta: cronómetro e botões no topo do texto */
+.leitura-controlos { margin-top: 14px; }
+.leitura-controlos .progresso { justify-content: center; margin-bottom: 10px; }
+.leitura-controlos .fila-botoes { margin-top: 0; }
+.leitura-fim[hidden] { display: none; }
