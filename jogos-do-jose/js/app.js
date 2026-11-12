@@ -865,7 +865,8 @@ async function escolherTema(jid) {
 }
 const GRUPOS_FOTOS = [
   ['Sporting e desporto', '🦁'],
-  ['Terras e monumentos', '🏰'],
+  ['Cidades e regiões', '🏙️'],
+  ['Monumentos e paisagens', '🏰'],
   ['Natureza e animais', '🌳'],
   ['Comida e sabores', '🍲'],
   ['História, arte e tradições', '🎨'],

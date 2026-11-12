@@ -4,21 +4,23 @@ Jogos simples e encorajadores para treinar a cabeça, pensados para seniores: le
 botões largos, sem pressas e sempre com uma palavra de incentivo.
 
 - **Fotografias de Portugal:** Memória de Fotografias (escolhe-se o tema e o número de pares), Que Fotografia É?
-  e Puzzle de Fotografias. Temas como Sporting, Algarve, monumentos, Património Mundial, cidades e muitos outros.
+  e Puzzle de Fotografias. 815 fotografias em 51 temas, arrumados em 6 grupos: Sporting, Algarve, Lisboa, Porto,
+  monumentos, Património Mundial, faróis, reis e rainhas, pintura portuguesa e muitos outros.
   Fotografias do Wikimedia Commons com licenças livres (créditos dentro da app, em Definições).
 - **Cartas e Dominó:** Dominó tradicional contra o computador (3 níveis); cartas com desenho tradicional:
   Paciência (3 níveis, todos os jogos verificados para terem solução), Jogo da Memória, Maior ou Menor.
-- **Treino da Cabeça:** Cultura Geral (314 perguntas), Contas de Cabeça, Sopa de Letras, Provérbios,
-  Adivinhas, Qual é o Intruso?, Sequências, Palavra Baralhada, Que Horas São?, Contas do Mercado,
-  Lembra-se?, Quantos São?, O Que É Isto? (centenas de desenhos) e Encontre o Diferente.
+- **Treino da Cabeça:** Cultura Geral (656 perguntas), Contas de Cabeça, Sopa de Letras (46 temas),
+  Provérbios (287), Adivinhas (103), Qual é o Intruso? (134), Sequências, Pôr por Ordem, Palavra Baralhada (242),
+  Que Horas São?, Contas do Mercado, Lembra-se?, Siga a Sequência (luzes e música), Quantos São?,
+  O Que É Isto? (487 desenhos) e Encontre o Diferente.
 - **Treino rápido, com recorde:** Contas Relâmpago, Cores Trocadas (tocar na cor da tinta), Memória de
-  Palavras e Leitura em Voz Alta (Camões, Pessoa, Florbela, Cesário Verde, Garrett, Eça e cantigas populares,
-  tudo em domínio público). Relógio com pausa, recordes pessoais e gráficos de evolução.
+  Palavras e Leitura em Voz Alta (32 textos: Camões, Pessoa, Florbela, Cesário Verde, Garrett, Eça, Antero,
+  Júlio Dinis, cantigas e trava-línguas, tudo em domínio público). Relógio com pausa, recordes pessoais e gráficos de evolução.
 - **Teste da Cabeça:** 3 exercícios rápidos que dão uma «idade da cabeça» (só um jogo, não é um teste médico),
   com gráfico da evolução.
 - **Treino do Dia:** 4 exercícios curtos, diferentes todos os dias, com carimbo no calendário e contagem de
   dias seguidos.
-- **O Meu Progresso:** calendário mensal de carimbos, 22 medalhas para colecionar, recordes e gráficos.
+- **O Meu Progresso:** calendário mensal de carimbos, 24 medalhas para colecionar, recordes e gráficos.
 - Três níveis em tudo: 🌱 Tranquilo, 🌿 Normal e 🌳 Desafio.
 - Funciona sem internet depois de aberto uma vez (pode ser instalado no ecrã inicial).
 - O progresso fica guardado só no próprio aparelho (`localStorage`); não há contas nem recolha de dados.
