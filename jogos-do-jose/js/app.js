@@ -24,6 +24,10 @@ const TEMAS_QUIZ = [
   { id: 'ue', nome: 'União Europeia', cat: 'União Europeia', icone: '⭐', novo: true },
   { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺', novo: true },
   { id: 'futebol', nome: 'Futebol', cat: 'Futebol', icone: '⚽', novo: true },
+  { id: 'sporting', nome: 'Sporting', icone: '🦁', novo: true },
+  { id: 'benfica', nome: 'Benfica', icone: '🦅', novo: true },
+  { id: 'fcporto', nome: 'FC Porto', icone: '🐉', novo: true },
+  { id: 'ciclismo', nome: 'Ciclismo', icone: '🚴', novo: true },
   { id: 'portugal', nome: 'Portugal', cat: 'Portugal', icone: '🏛️' },
   { id: 'geografia', nome: 'Geografia', cat: 'Geografia', icone: '🌍' },
   { id: 'historia', nome: 'História', cat: 'História', icone: '📜' },
@@ -48,7 +52,7 @@ const desafios = nome => () => import('./jogos/desafios.js').then(m => m[nome]);
 const JOGOS = {
   memfotos: {
     seccao: 'fotos', nome: 'Memória de Fotografias', icone: '📸', cor: '#2e7d32', tema: true,
-    desc: 'Pares de fotografias: cidades, monumentos, animais, futebol e muito mais.',
+    desc: 'Pares de fotografias: Sporting, Benfica, FC Porto, cidades, monumentos e muito mais.',
     ajuda: 'Escolha um tema e quantas fotografias quer. Depois vire duas cartas de cada vez e encontre os pares.',
     niveis: ['4 pares.', '6 pares.', '8 pares.'],
     carregar: fotos('memoriaFotos'),
@@ -239,7 +243,7 @@ const JOGOS = {
 };
 
 const SECCOES = {
-  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: cidades, monumentos, natureza, comida, futebol, viagens e muitos outros temas.' },
+  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Benfica, FC Porto, ciclismo, cidades, monumentos, natureza, viagens e muito mais.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
   cabeca: { titulo: 'Treino da Cabeça', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
@@ -1100,12 +1104,12 @@ async function escolherTema(jid) {
     el('p', { class: 'nota' }, el('a', { href: '#/creditos' }, 'Créditos das fotografias')));
 }
 const GRUPOS_FOTOS = [
+  ['Futebol e desporto', '⚽'],
   ['Cidades e regiões', '🏙️'],
   ['Monumentos e paisagens', '🏰'],
   ['Natureza e animais', '🌳'],
   ['Comida e sabores', '🍲'],
   ['História, arte e tradições', '🎨'],
-  ['Desporto', '⚽'],
   ['Viagens pelo mundo', '✈️'],
 ];
 

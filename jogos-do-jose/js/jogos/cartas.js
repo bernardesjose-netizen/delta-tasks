@@ -43,7 +43,7 @@ function melhorGrelha(n, largura, altura, proporcao, folga = 12) {
  * itens (opcional): [{ chave, nome, curto, foto }] — fotografias com legenda (curto: nome curto para a carta). Sem itens, usa desenhos.
  * pares (opcional): quantos pares; por omissão depende do nível.
  */
-export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, costas }) {
+export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, costas, coresCostas, marca }) {
   const pares = paresPedidos || (nivel === 1 ? 6 : nivel === 2 ? 8 : 10);
   const comFotos = Array.isArray(itens);
   const escolhidos = comFotos
@@ -60,6 +60,7 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
 
   limpar(alvo);
   const grelha = el('div', { class: `memoria${comFotos ? ' com-fotos' : ''}` });
+  if (coresCostas) { grelha.style.setProperty('--costas1', coresCostas[0]); grelha.style.setProperty('--costas2', coresCostas[1]); }
   function tamanho() {
     const est = getComputedStyle(alvo);
     const util = (alvo.clientWidth || window.innerWidth) - parseFloat(est.paddingLeft || 0) - parseFloat(est.paddingRight || 0);
@@ -83,7 +84,7 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
   const cartas = baralho.map((it, k) => el('button', { class: 'mem-carta', type: 'button', 'aria-label': `Carta ${k + 1}`, onclick: () => virar(k) },
     costas
       ? el('div', { class: 'lado costas com-img', 'aria-hidden': 'true' }, el('img', { src: costas, alt: '', draggable: 'false' }))
-      : el('div', { class: 'lado costas', 'aria-hidden': 'true' }, el('span', { class: 'marca' }, '?')),
+      : el('div', { class: 'lado costas', 'aria-hidden': 'true' }, el('span', { class: 'marca' }, marca || '?')),
     comFotos
       ? el('div', { class: 'lado face', 'aria-hidden': 'true' },
         el('img', { src: it.foto, alt: '', loading: 'eager', decoding: 'async', draggable: 'false' }),

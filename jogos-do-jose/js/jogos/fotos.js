@@ -29,7 +29,17 @@ export async function memoriaFotos(alvo, { tema, pares, nivel, aoTerminar }) {
   const temas = await carregarTemas();
   const fotos = fotosDoTema(temas, tema);
   const itens = fotos.map(f => ({ chave: f.f, nome: f.nome, curto: f.c, foto: f.f }));
-  return memoria(alvo, { nivel, aoTerminar, itens, pares: pares || (nivel === 1 ? 4 : nivel === 2 ? 6 : 8) });
+  // Temas dos clubes: o Sporting e o Benfica têm o emblema clássico (domínio público) nas costas das cartas;
+  // o FC Porto, sem emblema livre, tem riscas azuis e brancas com um dragão.
+  const COSTAS = {
+    sporting: { costas: 'fotos/sporting/emblema-costas.png', tirar: 'emblema-1945-2001.jpg', cores: ['#00703c', '#ffffff'] },
+    benfica: { costas: 'fotos/benfica/emblema-costas.png', tirar: 'emblema-1930.jpg', cores: ['#c8102e', '#ffffff'] },
+    fcporto: { cores: ['#0b4ea2', '#ffffff'], marca: '🐉' },
+  };
+  const c = COSTAS[tema] || {};
+  // A carta do emblema ficaria igual às costas e confundia: nesse tema não entra.
+  const cartas = c.tirar ? itens.filter(i => !i.foto.endsWith(c.tirar)) : itens;
+  return memoria(alvo, { nivel, aoTerminar, itens: cartas, costas: c.costas, coresCostas: c.cores, marca: c.marca, pares: pares || (nivel === 1 ? 4 : nivel === 2 ? 6 : 8) });
 }
 
 /* ---------- Que fotografia é? ---------- */
@@ -61,7 +71,7 @@ export async function quizFotos(alvo, { tema, nivel = 1, curto, aoTerminar }) {
 export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
   // Só temas com fotografias cheias de pormenor (num fundo branco liso as peças seriam todas iguais).
   const BONS = ['monumentos', 'patrimonio', 'cidades', 'castelos', 'aldeias', 'ilhas', 'paisagens', 'pontes', 'algarve', 'aves', 'selvagens', 'quinta', 'transportes', 'pratos', 'doces',
-    'lisboa', 'porto', 'alentejo', 'norte', 'beiras', 'palacios', 'igrejas', 'farois', 'praias', 'rios', 'jardins', 'mar', 'aves-rapina', 'racas', 'pintura', 'descobrimentos', 'comboios', 'artesanato', 'leiria', 'espanha', 'ue', 'estadios'];
+    'lisboa', 'porto', 'alentejo', 'norte', 'beiras', 'palacios', 'igrejas', 'farois', 'praias', 'rios', 'jardins', 'mar', 'aves-rapina', 'racas', 'pintura', 'descobrimentos', 'comboios', 'artesanato', 'leiria', 'espanha', 'ue', 'estadios', 'ciclismo'];
   const temas = (await carregarTemas()).filter(t => tema ? t.id === tema : BONS.includes(t.id));
   const [foto] = escolherNaoVistos('puzzle', fotosDoTema(temas.length ? temas : await carregarTemas(), 'todos'), 1, f => f.f);
   const n = nivel === 1 ? 2 : nivel === 2 ? 3 : 4;

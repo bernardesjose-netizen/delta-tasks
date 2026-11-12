@@ -4,15 +4,16 @@ Jogos simples e encorajadores para treinar a cabeça, pensados para seniores (e 
 botões largos, sem pressas e sempre com uma palavra de incentivo. (A pasta chama-se `jogos-do-jose` por razões históricas.)
 
 - **Fotografias de Portugal:** Memória de Fotografias (escolhe-se o tema e o número de pares), Que Fotografia É?
-  e Puzzle de Fotografias. 1078 fotografias leves (cerca de 13,6 MB) em 56 temas, arrumados em 7 grupos: cidades e regiões
-  (Algarve, Lisboa, Porto, Leiria, Zona Centro, Norte…), monumentos e paisagens, natureza e animais, comida e sabores,
-  história, arte e tradições, desporto (futebol português, lendas do futebol mundial, estádios e desportistas, sem
-  destaque a nenhum clube) e viagens pelo mundo (Espanha e União Europeia).
+  e Puzzle de Fotografias. 1167 fotografias leves (cerca de 14,5 MB) em 59 temas, arrumados em 7 grupos: futebol e desporto
+  (Sporting, Benfica e FC Porto, cada um com o seu tema e o seu emblema ou cores nas costas das cartas; futebol português e
+  Seleção, lendas do futebol mundial, estádios, ciclismo clássico de Portugal e desportistas), cidades e regiões (Algarve,
+  Lisboa, Porto, Leiria, Zona Centro, Norte…), monumentos e paisagens, natureza e animais, comida e sabores, história, arte
+  e tradições e viagens pelo mundo (Espanha e União Europeia).
   Fotografias do Wikimedia Commons com licenças livres (créditos dentro da app, em Definições).
 - **Cartas e Dominó:** Dominó tradicional contra o computador (3 níveis); cartas com desenho tradicional:
   Paciência (3 níveis, todos os jogos verificados para terem solução), Jogo da Memória, Maior ou Menor.
-- **Treino da Cabeça:** Cultura Geral (797 perguntas, por nível ou por tema: Futebol, Leiria, Zona Centro, Norte de Portugal,
-  Espanha, União Europeia, Artesanato português e mais 11), Contas de Cabeça, Sopa de Letras (64 temas, mais de 2000 palavras),
+- **Treino da Cabeça:** Cultura Geral (832 perguntas, por nível ou por tema: Futebol, Sporting, Benfica, FC Porto, Ciclismo, Leiria,
+  Zona Centro, Norte de Portugal, Espanha, União Europeia, Artesanato português e mais 11), Contas de Cabeça, Sopa de Letras (68 temas, mais de 2000 palavras),
   Provérbios (345), Adivinhas (103), Qual é o Intruso? (134), Sequências, Pôr por Ordem, Palavra Baralhada (242),
   Que Horas São?, Contas do Mercado, Lembra-se?, Siga a Sequência (luzes e música), Quantos São?,
   O Que É Isto? (487 desenhos) e Encontre o Diferente.

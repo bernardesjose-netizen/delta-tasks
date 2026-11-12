@@ -346,7 +346,7 @@ export async function quiz(alvo, { nivel, curto, temaQuiz, aoTerminar }) {
   let escolhidas;
   if (temaQuiz) {
     // Perguntas por tema: misturam os três níveis, das mais fáceis para as mais difíceis.
-    const lista = PERGUNTAS.filter(q => q.cat === temaQuiz.cat || (q.t && q.t.indexOf(temaQuiz.id) >= 0));
+    const lista = PERGUNTAS.filter(q => (temaQuiz.cat && q.cat === temaQuiz.cat) || (q.t && q.t.indexOf(temaQuiz.id) >= 0));
     escolhidas = escolherNaoVistos(`quiz-${temaQuiz.id}`, lista, Math.min(N(curto), lista.length), q => `${q.p}|${q.certa}`)
       .sort((x, y) => x.n - y.n);
   } else {

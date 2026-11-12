@@ -411,7 +411,8 @@ export function falarLongo(texto, aoAcabar) {
 const ELOGIOS = [
   'Muito bem!', 'Excelente!', 'Isso mesmo!', 'Fantástico!', 'Que cabeça!', 'Bravo!',
   'Certíssimo!', 'Assim é que é!', 'Impecável!', 'Espetacular!', 'Em cheio!',
-  'Está em grande forma!', 'Nem o Eusébio marcava melhor!', 'Mais certo do que um relógio!',
+  'Está em grande forma!', 'Nem o Eusébio marcava melhor!', 'Nem o Yazalde marcava melhor!',
+  'Nem o Fernando Gomes marcava melhor!', 'Golo à Cristiano Ronaldo!', 'Mais certo do que um relógio!',
   'Está a voar!', 'Que pontaria!', 'Parabéns!', 'Uma maravilha!',
 ];
 const ELOGIOS_NOME = ['Muito bem, {n}!', 'Boa, {n}!', 'Isso mesmo, {n}!', 'Grande {n}!', '{n}, está imparável!'];
@@ -424,8 +425,17 @@ const CONSOLO = [
   'Boa tentativa! Para a próxima é que é.', 'Aprender também é ganhar!',
   'Errar é humano, continuar é de campeão!', 'Esta enganava qualquer um!',
 ];
+// Elogios com a lenda do clube do coração (se a pessoa escolheu um) aparecem um pouco mais vezes.
+const ELOGIOS_CLUBE = {
+  sporting: ['Nem o Yazalde marcava melhor!', 'Digno dos Cinco Violinos!'],
+  benfica: ['Nem o Eusébio marcava melhor!', 'Digno do Pantera Negra!'],
+  porto: ['Nem o Fernando Gomes marcava melhor!', 'Golo de calcanhar, à Madjer!'],
+  selecao: ['Golo à Cristiano Ronaldo!', 'Como o Éder em Paris!'],
+};
 export function elogio() {
   if (Math.random() < 0.3 && dados.nome) return escolher(ELOGIOS_NOME).replace('{n}', dados.nome);
+  const doClube = ELOGIOS_CLUBE[dados.def.clube];
+  if (doClube && Math.random() < 0.2) return escolher(doClube);
   return escolher(ELOGIOS);
 }
 export const outraVez = () => escolher(OUTRA_VEZ);
