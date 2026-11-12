@@ -148,11 +148,24 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
       jogadas: f.jogadas,
     };
   }
-  function gravar() {
+  // Guarda o jogo com um pequeno atraso (e ao sair), para não escrever a cada jogada
+  // num telemóvel lento. Ficam guardadas as últimas 40 jogadas para desfazer depois.
+  let tGravar = null;
+  function gravarJa() {
+    clearTimeout(tGravar);
+    tGravar = null;
     dados.pacJogos = dados.pacJogos || {};
-    dados.pacJogos[nivel] = { foto: foto(), historico: historico.slice(-150), t0 };
+    dados.pacJogos[nivel] = { foto: foto(), historico: historico.slice(-40), t0 };
     guardar();
   }
+  function gravar() {
+    clearTimeout(tGravar);
+    tGravar = setTimeout(gravarJa, 700);
+  }
+  const aoSair = () => { if (tGravar) gravarJa(); };
+  const aoEsconder = () => { if (document.visibilityState === 'hidden') aoSair(); };
+  document.addEventListener('visibilitychange', aoEsconder);
+  window.addEventListener('pagehide', aoSair);
 
   function novoJogo() {
     const { deal } = distribuirComSolucao(draw);
@@ -376,6 +389,8 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
   function vitoria() {
     if (!vivo) return;
     dados.pac.ganhos[nivel] = (dados.pac.ganhos[nivel] || 0) + 1;
+    clearTimeout(tGravar);
+    tGravar = null;
     if (dados.pacJogos) delete dados.pacJogos[nivel];
     guardar();
     som.vitoria();
@@ -465,6 +480,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
       e.style.zIndex = voar.has(c.id) ? 2000 + z : z;
       e.classList.toggle('costas', !c.up);
       e.classList.remove('a-arrastar');
+      if (e.style.transform) e.style.transform = '';
       if (!animar) { void e.offsetWidth; e.style.transition = ''; }
     });
     if (voar.size) setTimeout(() => { if (vivo) voar.forEach(id => { ELS[id].style.zIndex = p.get(id)[2]; }); }, 260);
@@ -507,11 +523,11 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
     arr.moveu = true;
     arr.dx = dx;
     arr.dy = dy;
+    // Move com «transform» (feito pela placa gráfica): mais suave em telemóveis fracos.
     arr.grupo.forEach((g, i) => {
       const n = ELS[g.id];
       n.classList.add('a-arrastar');
-      n.style.left = `${arr.inicio[i][0] + dx}px`;
-      n.style.top = `${arr.inicio[i][1] + dy}px`;
+      n.style.transform = `translate(${dx}px, ${dy}px)`;
       n.style.zIndex = 3000 + i;
     });
   });
@@ -520,6 +536,16 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
     const a = arr;
     arr = null;
     if (!a.moveu) { tocar(a.c); return; }
+    // Fixa as cartas onde foram largadas, para a animação partir daí.
+    a.grupo.forEach((g, i) => {
+      const n = ELS[g.id];
+      n.style.transition = 'none';
+      n.style.left = `${a.inicio[i][0] + a.dx}px`;
+      n.style.top = `${a.inicio[i][1] + a.dy}px`;
+      n.style.transform = '';
+      void n.offsetWidth;
+      n.style.transition = '';
+    });
     const bx = a.inicio[0][0] + a.dx;
     const by = a.inicio[0][1] + a.dy;
     const sobre = (x, y, w, h) => Math.max(0, Math.min(bx + L.cw, x + w) - Math.max(bx, x)) * Math.max(0, Math.min(by + L.ch, y + h) - Math.max(by, y));
@@ -568,6 +594,9 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
 
   return () => {
     vivo = false;
+    aoSair();
+    document.removeEventListener('visibilitychange', aoEsconder);
+    window.removeEventListener('pagehide', aoSair);
     ro.disconnect();
     clearTimeout(tRealce);
     clearTimeout(tNovo);

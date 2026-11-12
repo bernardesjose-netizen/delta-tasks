@@ -1,35 +1,46 @@
 // Guarda os jogos (e as fotografias) no aparelho para funcionarem mesmo sem internet.
+// Pensado para telemóveis fracos: nunca bloqueia a página, descarrega aos poucos e, nas
+// atualizações, reaproveita as fotografias que já estão guardadas.
 importScripts('ficheiros.js'); // define self.FICHEIROS e self.VERSAO (gerado por ferramentas/gerar-lista.mjs)
 const VERSAO = self.VERSAO;
 const FICHEIROS = self.FICHEIROS;
+const imutavel = f => f.startsWith('./fotos/') || f.startsWith('./icones/');
 
-async function guardarTudo() {
-  const cache = await caches.open(VERSAO);
-  // Guarda em grupos e tolera falhas pontuais (uma fotografia em falta não estraga o resto).
-  for (let i = 0; i < FICHEIROS.length; i += 20) {
-    await Promise.allSettled(FICHEIROS.slice(i, i + 20).map(async f => {
-      if (await cache.match(f)) return;
-      const r = await fetch(f, { cache: 'no-cache' });
-      if (r.ok) await cache.put(f, r);
-    }));
-  }
+let aGuardar = null;
+function guardarTudo() {
+  if (aGuardar) return aGuardar;
+  aGuardar = (async () => {
+    const cache = await caches.open(VERSAO);
+    for (let i = 0; i < FICHEIROS.length; i += 4) {
+      await Promise.all(FICHEIROS.slice(i, i + 4).map(async f => {
+        if (await cache.match(f)) return;
+        // Fotografias e ícones não mudam: se já existirem numa versão antiga, copiam-se sem rede.
+        const antigo = imutavel(f) ? await caches.match(f) : null;
+        if (antigo) { await cache.put(f, antigo); return; }
+        const r = await fetch(f, { cache: 'no-cache' });
+        if (r.ok) await cache.put(f, r);
+      }).map(pr => pr.catch(() => {}))); // um ficheiro em falta não estraga os outros
+    }
+    // Só no fim se apagam as versões antigas (já não fazem falta).
+    const nomes = await caches.keys();
+    await Promise.all(nomes.filter(n => n !== VERSAO).map(n => caches.delete(n)));
+  })().finally(() => { aGuardar = null; });
+  return aGuardar;
 }
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSAO).then(c => c.addAll(['./', './index.html'])).then(() => self.skipWaiting()));
 });
 
+// A ativação é rápida de propósito: enquanto dura, o navegador retém os pedidos da página.
 self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys()
-      .then(nomes => Promise.all(nomes.filter(n => n !== VERSAO).map(n => caches.delete(n))))
-      .then(() => self.clients.claim())
-      .then(() => guardarTudo()),
-  );
+  e.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('message', e => {
-  if (!e.data || e.data.tipo !== 'estado' || !e.ports[0]) return;
+  if (!e.data) return;
+  if (e.data.tipo === 'guardar') { e.waitUntil(guardarTudo()); return; }
+  if (e.data.tipo !== 'estado' || !e.ports[0]) return;
   e.waitUntil((async () => {
     const cache = await caches.open(VERSAO);
     const chaves = await cache.keys();
@@ -37,22 +48,29 @@ self.addEventListener('message', e => {
     const base = new URL('./', self.location).pathname;
     const n = FICHEIROS.filter(f => guardados.has(new URL(f, self.location).pathname) || (f === './' && guardados.has(base))).length;
     e.ports[0].postMessage({ total: FICHEIROS.length, guardados: n });
-    if (n < FICHEIROS.length) guardarTudo();
+    if (n < FICHEIROS.length) await guardarTudo();
   })());
 });
 
-// Responde logo com a cópia guardada e atualiza-a em segundo plano.
+// O que já está guardado nesta versão sai logo do aparelho; o resto vem da rede (e fica guardado).
+// Sem rede, serve-se a última cópia que houver.
 self.addEventListener('fetch', e => {
   const pedido = e.request;
-  if (pedido.method !== 'GET' || new URL(pedido.url).origin !== self.location.origin) return;
-  if (new URL(pedido.url).pathname.startsWith('/.netlify/')) return;
-  e.respondWith(
-    caches.open(VERSAO).then(async cache => {
-      const guardado = await cache.match(pedido, { ignoreSearch: true });
-      const daRede = fetch(pedido)
-        .then(r => { if (r && r.ok) cache.put(pedido, r.clone()); return r; })
-        .catch(() => guardado || (pedido.mode === 'navigate' ? cache.match('./index.html') : Response.error()));
-      return guardado || daRede;
-    }),
-  );
+  const url = new URL(pedido.url);
+  if (pedido.method !== 'GET' || url.origin !== self.location.origin || url.pathname.startsWith('/.netlify/')) return;
+  e.respondWith((async () => {
+    const cache = await caches.open(VERSAO);
+    const guardado = await cache.match(pedido, { ignoreSearch: true });
+    if (guardado) return guardado;
+    try {
+      const r = await fetch(pedido);
+      if (r && r.ok) cache.put(pedido, r.clone());
+      return r;
+    } catch (erro) {
+      const antigo = await caches.match(pedido, { ignoreSearch: true });
+      if (antigo) return antigo;
+      if (pedido.mode === 'navigate') return (await caches.match('./index.html')) || Response.error();
+      return Response.error();
+    }
+  })());
 });

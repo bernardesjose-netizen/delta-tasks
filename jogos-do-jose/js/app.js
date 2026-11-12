@@ -1,7 +1,7 @@
 // Jogos do José — navegação, menus, Treino do Dia, progresso e definições.
 import {
   el, limpar, dados, guardar, registarJogo, diasSeguidos, hojeISO, dataPorExtenso, fraseFinal, festa, som, calar,
-  geradorSemente, vozDisponivel, aviso, marcar,
+  geradorSemente, vozDisponivel, aviso, marcar, modoLeve, aparelhoFraco,
 } from './util.js';
 import { novasMedalhas, MEDALHAS } from './medalhas.js';
 import { graficoLinha } from './grafico.js';
@@ -22,7 +22,7 @@ const treinoJ = nome => () => import('./jogos/treino.js').then(m => m[nome]);
 
 const JOGOS = {
   memfotos: {
-    seccao: 'fotos', nome: 'Memória de Fotografias', icone: '🖼️', cor: '#2e7d32', tema: true,
+    seccao: 'fotos', nome: 'Memória de Fotografias', icone: '📸', cor: '#2e7d32', tema: true,
     desc: 'Pares de fotografias: Sporting, Algarve, monumentos e muito mais.',
     ajuda: 'Escolha um tema e quantas fotografias quer. Depois vire duas cartas de cada vez e encontre os pares.',
     niveis: ['4 pares.', '6 pares.', '8 pares.'],
@@ -36,7 +36,7 @@ const JOGOS = {
     carregar: fotos('quizFotos'),
   },
   puzzle: {
-    seccao: 'fotos', nome: 'Puzzle de Fotografias', icone: '🧩', cor: '#558b2f',
+    seccao: 'fotos', nome: 'Puzzle de Fotografias', icone: '🖼️', cor: '#558b2f',
     desc: 'Troque as peças e descubra uma fotografia de Portugal.',
     ajuda: 'Toque numa peça e depois noutra para as trocar de lugar. As peças no sítio certo ficam com um contorno verde.',
     niveis: ['4 peças grandes.', '9 peças.', '16 peças.'],
@@ -202,7 +202,7 @@ const JOGOS = {
 const SECCOES = {
   fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Algarve, monumentos, cidades e muitos outros temas.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
-  cabeca: { titulo: 'Treino da Cabeça', icone: '🧠', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
+  cabeca: { titulo: 'Treino da Cabeça', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
 
 // Grupos do Treino do Dia: um exercício de cada grupo.
@@ -224,6 +224,7 @@ let paiAtual = null;
 function aplicarDefinicoes() {
   document.documentElement.classList.remove('letra-0', 'letra-1', 'letra-2');
   document.documentElement.classList.add(`letra-${dados.def.letra}`);
+  document.documentElement.classList.toggle('leve', modoLeve());
 }
 function atualizarEstrelas() {
   topoEstrelas.textContent = `⭐ ${dados.estrelas}`;
@@ -282,7 +283,7 @@ function inicio() {
       botaoMenu('azul', '🎯', 'Teste da Cabeça', ultimoTeste() ? `Da última vez: ${ultimoTeste().idade} anos. Consegue melhorar?` : 'Que idade tem a sua cabeça? 3 exercícios rápidos.', '#/teste'),
       botaoMenu('verde', '🃏', 'Cartas e Dominó', 'Paciência, dominó, memória e maior ou menor.', '#/cartas'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
-      botaoMenu('azul', '🧠', 'Treino da Cabeça', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
+      botaoMenu('azul', '💡', 'Treino da Cabeça', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
       botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Calendário, medalhas, recordes e gráficos.', '#/progresso'),
       botaoMenu('claro', '⚙️', 'Definições', 'Tamanho da letra, sons, voz e nome.', '#/definicoes')),
     el('div', { class: 'frase-dia' }, el('small', {}, 'Provérbio do dia'), frase),
@@ -313,7 +314,7 @@ function seccao(id) {
   const s = SECCOES[id];
   const a = ecra(s.titulo, '#/');
   a.append(el('h2', { class: 'titulo-seccao' }, `${s.icone} ${s.titulo}`), el('p', { class: 'sub' }, s.sub));
-  const grupos = id === 'cabeca' ? [['rapido', '⏱️ Treino rápido, com recorde'], [undefined, '🧩 Perguntas, palavras e memória']] : [[undefined, null]];
+  const grupos = id === 'cabeca' ? [['rapido', '⏱️ Treino rápido, com recorde'], [undefined, '💬 Perguntas, palavras e memória']] : [[undefined, null]];
   for (const [grupo, tituloGrupo] of grupos) {
   if (tituloGrupo) a.append(el('h3', { class: 'titulo-grupo' }, tituloGrupo));
   const grelha = el('div', { class: 'grelha-jogos' });
@@ -347,7 +348,7 @@ function escolherNivel(jid) {
       el('p', {}, j.ajuda)),
     el('div', { class: 'niveis' },
       [1, 2, 3].map(n => {
-        const estrelas = reg?.melhor?.[n] || 0;
+        const estrelas = (reg && reg.melhor && reg.melhor[n]) || 0;
         return el('button', { class: `nivel-btn n${n}`, type: 'button', onclick: () => ir(`#/jogo/${jid}/${n}`) },
           el('div', { class: 'icone', 'aria-hidden': 'true' }, NIVEIS[n].icone),
           el('div', {},
@@ -561,7 +562,7 @@ const pontosTeste = () => (dados.testes || []).map(t => ({ d: t.d, v: t.idade })
 const ultimoTeste = () => (dados.testes && dados.testes.length ? dados.testes[dados.testes.length - 1] : null);
 
 function frasePorIdade(idade) {
-  if (idade <= 35) return 'Uma cabeça jovem e ágil! 🧠✨';
+  if (idade <= 35) return 'Uma cabeça jovem e ágil! 💡✨';
   if (idade <= 50) return 'Está em grande forma! 💪';
   if (idade <= 65) return 'Boa forma — e treinar um bocadinho todos os dias ajuda sempre! 🌿';
   return 'Cada treino conta. Volte amanhã e veja a diferença! 🌱';
@@ -604,7 +605,7 @@ function correrTeste() {
       guardar();
       const a = ecra('Teste da Cabeça', '#/');
       som.vitoria();
-      festa(['🧠', '⭐', '✨', '🎯']);
+      festa(['💡', '⭐', '✨', '🎯']);
       const melhorou = anterior && idade < anterior.idade;
       a.append(el('div', { class: 'resultado' },
         el('p', { class: 'frase' }, 'A sua cabeça está em forma de quem tem'),
@@ -620,7 +621,7 @@ function correrTeste() {
         el('p', { class: 'nota' }, 'É só um jogo para treinar a cabeça a brincar — não é um teste médico.'),
         el('div', { class: 'fila-botoes' },
           el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Voltar ao início'),
-          el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir('#/cabeca') }, '🧠 Treinar mais'))));
+          el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir('#/cabeca') }, '💡 Treinar mais'))));
     },
   });
 }
@@ -784,6 +785,8 @@ function definicoes() {
         segmentos([[true, 'Sim'], [false, 'Não']], dados.def.voz, v => { dados.def.voz = v; })) : null,
       'vibrate' in navigator ? el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Vibrar ao acertar e ao errar'),
         segmentos([[true, 'Sim'], [false, 'Não']], dados.def.vibrar !== false, v => { dados.def.vibrar = v; if (v) navigator.vibrate(30); })) : null,
+      el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, `Animações${aparelhoFraco() ? ' (este aparelho é mais lento: «Automático» poupa-o)' : ''}`),
+        segmentos([['auto', 'Automático'], [false, 'Completas'], [true, 'Leves']], dados.def.leve == null ? 'auto' : dados.def.leve, v => { dados.def.leve = v === 'auto' ? null : v; aplicarDefinicoes(); })),
       el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Letras das cartas'),
         segmentos([['int', 'A K Q J'], ['pt', 'A R D V']], dados.def.letras === 'pt' ? 'pt' : 'int', v => { dados.def.letras = v; }))),
     el('div', { class: 'painel' },
@@ -823,7 +826,7 @@ async function escolherTema(jid) {
     el('span', {}, `${new Set(temas.flatMap(t => t.fotos.map(f => f.fonte || f.f))).size} fotografias`)));
   for (const t of temas) {
     grelha.append(el('button', { class: 'tema-foto', type: 'button', onclick: () => ir(`#/jogo/${jid}/${t.id}`) },
-      el('div', { class: 'capa', 'aria-hidden': 'true' }, t.fotos.slice(0, 2).map(f => el('img', { src: f.f, alt: '', loading: 'lazy' }))),
+      el('div', { class: 'capa', 'aria-hidden': 'true' }, t.fotos.slice(0, 2).map(f => el('img', { src: f.f, alt: '', loading: 'lazy', decoding: 'async' }))),
       el('b', {}, `${t.icone} ${t.tema}`),
       el('span', {}, `${t.fotos.length} fotografias`)));
   }
@@ -882,7 +885,7 @@ function router() {
   const [p0, p1, p2] = partes;
   if (p0 === 'cartas' || p0 === 'cabeca' || p0 === 'fotos') return seccao(p0);
   if (p0 === 'creditos') return creditos();
-  if (p0 === 'jogo' && JOGOS[p1]?.tema) {
+  if (p0 === 'jogo' && JOGOS[p1] && JOGOS[p1].tema) {
     if (!p2) return escolherTema(p1);
     if (p1 === 'memfotos' && !partes[3]) return escolherPares(p2);
     return jogar(p1, p1 === 'memfotos' ? nivelDePares(Number(partes[3])) : 1, { tema: p2, pares: Number(partes[3]) || undefined });
@@ -900,6 +903,13 @@ window.addEventListener('hashchange', router);
 aplicarDefinicoes();
 router();
 
+// Modo sem internet: o registo é imediato, mas a descarga das fotografias só começa uns
+// segundos depois de a página abrir, para não atrapalhar telemóveis mais fracos.
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.ready.then(reg => {
+      setTimeout(() => { if (reg.active) reg.active.postMessage({ tipo: 'guardar' }); }, 5000);
+    }).catch(() => {});
+  });
 }

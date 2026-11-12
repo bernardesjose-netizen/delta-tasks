@@ -50,7 +50,7 @@ export async function quizFotos(alvo, { tema, nivel = 1, curto, aoTerminar }) {
       etiqueta: f.tema,
       enunciado: el('div', {},
         el('div', { class: 'centrado' }, 'O que mostra esta fotografia?'),
-        el('img', { class: 'foto-quiz', src: f.f, alt: 'Fotografia para adivinhar', draggable: 'false' })),
+        el('img', { class: 'foto-quiz', src: f.f, alt: 'Fotografia para adivinhar', decoding: 'async', draggable: 'false' })),
       ler: 'O que mostra esta fotografia?',
       centrado: true,
       opcoes: [f.nome, ...new Set(outras)].slice(0, nOpcoes),
@@ -82,7 +82,7 @@ export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
   const contador = el('span', {}, 'Trocas: 0');
   alvo.append(el('div', { class: 'ronda' },
     el('div', { class: 'puzzle-topo' },
-      el('figure', { class: 'puzzle-modelo' }, el('img', { src: foto.f, alt: foto.nome }), el('figcaption', {}, 'Assim fica no fim')),
+      el('figure', { class: 'puzzle-modelo' }, el('img', { src: foto.f, alt: foto.nome, decoding: 'async' }), el('figcaption', {}, 'Assim fica no fim')),
       el('div', {},
         el('div', { class: 'etiqueta' }, foto.tema),
         el('p', { class: 'enunciado' }, 'Toque numa peça e depois noutra para as trocar.'),
@@ -109,6 +109,10 @@ export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
     tabuleiro.append(b);
   }
   desenhar();
+  // Navegadores antigos sem «aspect-ratio»: o tabuleiro fica quadrado à mão.
+  const semProporcao = !(window.CSS && CSS.supports && CSS.supports('aspect-ratio', '1 / 1'));
+  const quadrar = () => { tabuleiro.style.height = `${tabuleiro.offsetWidth}px`; };
+  if (semProporcao) { quadrar(); window.addEventListener('resize', quadrar); }
 
   function tocar(i) {
     if (acabado) return;
@@ -150,5 +154,5 @@ export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
     zona.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  return () => {};
+  return () => { if (semProporcao) window.removeEventListener('resize', quadrar); };
 }

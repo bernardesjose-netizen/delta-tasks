@@ -221,10 +221,10 @@ const PRODUTOS = [
   ['🍞', 'um saco de pão', [120, 250]], ['🥛', 'um litro de leite', [80, 120]], ['☕', 'um café', [60, 90]],
   ['🍉', 'uma melancia', [200, 500]], ['🧀', 'um queijo', [250, 600]], ['🐟', 'um quilo de carapau', [300, 700]],
   ['🍊', 'um quilo de laranjas', [100, 250]], ['📰', 'o jornal', [100, 200]], ['🥚', 'uma dúzia de ovos', [200, 350]],
-  ['🫒', 'um frasco de azeitonas', [150, 300]], ['🍫', 'uma tablete de chocolate', [100, 250]], ['🥖', 'uma broa', [150, 300]],
+  ['🍯', 'um frasco de mel', [250, 600]], ['🍫', 'uma tablete de chocolate', [100, 250]], ['🥖', 'uma broa', [150, 300]],
   ['🍷', 'uma garrafa de vinho', [300, 900]], ['💐', 'um ramo de flores', [400, 1000]], ['🎫', 'um bilhete de autocarro', [150, 200]],
   ['🍦', 'um gelado', [150, 300]], ['🥐', 'um pastel de nata', [100, 150]], ['🍅', 'um quilo de tomate', [150, 300]],
-  ['🥔', 'um saco de batatas', [200, 450]], ['🧴', 'um frasco de champô', [250, 500]],
+  ['🥔', 'um saco de batatas', [200, 450]], ['🍬', 'um saco de rebuçados', [100, 250]],
 ];
 
 function precoAleatorio([min, max], passo) {

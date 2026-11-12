@@ -97,6 +97,16 @@ function ler() {
 
 export const dados = ler();
 
+// Telemóveis fracos (pouca memória ou poucos núcleos): ativa-se o modo leve.
+export function aparelhoFraco() {
+  const memoria = navigator.deviceMemory;
+  const nucleos = navigator.hardwareConcurrency;
+  return Boolean((memoria && memoria <= 2) || (nucleos && nucleos <= 2));
+}
+export function modoLeve() {
+  return dados.def.leve === true || (dados.def.leve == null && aparelhoFraco());
+}
+
 export function guardar() {
   try { localStorage.setItem(CHAVE, JSON.stringify(dados)); } catch { /* sem espaço ou modo privado: segue sem guardar */ }
 }
@@ -279,7 +289,7 @@ function escolherVoz() {
 }
 if ('speechSynthesis' in window) {
   escolherVoz();
-  speechSynthesis.addEventListener?.('voiceschanged', escolherVoz);
+  if (speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', escolherVoz);
 }
 export const vozDisponivel = () => 'speechSynthesis' in window;
 export function falar(texto) {
@@ -343,7 +353,8 @@ export function aviso(texto, ms = 2600) {
 export function festa(simbolos = ['🎉', '⭐', '🎊', '✨', '🌟']) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const f = el('div', { class: 'festa', 'aria-hidden': 'true' });
-  for (let i = 0; i < 36; i++) {
+  const quantos = modoLeve() ? 10 : 36;
+  for (let i = 0; i < quantos; i++) {
     const s = el('i', {}, escolher(simbolos));
     s.style.left = `${Math.random() * 100}%`;
     s.style.animationDuration = `${2 + Math.random() * 2.5}s`;

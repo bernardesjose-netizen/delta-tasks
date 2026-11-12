@@ -219,7 +219,7 @@ export function rondaTeclado(alvo, { perguntas, aoTerminar }) {
     atual = e => {
       if (/^[0-9]$/.test(e.key)) tecla(e.key);
       else if (e.key === 'Backspace') tecla('apagar');
-      else if (e.key === 'Enter') { e.preventDefault(); if (bloqueado) zonaRetorno.querySelector('button')?.click(); else tecla('ok'); }
+      else if (e.key === 'Enter') { e.preventDefault(); if (bloqueado) { const b = zonaRetorno.querySelector('button'); if (b) b.click(); } else tecla('ok'); }
     };
   }
 

@@ -161,7 +161,7 @@ export function domino(alvo, { nivel, aoTerminar }) {
           el('button', { class: 'btn grande', type: 'button', onclick: () => jogar('eu', escolhaPendente, 'dir') }, `Pôr na direita (${dir}) ▶`),
           el('button', { class: 'btn claro', type: 'button', onclick: () => { escolhaPendente = null; desenhar(); } }, 'Escolher outra'));
       } else if (!op.length) {
-        if (monte.length) acoes.append(el('button', { class: 'btn laranja grande', type: 'button', onclick: comprar }, '🂠 Não tenho pedra: comprar ao monte'));
+        if (monte.length) acoes.append(el('button', { class: 'btn laranja grande', type: 'button', onclick: comprar }, '➕ Não tenho pedra: comprar ao monte'));
         else acoes.append(el('button', { class: 'btn laranja grande', type: 'button', onclick: passar }, 'Não tenho pedra: passar a vez'));
       } else if (nivel === 1) {
         acoes.append(el('button', { class: 'btn claro', type: 'button', onclick: sugerir }, '💡 Sugestão'));
@@ -302,7 +302,7 @@ export function domino(alvo, { nivel, aoTerminar }) {
     guardar();
     desenhar();
     dizer(frase, true);
-    if (ganhei) { som.vitoria(); festa(['🁫', '⭐', '🎉', '✨']); } else som.quase();
+    if (ganhei) { som.vitoria(); festa(['🎲', '⭐', '🎉', '✨']); } else som.quase();
     setTimeout(() => {
       if (!vivo) return;
       const pts = ganhei ? deles : meus;

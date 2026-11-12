@@ -44,11 +44,15 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
   limpar(alvo);
   const grelha = el('div', { class: `memoria${comFotos ? ' com-fotos' : ''}` });
   function tamanho() {
-    const largura = Math.min((alvo.clientWidth || window.innerWidth) - 8, 1100);
+    const est = getComputedStyle(alvo);
+    const util = (alvo.clientWidth || window.innerWidth) - parseFloat(est.paddingLeft || 0) - parseFloat(est.paddingRight || 0);
+    const largura = Math.min(util - 4, 1100);
     const altura = Math.max(320, window.innerHeight - 230);
-    const { colunas, tam } = melhorGrelha(baralho.length, largura, altura, proporcao);
+    const folga = largura < 420 ? 8 : 12;
+    const { colunas, tam } = melhorGrelha(baralho.length, largura, altura, proporcao, folga);
     grelha.style.gridTemplateColumns = `repeat(${colunas}, auto)`;
-    grelha.style.setProperty('--tam', `${Math.max(64, tam)}px`);
+    grelha.style.gap = `${folga}px`;
+    grelha.style.setProperty('--tam', `${Math.max(48, Math.min(tam, Math.floor((largura - (colunas - 1) * folga) / colunas)))}px`);
   }
   const infoT = el('span', {}, 'Tentativas: 0');
   const infoP = el('span', {}, `Pares: 0 de ${escolhidos.length}`);
@@ -58,7 +62,7 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
       : el('div', { class: 'lado costas', 'aria-hidden': 'true' }, 'J'),
     comFotos
       ? el('div', { class: 'lado face', 'aria-hidden': 'true' },
-        el('img', { src: it.foto, alt: '', loading: 'eager', draggable: 'false' }),
+        el('img', { src: it.foto, alt: '', loading: 'eager', decoding: 'async', draggable: 'false' }),
         el('span', { class: 'legenda' }, it.nome))
       : el('div', { class: 'lado face', 'aria-hidden': 'true' }, it.emoji)));
   grelha.append(...cartas);
