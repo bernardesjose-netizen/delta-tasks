@@ -1,5 +1,5 @@
 // Gerado por ferramentas/gerar-lista.mjs — não editar à mão.
-self.VERSAO = 'jogos-do-jose-f2-9334ab6aea';
+self.VERSAO = 'jogos-do-jose-f2-01f5b8adfd';
 self.FICHEIROS = [
  "./",
  "./css/estilo.css",
@@ -920,7 +920,7 @@ self.FICHEIROS = [
  "./fotos/pintura/outono-malhoa.jpg",
  "./fotos/pintura/paineis-de-sao-vicente.jpg",
  "./fotos/pintura/primavera-malhoa.jpg",
- "./fotos/pintura/velha-a-fiar-malhoa.jpg",
+ "./fotos/pintura/velha-a-fiar-malhoa-v2.jpg",
  "./fotos/pintura/volta-do-mercado.jpg",
  "./fotos/pontes/ponte-25-de-abril.jpg",
  "./fotos/pontes/ponte-516-arouca.jpg",
