@@ -1,0 +1,485 @@
+// Utilitários partilhados: DOM, aleatoriedade, memória (localStorage), som, voz e frases de incentivo.
+
+/* ---------- DOM ---------- */
+export function el(tag, attrs = {}, ...filhos) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') n.className = v;
+    else if (k === 'html') n.innerHTML = v;
+    else if (k === 'style' && typeof v === 'object') {
+      for (const [prop, valor] of Object.entries(v)) {
+        if (prop.startsWith('--')) n.style.setProperty(prop, valor); else n.style[prop] = valor;
+      }
+    }
+    else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
+    else if (v === true) n.setAttribute(k, '');
+    else n.setAttribute(k, v);
+  }
+  for (const f of filhos.flat()) {
+    if (f == null || f === false) continue;
+    n.append(f instanceof Node ? f : document.createTextNode(String(f)));
+  }
+  return n;
+}
+
+export function limpar(n) { while (n.firstChild) n.removeChild(n.firstChild); return n; }
+
+export function esperar(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ---------- Aleatoriedade ---------- */
+export const inteiro = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+export const escolher = arr => arr[Math.floor(Math.random() * arr.length)];
+export function baralhar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+export const amostra = (arr, n) => baralhar(arr).slice(0, n);
+
+// Gerador previsível (mesma semente → mesma sequência), usado no Treino do Dia.
+export function geradorSemente(semente) {
+  let h = 2166136261;
+  for (const c of String(semente)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return function () {
+    h += 0x6d2b79f5;
+    let t = h;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* ---------- Datas ---------- */
+export function hojeISO(d = new Date()) {
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+const DIAS = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+export function dataPorExtenso(d = new Date()) {
+  const dia = DIAS[d.getDay()];
+  return `${dia[0].toUpperCase() + dia.slice(1)}, ${d.getDate()} de ${MESES[d.getMonth()]}`;
+}
+export function duracao(ms) {
+  const s = Math.max(1, Math.round(ms / 1000));
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  if (!m) return `${r} s`;
+  return `${m} min ${String(r).padStart(2, '0')} s`;
+}
+export const euros = v => `${v.toFixed(2).replace('.', ',')} €`;
+export const semAcentos = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+/* ---------- Pessoas que jogam neste aparelho (sem contas nem palavras-passe) ---------- */
+// Cada pessoa tem o seu progresso. A primeira usa a chave antiga, para ninguém perder o que já tinha.
+const CHAVE_PESSOAS = 'jogos-pessoas';
+function lerPessoas() {
+  try {
+    const p = JSON.parse(localStorage.getItem(CHAVE_PESSOAS) || 'null');
+    if (p && Array.isArray(p.lista) && p.lista.length && p.lista.some(x => x.id === p.atual)) return p;
+  } catch { /* nada */ }
+  return { atual: 'p1', lista: [{ id: 'p1', nome: '' }] };
+}
+export const pessoas = lerPessoas();
+const chaveDe = id => (id === 'p1' ? 'jogos-do-jose-v1' : `jogos-v1-${id}`);
+function guardarPessoas() {
+  try { localStorage.setItem(CHAVE_PESSOAS, JSON.stringify(pessoas)); } catch { /* nada */ }
+}
+
+/* ---------- Memória (fica guardada no aparelho) ---------- */
+const CHAVE = chaveDe(pessoas.atual);
+const PADRAO = () => ({
+  nome: '',
+  def: { som: true, voz: false, letra: 1 },
+  estrelas: 0,
+  jogos: {},
+  dias: [],
+  treinos: [],
+  vistos: {},
+  pac: { ganhos: { 1: 0, 2: 0, 3: 0 }, jogados: { 1: 0, 2: 0, 3: 0 } },
+});
+
+function ler() {
+  try {
+    const t = localStorage.getItem(CHAVE);
+    if (!t) return PADRAO();
+    const d = JSON.parse(t);
+    const p = PADRAO();
+    return { ...p, ...d, def: { ...p.def, ...(d.def || {}) }, pac: { ...p.pac, ...(d.pac || {}) } };
+  } catch {
+    return PADRAO();
+  }
+}
+
+export const dados = ler();
+// O jogo deixou de ter um nome de pessoa por omissão: quem tinha o nome antigo, sem o ter escolhido,
+// volta a ver as boas-vindas e escolhe como quer ser tratado (ou não).
+if (!dados.universal) {
+  if (dados.nome === 'José') { dados.nome = ''; dados.boasVindas = false; }
+  dados.universal = true;
+  try { localStorage.setItem(CHAVE, JSON.stringify(dados)); } catch { /* nada */ }
+}
+{
+  const eu = pessoas.lista.find(p => p.id === pessoas.atual);
+  if (eu && eu.nome !== dados.nome) { eu.nome = dados.nome; if (pessoas.lista.length > 1) guardarPessoas(); }
+}
+
+export function mudarNome(nome) {
+  dados.nome = nome;
+  const eu = pessoas.lista.find(p => p.id === pessoas.atual);
+  if (eu) eu.nome = nome;
+  guardar();
+  guardarPessoas();
+}
+export function trocarPessoa(id) {
+  guardar();
+  pessoas.atual = id;
+  guardarPessoas();
+  location.hash = '#/';
+  location.reload();
+}
+export function novaPessoa(nome) {
+  const id = `p${Date.now().toString(36)}`;
+  pessoas.lista.push({ id, nome });
+  const novo = { ...PADRAO(), nome, universal: true, boasVindas: true, def: { ...dados.def } };
+  try { localStorage.setItem(chaveDe(id), JSON.stringify(novo)); } catch { /* nada */ }
+  trocarPessoa(id);
+}
+export function apagarPessoa(id) {
+  if (id === pessoas.atual) return;
+  pessoas.lista = pessoas.lista.filter(p => p.id !== id);
+  try { localStorage.removeItem(chaveDe(id)); } catch { /* nada */ }
+  guardarPessoas();
+}
+
+// Clube do coração (opcional): só muda as cores das costas das cartas. Por ordem alfabética, sem destaques.
+export const CLUBES = [
+  ['', 'Nenhum (cores do jogo)'],
+  ['academica', 'Académica', '#1a1a1a', '#5a5a5a'],
+  ['belenenses', 'Belenenses', '#1d4f9c', '#7fb2e5'],
+  ['benfica', 'Benfica', '#c8102e', '#ffffff'],
+  ['boavista', 'Boavista', '#1a1a1a', '#ffffff'],
+  ['braga', 'Braga', '#d4151c', '#ffffff'],
+  ['porto', 'FC Porto', '#0b4ea2', '#ffffff'],
+  ['maritimo', 'Marítimo', '#1f8a3b', '#d4151c'],
+  ['sporting', 'Sporting', '#008a4b', '#ffffff'],
+  ['vitoria', 'Vitória de Guimarães', '#1a1a1a', '#f2f2f2'],
+  ['selecao', 'Seleção Nacional', '#d4151c', '#0f7a3d'],
+];
+
+// Telemóveis fracos (pouca memória ou poucos núcleos): ativa-se o modo leve.
+export function aparelhoFraco() {
+  const memoria = navigator.deviceMemory;
+  const nucleos = navigator.hardwareConcurrency;
+  return Boolean((memoria && memoria <= 2) || (nucleos && nucleos <= 2));
+}
+export function modoLeve() {
+  return dados.def.leve === true || (dados.def.leve == null && aparelhoFraco());
+}
+
+export function guardar() {
+  try { localStorage.setItem(CHAVE, JSON.stringify(dados)); } catch { /* sem espaço ou modo privado: segue sem guardar */ }
+}
+
+export function marcarDiaJogado() {
+  const h = hojeISO();
+  if (!dados.dias.includes(h)) {
+    dados.dias.push(h);
+    if (dados.dias.length > 400) dados.dias = dados.dias.slice(-400);
+    guardar();
+  }
+}
+
+export function diasSeguidos() {
+  const set = new Set(dados.dias);
+  let n = 0;
+  const d = new Date();
+  if (!set.has(hojeISO(d))) d.setDate(d.getDate() - 1); // ainda pode jogar hoje
+  while (set.has(hojeISO(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+/* ---------- Recordes e histórico (para os gráficos) ---------- */
+// Guarda o recorde de `chave`. menor=true quando um valor mais baixo é melhor (tempos).
+export function verRecorde(chave, valor, menor = true) {
+  const r = dados.recordes || (dados.recordes = {});
+  const anterior = r[chave];
+  const bateu = anterior == null || (menor ? valor < anterior : valor > anterior);
+  if (bateu) r[chave] = valor;
+  guardar();
+  return { bateu, primeiro: anterior == null, anterior };
+}
+// Um valor por dia (o melhor desse dia), para os gráficos de evolução.
+export function registarHistorico(chave, valor, menor = true) {
+  const h = dados.historico || (dados.historico = {});
+  const lista = h[chave] || (h[chave] = []);
+  const hoje = hojeISO();
+  const ultimo = lista[lista.length - 1];
+  if (ultimo && ultimo.d === hoje) {
+    if (menor ? valor < ultimo.v : valor > ultimo.v) ultimo.v = valor;
+  } else lista.push({ d: hoje, v: valor });
+  if (lista.length > 120) lista.splice(0, lista.length - 120);
+  guardar();
+}
+// Contadores e marcas para as medalhas.
+export function marcar(chave, incremento = 1) {
+  const f = dados.feitos || (dados.feitos = {});
+  f[chave] = (f[chave] || 0) + incremento;
+  guardar();
+  return f[chave];
+}
+
+export function registarJogo(id, nivel, estrelas, extra = {}) {
+  const j = dados.jogos[id] || (dados.jogos[id] = { vezes: 0, melhor: {}, ultimoNivel: 1 });
+  j.vezes++;
+  j.ultimoNivel = nivel;
+  if (nivel) j.melhor[nivel] = Math.max(j.melhor[nivel] || 0, estrelas);
+  Object.assign(j, extra);
+  dados.estrelas += estrelas;
+  marcarDiaJogado();
+  guardar();
+}
+
+// Evita repetir as mesmas perguntas: devolve primeiro as que ainda não saíram.
+export function escolherNaoVistos(chave, lista, n, idDe = x => x) {
+  const vistos = new Set(dados.vistos[chave] || []);
+  let novos = lista.filter(x => !vistos.has(idDe(x)));
+  if (novos.length < n) {
+    dados.vistos[chave] = [];
+    novos = lista;
+  }
+  const escolhidos = amostra(novos, n);
+  dados.vistos[chave] = [...(dados.vistos[chave] || []), ...escolhidos.map(idDe)];
+  guardar();
+  return escolhidos;
+}
+
+/* ---------- Som (sintetizado, sem ficheiros) ---------- */
+let ctx = null;
+function audio() {
+  if (!dados.def.som) return null;
+  try {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  } catch { return null; }
+}
+function nota(freq, inicio, dur, tipo = 'sine', vol = 0.18) {
+  const a = audio();
+  if (!a) return;
+  const t = a.currentTime + inicio;
+  const o = a.createOscillator();
+  const g = a.createGain();
+  o.type = tipo;
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g).connect(saida(a));
+  o.start(t);
+  o.stop(t + dur + 0.05);
+}
+// Saída com um eco suave, para os sons ficarem mais «redondos».
+let mistura = null;
+function saida(a) {
+  if (mistura && mistura.ctx === a) return mistura.no;
+  const entrada = a.createGain();
+  const atraso = a.createDelay(1);
+  const retorno = a.createGain();
+  const filtro = a.createBiquadFilter();
+  atraso.delayTime.value = 0.13;
+  retorno.gain.value = 0.22;
+  filtro.type = 'lowpass';
+  filtro.frequency.value = 2600;
+  entrada.connect(a.destination);
+  entrada.connect(atraso);
+  atraso.connect(filtro).connect(retorno).connect(atraso);
+  retorno.connect(a.destination);
+  mistura = { ctx: a, no: entrada };
+  return entrada;
+}
+// Sino: fundamental + harmónicos que se apagam depressa.
+function sino(freq, inicio = 0, vol = 0.16, dur = 0.9) {
+  nota(freq, inicio, dur, 'sine', vol);
+  nota(freq * 2, inicio, dur * 0.6, 'sine', vol * 0.35);
+  nota(freq * 3.01, inicio, dur * 0.35, 'sine', vol * 0.12);
+}
+// Estalido curto de ruído (cartas a deslizar).
+function ruido(inicio, dur, freq, vol) {
+  const a = audio();
+  if (!a) return;
+  const t = a.currentTime + inicio;
+  const n = Math.floor(a.sampleRate * dur);
+  const buf = a.createBuffer(1, n, a.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n) ** 2;
+  const src = a.createBufferSource();
+  src.buffer = buf;
+  const f = a.createBiquadFilter();
+  f.type = 'bandpass';
+  f.frequency.value = freq;
+  f.Q.value = 0.9;
+  const g = a.createGain();
+  g.gain.value = vol;
+  src.connect(f).connect(g).connect(a.destination);
+  src.start(t);
+}
+// Vibração curta nos telemóveis que a suportam (pode desligar-se nas Definições).
+export function vibrar(padrao) {
+  if (dados.def.vibrar === false) return;
+  try { if (navigator.vibrate) navigator.vibrate(padrao); } catch { /* sem vibração */ }
+}
+
+export const som = {
+  certo() { sino(1046.5, 0, 0.13); sino(1568, 0.09, 0.12, 1.1); vibrar(15); },
+  quase() { nota(392, 0, 0.18, 'triangle', 0.09); nota(330, 0.12, 0.28, 'triangle', 0.08); vibrar([30, 40, 30]); },
+  rapido() { sino(1318.5, 0, 0.1, 0.5); vibrar(10); },
+  combo(n = 3) { const base = n >= 10 ? 1568 : n >= 5 ? 1318.5 : 1174.7; [0, 0.08, 0.16].forEach((t, i) => sino(base * [1, 1.26, 1.5][i], t, 0.1, 0.8)); vibrar([15, 30, 15]); },
+  recorde() { [784, 988, 1175, 1568, 1976].forEach((f, i) => sino(f, i * 0.09, 0.11, 1)); vibrar([20, 40, 20, 40, 60]); },
+  medalha() { [659.25, 830.6, 987.8, 1318.5].forEach((f, i) => sino(f, i * 0.13, 0.12, 1.3)); nota(329.6, 0, 1.2, 'triangle', 0.05); vibrar([30, 50, 30]); },
+  clique() { ruido(0, 0.03, 3200, 0.18); },
+  carta() { ruido(0, 0.07, 2400, 0.35); nota(880, 0, 0.05, 'triangle', 0.025); },
+  peca() { ruido(0, 0.045, 1500, 0.55); ruido(0.05, 0.035, 1100, 0.3); nota(220, 0, 0.06, 'triangle', 0.05); },
+  par() { sino(784, 0, 0.12); sino(988, 0.07, 0.11); sino(1175, 0.14, 0.11, 1.2); },
+  // Nota de cada botão da «Siga a Sequência» (escala pentatónica: soa sempre bem).
+  tecla(k = 0) { const f = [392, 523.25, 659.25, 783.99, 880, 1046.5][k % 6]; sino(f, 0, 0.14, 0.6); nota(f / 2, 0, 0.35, 'triangle', 0.045); },
+  estrela(k = 0) { sino([1046.5, 1318.5, 1568][k] || 1568, 0, 0.14, 1.1); nota(([1046.5, 1318.5, 1568][k] || 1568) * 4, 0.02, 0.25, 'sine', 0.02); },
+  vitoria() {
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => sino(f, i * 0.11, 0.12, 0.7));
+    [1318.5, 1568, 2093].forEach((f, i) => sino(f, 0.5 + i * 0.09, 0.09, 1.2));
+    nota(261.6, 0.5, 1.4, 'triangle', 0.06);
+    nota(392, 0.5, 1.4, 'triangle', 0.05);
+  },
+};
+
+/* ---------- Voz ---------- */
+let vozPT = null;
+function escolherVoz() {
+  if (!('speechSynthesis' in window)) return;
+  const vozes = speechSynthesis.getVoices();
+  vozPT = vozes.find(v => /pt[-_]PT/i.test(v.lang)) || vozes.find(v => /^pt/i.test(v.lang)) || null;
+}
+if ('speechSynthesis' in window) {
+  escolherVoz();
+  if (speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', escolherVoz);
+}
+export const vozDisponivel = () => 'speechSynthesis' in window;
+export function falar(texto) {
+  if (!vozDisponivel() || !texto) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = 'pt-PT';
+    if (vozPT) u.voice = vozPT;
+    u.rate = 0.92;
+    speechSynthesis.speak(u);
+  } catch { /* sem voz neste aparelho */ }
+}
+export function calar() { try { speechSynthesis.cancel(); } catch { /* nada */ } }
+
+// Textos compridos (histórias, poemas): lidos aos bocados, frase a frase, porque alguns telemóveis
+// cortam uma fala muito longa a meio. aoAcabar é chamado no fim (ou se não houver voz).
+export function falarLongo(texto, aoAcabar) {
+  if (!vozDisponivel() || !texto) { if (aoAcabar) aoAcabar(); return; }
+  try {
+    speechSynthesis.cancel();
+    const pedacos = [];
+    for (const bloco of texto.split(/\n{2,}/)) {
+      let atual = '';
+      // (sem «lookbehind» nas expressões regulares: os Safari antigos não o conhecem)
+      for (const frase of (bloco.replace(/\n/g, ' ').match(/[^.!?…:;»]+[.!?…:;»]*\s*/g) || [bloco])) {
+        if ((atual + frase).length > 220 && atual) { pedacos.push(atual); atual = frase; } else atual += frase;
+      }
+      if (atual.trim()) pedacos.push(atual);
+    }
+    pedacos.forEach((p, i) => {
+      const u = new SpeechSynthesisUtterance(p);
+      u.lang = 'pt-PT';
+      if (vozPT) u.voice = vozPT;
+      u.rate = 0.9;
+      if (i === pedacos.length - 1 && aoAcabar) { u.onend = aoAcabar; u.onerror = aoAcabar; }
+      speechSynthesis.speak(u);
+    });
+  } catch { if (aoAcabar) aoAcabar(); }
+}
+
+/* ---------- Frases de incentivo ---------- */
+const ELOGIOS = [
+  'Muito bem!', 'Excelente!', 'Isso mesmo!', 'Fantástico!', 'Que cabeça!', 'Bravo!',
+  'Certíssimo!', 'Assim é que é!', 'Impecável!', 'Espetacular!', 'Em cheio!',
+  'Está em grande forma!', 'Nem o Eusébio marcava melhor!', 'Nem o Yazalde marcava melhor!',
+  'Nem o Fernando Gomes marcava melhor!', 'Golo à Cristiano Ronaldo!', 'Mais certo do que um relógio!',
+  'Está a voar!', 'Que pontaria!', 'Parabéns!', 'Uma maravilha!',
+];
+const ELOGIOS_NOME = ['Muito bem, {n}!', 'Boa, {n}!', 'Isso mesmo, {n}!', 'Grande {n}!', '{n}, está imparável!'];
+const OUTRA_VEZ = [
+  'Ainda não… tente outra vez!', 'Quase! Mais uma tentativa?', 'Hum, não é essa. Tente de novo!',
+  'Está perto! Experimente outra.', 'Não desista, tente outra vez!',
+];
+const CONSOLO = [
+  'Não faz mal — agora já sabe!', 'Esta era difícil!', 'Ninguém nasce ensinado!',
+  'Boa tentativa! Para a próxima é que é.', 'Aprender também é ganhar!',
+  'Errar é humano, continuar é de campeão!', 'Esta enganava qualquer um!',
+];
+// Elogios com a lenda do clube do coração (se a pessoa escolheu um) aparecem um pouco mais vezes.
+const ELOGIOS_CLUBE = {
+  sporting: ['Nem o Yazalde marcava melhor!', 'Digno dos Cinco Violinos!'],
+  benfica: ['Nem o Eusébio marcava melhor!', 'Digno do Pantera Negra!'],
+  porto: ['Nem o Fernando Gomes marcava melhor!', 'Golo de calcanhar, à Madjer!'],
+  selecao: ['Golo à Cristiano Ronaldo!', 'Como o Éder em Paris!'],
+};
+export function elogio() {
+  if (Math.random() < 0.3 && dados.nome) return escolher(ELOGIOS_NOME).replace('{n}', dados.nome);
+  const doClube = ELOGIOS_CLUBE[dados.def.clube];
+  if (doClube && Math.random() < 0.2) return escolher(doClube);
+  return escolher(ELOGIOS);
+}
+export const outraVez = () => escolher(OUTRA_VEZ);
+export const consolo = () => escolher(CONSOLO);
+
+export function fraseFinal(estrelas) {
+  const nome = dados.nome ? `, ${dados.nome}` : '';
+  if (estrelas >= 3) return escolher([`Uma ronda de mestre${nome}! 🏆`, `Perfeito${nome}! Que cabeça! 🏆`, `Brilhante${nome}! Está imparável! 🏆`]);
+  if (estrelas === 2) return escolher([`Muito bom trabalho${nome}! 👏`, `Grande ronda${nome}! 👏`, `Está cada vez melhor${nome}! 👏`]);
+  return escolher([`Bom treino${nome}! Cada jogo deixa a cabeça mais ágil. 🌱`, `Bem jogado${nome}! O importante é treinar. 🌱`, `Boa${nome}! Amanhã ainda vai correr melhor. 🌱`]);
+}
+
+/* ---------- Mensagem rápida e festa ---------- */
+let tMsg = null;
+export function aviso(texto, ms = 2600) {
+  const m = document.getElementById('mensagem');
+  if (!m) return;
+  m.textContent = texto;
+  m.hidden = false;
+  m.style.animation = 'none';
+  void m.offsetWidth;
+  m.style.animation = '';
+  clearTimeout(tMsg);
+  tMsg = setTimeout(() => { m.hidden = true; }, ms);
+}
+
+export function festa(simbolos = ['🎉', '⭐', '🎊', '✨', '🌟']) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const f = el('div', { class: 'festa', 'aria-hidden': 'true' });
+  const quantos = modoLeve() ? 10 : 36;
+  for (let i = 0; i < quantos; i++) {
+    const s = el('i', {}, escolher(simbolos));
+    s.style.left = `${Math.random() * 100}%`;
+    s.style.animationDuration = `${2 + Math.random() * 2.5}s`;
+    s.style.animationDelay = `${Math.random() * 0.8}s`;
+    s.style.fontSize = `${1.4 + Math.random() * 1.6}rem`;
+    f.append(s);
+  }
+  document.body.append(f);
+  setTimeout(() => f.remove(), 5500);
+}
+
+export function estrelasPorPercentagem(p) {
+  if (p >= 0.8) return 3;
+  if (p >= 0.5) return 2;
+  return 1;
+}

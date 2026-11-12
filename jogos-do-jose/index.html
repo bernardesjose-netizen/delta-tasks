@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Jogos e Passatempos</title>
+  <meta name="description" content="Paciência, jogo da memória, contas, cultura geral, sopas de letras e outros desafios para treinar a cabeça a brincar.">
+  <meta name="theme-color" content="#00703c">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Passatempos">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" href="icones/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header class="topo" id="topo">
+    <button class="btn-voltar" id="btn-voltar" type="button" hidden>
+      <span aria-hidden="true">◀</span> Voltar
+    </button>
+    <h1 class="topo-titulo" id="topo-titulo">Jogos e Passatempos</h1>
+    <div class="topo-estrelas" id="topo-estrelas" aria-label="Estrelas ganhas">⭐ 0</div>
+  </header>
+  <main id="app" class="app" tabindex="-1">
+    <div class="a-carregar">A preparar os jogos…</div>
+  </main>
+  <div id="mensagem" class="mensagem" role="status" aria-live="polite" hidden></div>
+  <noscript>
+    <p class="sem-js">Para jogar é preciso ativar o JavaScript no navegador.</p>
+  </noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

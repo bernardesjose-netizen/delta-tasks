@@ -1,0 +1,17 @@
+{
+  "name": "Jogos e Passatempos",
+  "short_name": "Passatempos",
+  "description": "Paciência, jogo da memória, contas, cultura geral, sopas de letras e outros desafios para treinar a cabeça a brincar.",
+  "lang": "pt-PT",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eef7f0",
+  "theme_color": "#00703c",
+  "icons": [
+    { "src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
