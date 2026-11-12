@@ -137,7 +137,7 @@ const JOGOS = {
   },
   quiz: {
     seccao: 'cabeca', nome: 'Cultura Geral', icone: '🌍', cor: '#1d5fd1',
-    desc: 'Por nível ou por tema: Leiria, Espanha, Europa, desporto e muito mais.',
+    desc: 'De tudo um pouco ou por tema: Leiria, Espanha, Europa, clubes, ciclismo e muito mais.',
     ajuda: 'Escolha a resposta certa. Se errar, pode tentar outra vez. No fim de cada pergunta há uma curiosidade.',
     niveis: ['Perguntas fáceis, com 3 opções.', 'Perguntas do dia a dia, com 4 opções.', 'Perguntas para quem sabe muito!'],
     carregar: cerebro('quiz'),
@@ -434,17 +434,17 @@ function seccao(id) {
 }
 
 /* ---------- Escolha de nível ---------- */
-function escolherNivel(jid) {
+function escolherNivel(jid, cab = {}) {
   const j = JOGOS[jid];
   if (!j) { ir('#/'); return; }
-  const a = ecra(j.nome, `#/${j.seccao}`);
+  const a = ecra(cab.titulo || j.nome, cab.voltar || `#/${j.seccao}`);
   const reg = dados.jogos[jid];
   const ultimo = reg ? reg.ultimoNivel : null;
   a.append(
     el('div', { class: 'cabeca-jogo' },
-      iconeJogo(j, 'icone-grande'),
-      el('h2', {}, j.nome),
-      el('p', {}, j.ajuda)),
+      cab.icone ? el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, cab.icone) : iconeJogo(j, 'icone-grande'),
+      el('h2', {}, cab.titulo || j.nome),
+      el('p', {}, cab.ajuda || j.ajuda)),
     el('div', { class: 'niveis' },
       [1, 2, 3].map(n => {
         const estrelas = (reg && reg.melhor && reg.melhor[n]) || 0;
@@ -458,15 +458,28 @@ function escolherNivel(jid) {
       })),
     el('p', { class: 'nota' }, 'Nenhum nível é difícil demais: pode sempre tentar outra vez e pedir ajuda.'),
   );
-  if (jid === 'quiz') {
-    a.append(
-      el('h3', { class: 'titulo-grupo centrado' }, '📚 Ou escolha um tema'),
-      el('p', { class: 'sub centrado' }, 'Dez perguntas sobre o tema, das mais fáceis para as mais difíceis.'),
-      el('div', { class: 'temas-quiz' }, TEMAS_QUIZ.map(t => el('button', {
+}
+
+/* ---------- Cultura Geral: primeiro as fichas («De tudo um pouco» e os temas), depois o nível ---------- */
+function escolherTemaQuiz() {
+  const j = JOGOS.quiz;
+  const a = ecra(j.nome, `#/${j.seccao}`);
+  const feitos = dados.temasQuiz || {};
+  const estrelas = n => (n ? el('span', { class: 'estrelas-jogo' }, '★'.repeat(n) + '☆'.repeat(3 - n)) : null);
+  a.append(
+    // cabeçalho pequeno, para as fichas aparecerem logo
+    el('div', { class: 'cabeca-jogo compacta' },
+      el('h2', {}, el('span', { 'aria-hidden': 'true' }, `${j.icone} `), j.nome),
+      el('p', {}, 'Escolha uma ficha para começar.')),
+    el('div', { class: 'temas-quiz' },
+      el('button', { class: 'tema-quiz tudo', type: 'button', onclick: () => ir('#/jogo/quiz/tudo') },
+        el('span', { class: 'icone', 'aria-hidden': 'true' }, '🎲'),
+        el('span', { class: 'texto' }, el('b', {}, 'De tudo um pouco'), el('small', {}, 'Perguntas misturadas'))),
+      TEMAS_QUIZ.map(t => el('button', {
         class: `tema-quiz${t.novo ? ' novo' : ''}`, type: 'button', onclick: () => ir(`#/jogo/quiz/tema/${t.id}`),
       }, el('span', { class: 'icone', 'aria-hidden': 'true' }, t.icone),
-      el('span', { class: 'texto' }, el('b', {}, t.nome), t.novo ? el('small', {}, 'Novo') : null)))));
-  }
+      el('span', { class: 'texto' }, el('b', {}, t.nome), feitos[t.id] ? estrelas(feitos[t.id]) : t.novo ? el('small', {}, 'Novo') : null)))),
+    el('p', { class: 'nota' }, 'Em cada tema saem dez perguntas, das mais fáceis para as mais difíceis.'));
 }
 
 /* ---------- Jogar ---------- */
@@ -474,7 +487,8 @@ async function jogar(jid, nivel, extra = {}) {
   const j = JOGOS[jid];
   if (!j || ![1, 2, 3].includes(nivel)) { ir('#/'); return; }
   const titulo = j.tema ? j.nome : extra.temaQuiz ? `${j.nome} · ${extra.temaQuiz.nome}` : `${j.nome} · ${NIVEIS[nivel].nome}`;
-  const pai = j.tema ? (jid === 'memfotos' && extra.tema ? `#/jogo/${jid}/${extra.tema}` : `#/jogo/${jid}`) : `#/jogo/${jid}`;
+  const pai = j.tema ? (jid === 'memfotos' && extra.tema ? `#/jogo/${jid}/${extra.tema}` : `#/jogo/${jid}`)
+    : jid === 'quiz' && !extra.temaQuiz ? '#/jogo/quiz/tudo' : `#/jogo/${jid}`;
   const a = ecra(titulo, pai);
   a.append(el('div', { class: 'a-carregar' }, 'A preparar…'));
   const minhaVez = Symbol('jogo');
@@ -492,7 +506,7 @@ async function jogar(jid, nivel, extra = {}) {
       registar(jid, nivel, res, extra);
       mostrarResultado(res, {
         repetir: () => router(),
-        outro: () => ir(j.tema || extra.temaQuiz ? `#/jogo/${jid}` : `#/${j.seccao}`),
+        outro: () => ir(j.tema || jid === 'quiz' ? `#/jogo/${jid}` : `#/${j.seccao}`),
         nivelAcima: !j.tema && !extra.temaQuiz && nivel < 3 && res.estrelas >= 2 ? () => ir(`#/jogo/${jid}/${nivel + 1}`) : null,
         nivelAbaixo: !j.tema && !extra.temaQuiz && nivel > 1 && res.estrelas === 1 ? () => ir(`#/jogo/${jid}/${nivel - 1}`) : null,
       });
@@ -505,6 +519,10 @@ let ecraAtual = null;
 
 // Regista o jogo, conta as rondas perfeitas e os temas de fotografias vistos.
 function registar(jid, nivel, res, extra = {}) {
+  if (extra.temaQuiz) {
+    const t = dados.temasQuiz || (dados.temasQuiz = {});
+    t[extra.temaQuiz.id] = Math.max(t[extra.temaQuiz.id] || 0, res.estrelas);
+  }
   registarJogo(jid, nivel, res.estrelas);
   if (res.estrelas >= 3) marcar('tresEstrelas');
   if (extra.tema && extra.tema !== 'todos') {
@@ -1183,7 +1201,11 @@ function router() {
   if (p0 === 'definicoes') return definicoes();
   if (p0 === 'jogo' && p1 === 'quiz' && p2 === 'tema') {
     const t = TEMAS_QUIZ.find(x => x.id === partes[3]);
-    return t ? jogar('quiz', 2, { temaQuiz: t }) : escolherNivel('quiz');
+    return t ? jogar('quiz', 2, { temaQuiz: t }) : escolherTemaQuiz();
+  }
+  if (p0 === 'jogo' && p1 === 'quiz' && !p2) return escolherTemaQuiz();
+  if (p0 === 'jogo' && p1 === 'quiz' && p2 === 'tudo') {
+    return escolherNivel('quiz', { titulo: 'De tudo um pouco', icone: '🎲', voltar: '#/jogo/quiz', ajuda: 'Perguntas misturadas, de todos os temas. Escolha o nível.' });
   }
   if (p0 === 'jogo' && p1 && !p2) return escolherNivel(p1);
   if (p0 === 'jogo' && p1 && p2) return jogar(p1, Number(p2));

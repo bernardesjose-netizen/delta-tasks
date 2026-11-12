@@ -1145,3 +1145,31 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .leitura-controlos .progresso { justify-content: center; margin-bottom: 10px; }
 .leitura-controlos .fila-botoes { margin-top: 0; }
 .leitura-fim[hidden] { display: none; }
+/* Cultura Geral: a primeira ficha, «De tudo um pouco», ocupa a linha toda e tem a cor do jogo */
+.tema-quiz.tudo { grid-column: 1 / -1; flex-direction: row; gap: 14px; min-height: 84px; background: #1d5fd1; color: #fff; border-color: #143f8f; box-shadow: 0 4px 0 #143f8f; }
+.tema-quiz.tudo:active { box-shadow: 0 1px 0 #143f8f; }
+.tema-quiz.tudo .icone { font-size: 2.3rem; }
+.tema-quiz.tudo .texto { align-items: flex-start; text-align: left; }
+.tema-quiz.tudo b { font-size: 1.3rem; }
+.tema-quiz.tudo small { background: rgba(255, 255, 255, .22); font-size: .85rem; padding: 2px 10px; }
+.tema-quiz .estrelas-jogo { color: #c98a00; font-size: .85rem; letter-spacing: .05em; }
+@media (max-width: 420px) {
+  .tema-quiz.tudo { min-height: 76px; }
+  .tema-quiz.tudo .icone { font-size: 2rem; }
+  .tema-quiz.tudo b { font-size: 1.15rem; }
+  html.letra-2 .tema-quiz.tudo b { font-size: 1.05rem; }
+}
+.cabeca-jogo.compacta { margin: 0 0 12px; }
+.cabeca-jogo.compacta h2 { font-size: 1.35rem; }
+.cabeca-jogo.compacta p { font-size: .95rem; color: var(--texto-suave); }
+.tema-quiz.tudo small { white-space: nowrap; }
+@media (max-width: 360px) {
+  .tema-quiz.tudo { gap: 10px; padding: 8px 10px; }
+  .tema-quiz.tudo .icone { font-size: 1.7rem; }
+  .tema-quiz.tudo b, html.letra-2 .tema-quiz.tudo b { font-size: .98rem; }
+  .tema-quiz.tudo small { font-size: .72rem; }
+}
+@media (max-width: 360px) {
+  html.letra-2 .tema-quiz.tudo b { font-size: .84rem; }
+  html.letra-2 .tema-quiz.tudo small { font-size: .6rem; white-space: normal; }
+}
