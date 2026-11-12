@@ -1141,6 +1141,7 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .pessoa small { font-weight: 600; color: var(--texto-suave); }
 /* Leitura em Voz Alta: cronómetro e botões no topo do texto */
 .leitura-controlos { margin-top: 14px; }
+.leitura-controlos + .dica { margin-top: 12px; }
 .leitura-controlos .progresso { justify-content: center; margin-bottom: 10px; }
 .leitura-controlos .fila-botoes { margin-top: 0; }
 .leitura-fim[hidden] { display: none; }

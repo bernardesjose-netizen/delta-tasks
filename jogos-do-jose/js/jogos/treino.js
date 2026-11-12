@@ -372,18 +372,21 @@ export async function leitura(alvo, { nivel, aoTerminar }) {
   const tempo = el('span', { class: 'cronometro' }, '⏱ 0:00');
   const zona = el('div', { class: 'fila-botoes' });
   const comecar = el('button', { class: 'btn verde grande', type: 'button', onclick: iniciar }, '▶ Começar a ler');
-  const instrucao = el('p', { class: 'dica' }, 'Quando estiver pronto, carregue em «Começar» e leia o texto em voz alta, com calma. No fim, carregue em «Terminei».');
+  const instrucao = el('p', { class: 'dica' }, 'Leia o texto em voz alta, com calma. No fim, carregue em «Terminei».');
   // Os botões ficam no topo, logo antes do texto; no fim do texto há só um «Terminei» de reserva.
   const fimTexto = el('div', { class: 'fila-botoes leitura-fim', hidden: true },
     el('button', { class: 'btn verde grande', type: 'button', onclick: terminar }, '✔ Terminei'));
-  const controlos = el('div', { class: 'leitura-controlos' }, el('div', { class: 'progresso' }, tempo), zona);
+  // o cronómetro só aparece depois de começar, para o botão «Começar a ler» caber logo no ecrã
+  const linhaTempo = el('div', { class: 'progresso' }, tempo);
+  linhaTempo.style.display = 'none';
+  const controlos = el('div', { class: 'leitura-controlos' }, linhaTempo, zona);
   alvo.append(el('div', { class: 'ronda' },
     el('div', { class: 'cartao-pergunta' },
       el('div', { class: 'etiqueta' }, 'Leitura em Voz Alta'),
       el('div', { class: 'enunciado' }, t.titulo),
       el('p', { class: 'autor-texto' }, `${t.autor} · ${nPalavras} palavras`),
-      instrucao,
       controlos,
+      instrucao,
       corpo),
     fimTexto));
   zona.append(comecar);
@@ -392,6 +395,7 @@ export async function leitura(alvo, { nivel, aoTerminar }) {
     corpo.hidden = false;
     instrucao.hidden = true;
     fimTexto.hidden = false;
+    linhaTempo.style.display = '';
     rel = relogio();
     intervalo = setInterval(() => { tempo.textContent = `⏱ ${mmss(rel.ms())}`; }, 250);
     limpar(zona).append(el('button', { class: 'btn verde grande', type: 'button', onclick: terminar }, '✔ Terminei'));
