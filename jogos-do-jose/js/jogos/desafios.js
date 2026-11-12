@@ -408,7 +408,7 @@ export function ordem(alvo, { nivel, curto, aoTerminar }) {
     const msg = el('div', { class: 'msg-curta', 'aria-live': 'polite' }, '');
     const zona = el('div');
     const botoes = misturados.map(it => {
-      const b = el('button', { class: 'opcao ordem-item', type: 'button', onclick: () => tocar(it, b) },
+      const b = el('button', { class: `opcao ordem-item${it.e ? ' com-emoji' : ''}`, type: 'button', onclick: () => tocar(it, b) },
         el('span', { class: 'ordem-num', 'aria-hidden': 'true' }, ''),
         it.e ? el('span', { class: 'ordem-emoji', 'aria-hidden': 'true' }, it.e) : null,
         el('span', { class: 'ordem-texto' }, it.t));
