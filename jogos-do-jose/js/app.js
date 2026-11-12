@@ -1046,9 +1046,11 @@ async function lerAnedotas() {
       el('div', { class: 'leitura-topo' }, el('div', { class: 'etiqueta' }, an.c), botaoOuvir(an.t)),
       el('div', { class: 'leitura-texto poema' }, an.t.split(/\n{2,}/).map(p => el('p', {}, p))));
     contador.textContent = `Já leu ${vistas.length} de ${todas.length} anedotas.`;
-    limpar(zonaBotoes).append(
+    // (o append do navegador escreveria «null»; por isso o «Anterior» só entra quando existe)
+    limpar(zonaBotoes).append(...[
       el('button', { class: 'btn verde grande', type: 'button', onclick: outra }, '😄 Outra!'),
-      pos > 0 ? el('button', { class: 'btn claro grande', type: 'button', onclick: () => { pos--; mostrar(historico[pos]); } }, '◀ Anterior') : null);
+      pos > 0 ? el('button', { class: 'btn claro grande', type: 'button', onclick: () => { pos--; mostrar(historico[pos]); } }, '◀ Anterior') : null,
+    ].filter(Boolean));
     som.carta();
     // Se a pessoa deslizou para baixo para tocar no botão, volta a mostrar o início da anedota.
     const topo = cartao.getBoundingClientRect().top;
