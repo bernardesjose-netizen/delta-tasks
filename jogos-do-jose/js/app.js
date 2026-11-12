@@ -1,7 +1,7 @@
 // Jogos do José — navegação, menus, Treino do Dia, progresso e definições.
 import {
   el, limpar, dados, guardar, registarJogo, diasSeguidos, hojeISO, dataPorExtenso, fraseFinal, festa, som, calar,
-  geradorSemente, vozDisponivel, aviso, marcar, modoLeve, aparelhoFraco,
+  geradorSemente, vozDisponivel, aviso, marcar, modoLeve, aparelhoFraco, falarLongo, baralhar,
 } from './util.js';
 import { novasMedalhas, MEDALHAS } from './medalhas.js';
 import { graficoLinha } from './grafico.js';
@@ -19,7 +19,6 @@ const TEMAS_QUIZ = [
   { id: 'centro', nome: 'Zona Centro', cat: 'Zona Centro', icone: '🏞️', novo: true },
   { id: 'norte', nome: 'Norte de Portugal', cat: 'Norte de Portugal', icone: '🌄', novo: true },
   { id: 'espanha', nome: 'Espanha', cat: 'Espanha', icone: '💃', novo: true },
-  { id: 'eua', nome: 'Estados Unidos', cat: 'Estados Unidos', icone: '🗽', novo: true },
   { id: 'ue', nome: 'União Europeia', cat: 'União Europeia', icone: '⭐', novo: true },
   { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺', novo: true },
   { id: 'portugal', nome: 'Portugal', cat: 'Portugal', icone: '🏛️' },
@@ -237,7 +236,7 @@ const JOGOS = {
 };
 
 const SECCOES = {
-  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Leiria, monumentos, Espanha, Estados Unidos e muitos outros temas.' },
+  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Leiria, monumentos, Espanha, Europa e muitos outros temas.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
   cabeca: { titulo: 'Treino da Cabeça', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
@@ -321,6 +320,7 @@ function inicio() {
       botaoMenu('verde', '🃏', 'Cartas e Dominó', 'Paciência, dominó, memória e maior ou menor.', '#/cartas'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
       botaoMenu('azul', '💡', 'Treino da Cabeça', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
+      botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, lendas e poemas populares.', '#/ler'),
       botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Calendário, medalhas, recordes e gráficos.', '#/progresso'),
       botaoMenu('claro', '⚙️', 'Definições', 'Tamanho da letra, sons, voz e nome.', '#/definicoes')),
     el('div', { class: 'frase-dia' }, el('small', {}, 'Provérbio do dia'), frase),
@@ -852,6 +852,146 @@ function definicoes() {
   );
 }
 
+/* ---------- Para Ler e Rir (só para entretenimento: sem pontos nem relógio) ---------- */
+const LER = {
+  anedotas: { nome: 'Anedotas', icone: '😄', desc: 'Cem anedotas para rir com a família.', chave: 'ANEDOTAS', cor: 'laranja' },
+  fabulas: { nome: 'Fábulas', icone: '🦊', desc: 'Esopo, Fedro e La Fontaine, com a moral da história.', chave: 'FABULAS', cor: 'verde', tipo: 'Fábula' },
+  contos: { nome: 'Contos e lendas', icone: '🏰', desc: 'Histórias e lendas da tradição portuguesa.', chave: 'CONTOS', cor: 'azul', tipo: 'Conto' },
+  divertidas: { nome: 'Histórias divertidas', icone: '😂', desc: 'Casos da aldeia para sorrir.', chave: 'DIVERTIDAS', cor: 'roxo', tipo: 'História divertida' },
+  poemas: { nome: 'Poemas populares', icone: '🎶', desc: 'Quadras, cantigas e poemas de sempre.', chave: 'POEMAS', cor: 'foto', tipo: 'Poema' },
+};
+const lidos = cat => (dados.lidos || (dados.lidos = {}))[cat] || (dados.lidos[cat] = []);
+
+async function carregarHistorias(a, minhaVez) {
+  a.append(el('div', { class: 'a-carregar' }, 'A preparar…'));
+  let h;
+  try { h = await import('./dados/historias.js'); } catch (e) { mostrarErro(a, e); return null; }
+  if (ecraAtual !== minhaVez) return null;
+  limpar(a);
+  return h;
+}
+
+async function lerInicio() {
+  const a = ecra('Para Ler e Rir', '#/');
+  const minhaVez = Symbol('ler');
+  ecraAtual = minhaVez;
+  const h = await carregarHistorias(a, minhaVez);
+  if (!h) return;
+  a.append(
+    el('h2', { class: 'titulo-seccao' }, '📚 Para Ler e Rir'),
+    el('p', { class: 'sub' }, 'Só para se divertir: sem pontos nem relógio. Os textos também se podem ouvir em voz alta.'),
+    el('div', { class: 'menu-principal' }, Object.entries(LER).filter(([, c]) => h[c.chave].length).map(([id, c]) =>
+      botaoMenu(c.cor, c.icone, c.nome, `${c.desc} (${h[c.chave].length})`, `#/ler/${id}`))));
+}
+
+// Lista de títulos (fábulas, contos, histórias, poemas), com ✓ nos que já foram lidos.
+async function lerLista(cat) {
+  const c = LER[cat];
+  const a = ecra(c.nome, '#/ler');
+  const minhaVez = Symbol('ler');
+  ecraAtual = minhaVez;
+  const h = await carregarHistorias(a, minhaVez);
+  if (!h) return;
+  const lista = h[c.chave];
+  const feitos = lidos(cat);
+  a.append(
+    el('h2', { class: 'titulo-seccao' }, `${c.icone} ${c.nome}`),
+    el('p', { class: 'sub' }, `${c.desc} Toque num título para ler.`),
+    el('div', { class: 'lista-leitura' }, lista.map((t, i) => el('button', {
+      class: `item-leitura${feitos.includes(t.id) ? ' lido' : ''}`, type: 'button', onclick: () => ir(`#/ler/${cat}/${t.id}`),
+    }, el('span', { class: 'num', 'aria-hidden': 'true' }, feitos.includes(t.id) ? '✓' : String(i + 1)),
+    el('span', { class: 'txt' }, el('b', {}, t.titulo), t.autor || t.origem ? el('small', {}, t.autor || t.origem) : null)))));
+}
+
+function botaoOuvir(texto) {
+  if (!vozDisponivel()) return null;
+  const b = el('button', { class: 'btn claro grande', type: 'button' }, '🔊 Ouvir');
+  let aLer = false;
+  const parar = () => { aLer = false; b.textContent = '🔊 Ouvir'; };
+  b.addEventListener('click', () => {
+    if (aLer) { calar(); parar(); return; }
+    aLer = true;
+    b.textContent = '⏹ Parar';
+    falarLongo(texto, () => { if (b.isConnected) parar(); });
+  });
+  return b;
+}
+
+// Um texto: parágrafos (ou versos, nos poemas), moral nas fábulas, ouvir, anterior e seguinte.
+async function lerTexto(cat, id) {
+  const c = LER[cat];
+  const a = ecra(c.nome, `#/ler/${cat}`);
+  const minhaVez = Symbol('ler');
+  ecraAtual = minhaVez;
+  const h = await carregarHistorias(a, minhaVez);
+  if (!h) return;
+  const lista = h[c.chave];
+  const i = lista.findIndex(t => t.id === id);
+  if (i < 0) { ir(`#/ler/${cat}`); return; }
+  const t = lista[i];
+  const feitos = lidos(cat);
+  if (!feitos.includes(t.id)) { feitos.push(t.id); guardar(); }
+  const poema = cat === 'poemas';
+  // Nos poemas, cada verso é uma linha; se não couber, continua com recuo (como nos livros).
+  const corpo = el('div', { class: `leitura-texto${poema ? ' poema' : ''}` }, t.texto.split(/\n{2,}/).map(p =>
+    el('p', {}, poema ? p.split('\n').map(v => el('span', { class: 'verso' }, v)) : p)));
+  const falado = `${t.titulo}. ${t.texto}${t.moral ? `\n\nMoral da história: ${t.moral}` : ''}`;
+  const anterior = lista[i - 1];
+  const seguinte = lista[i + 1];
+  a.append(el('article', { class: 'leitura' },
+    el('div', { class: 'etiqueta' }, cat === 'fabulas' ? `Fábula · ${t.autor}` : (t.autor || t.origem || c.tipo)),
+    el('h2', {}, t.titulo),
+    corpo,
+    t.moral ? el('div', { class: 'moral' }, el('b', {}, '💡 Moral da história: '), t.moral) : null,
+    t.fonte ? el('p', { class: 'fonte' }, 'Texto: ', el('a', { href: t.fonte, target: '_blank', rel: 'noopener' }, 'ver a fonte')) : null),
+  el('div', { class: 'fila-botoes leitura-botoes' },
+    botaoOuvir(falado),
+    seguinte ? el('button', { class: 'btn verde grande', type: 'button', onclick: () => ir(`#/ler/${cat}/${seguinte.id}`) }, 'Seguinte ▶') : null,
+    anterior ? el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir(`#/ler/${cat}/${anterior.id}`) }, '◀ Anterior') : null,
+    el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir(`#/ler/${cat}`) }, '📋 Ver a lista')));
+}
+
+// Anedotas: uma de cada vez, sem repetir até ter visto todas.
+async function lerAnedotas() {
+  const a = ecra('Anedotas', '#/ler');
+  const minhaVez = Symbol('ler');
+  ecraAtual = minhaVez;
+  const h = await carregarHistorias(a, minhaVez);
+  if (!h) return;
+  const todas = h.ANEDOTAS;
+  const vistas = lidos('anedotas');
+  let fila = baralhar(todas.map((_, k) => k).filter(k => !vistas.includes(k)));
+  const historico = [];
+  let pos = -1;
+  const cartao = el('article', { class: 'leitura anedota' });
+  const contador = el('p', { class: 'sub centrado' });
+  const zonaBotoes = el('div', { class: 'fila-botoes leitura-botoes' });
+  function mostrar(k) {
+    const an = todas[k];
+    if (!vistas.includes(k)) { vistas.push(k); guardar(); }
+    limpar(cartao).append(el('div', { class: 'etiqueta' }, an.c), el('div', { class: 'leitura-texto poema' }, an.t.split(/\n{2,}/).map(p => el('p', {}, p))));
+    contador.textContent = `Já leu ${vistas.length} de ${todas.length} anedotas.`;
+    limpar(zonaBotoes).append(
+      el('button', { class: 'btn verde grande', type: 'button', onclick: outra }, '😄 Outra!'),
+      botaoOuvir(an.t),
+      pos > 0 ? el('button', { class: 'btn claro grande', type: 'button', onclick: () => { pos--; mostrar(historico[pos]); } }, '◀ Anterior') : null);
+    som.carta();
+    // Se a pessoa deslizou para baixo para tocar no botão, volta a mostrar o início da anedota.
+    const topo = cartao.getBoundingClientRect().top;
+    if (topo < 70) window.scrollTo(0, Math.max(0, topo + window.pageYOffset - 80));
+  }
+  function outra() {
+    calar();
+    if (pos < historico.length - 1) { pos++; mostrar(historico[pos]); return; }
+    if (!fila.length) { vistas.length = 0; guardar(); fila = baralhar(todas.map((_, k) => k)); aviso('Já leu todas! Vamos recomeçar. 😄', 2200); }
+    historico.push(fila.shift());
+    pos = historico.length - 1;
+    mostrar(historico[pos]);
+  }
+  a.append(el('h2', { class: 'titulo-seccao' }, '😄 Anedotas'), contador, cartao, zonaBotoes);
+  outra();
+}
+
 /* ---------- Fotografias: escolha de tema e de pares ---------- */
 const nivelDePares = n => (!n || n <= 4 ? 1 : n <= 8 ? 2 : 3);
 
@@ -950,6 +1090,11 @@ function router() {
   const [p0, p1, p2] = partes;
   if (p0 === 'cartas' || p0 === 'cabeca' || p0 === 'fotos') return seccao(p0);
   if (p0 === 'creditos') return creditos();
+  if (p0 === 'ler') {
+    if (!p1 || !LER[p1]) return lerInicio();
+    if (p1 === 'anedotas') return lerAnedotas();
+    return p2 ? lerTexto(p1, decodeURIComponent(p2)) : lerLista(p1);
+  }
   if (p0 === 'jogo' && JOGOS[p1] && JOGOS[p1].tema) {
     if (!p2) return escolherTema(p1);
     if (p1 === 'memfotos' && !partes[3]) return escolherPares(p2);

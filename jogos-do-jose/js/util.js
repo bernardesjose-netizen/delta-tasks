@@ -311,6 +311,32 @@ export function falar(texto) {
 }
 export function calar() { try { speechSynthesis.cancel(); } catch { /* nada */ } }
 
+// Textos compridos (histórias, poemas): lidos aos bocados, frase a frase, porque alguns telemóveis
+// cortam uma fala muito longa a meio. aoAcabar é chamado no fim (ou se não houver voz).
+export function falarLongo(texto, aoAcabar) {
+  if (!vozDisponivel() || !texto) { if (aoAcabar) aoAcabar(); return; }
+  try {
+    speechSynthesis.cancel();
+    const pedacos = [];
+    for (const bloco of texto.split(/\n{2,}/)) {
+      let atual = '';
+      // (sem «lookbehind» nas expressões regulares: os Safari antigos não o conhecem)
+      for (const frase of (bloco.replace(/\n/g, ' ').match(/[^.!?…:;»]+[.!?…:;»]*\s*/g) || [bloco])) {
+        if ((atual + frase).length > 220 && atual) { pedacos.push(atual); atual = frase; } else atual += frase;
+      }
+      if (atual.trim()) pedacos.push(atual);
+    }
+    pedacos.forEach((p, i) => {
+      const u = new SpeechSynthesisUtterance(p);
+      u.lang = 'pt-PT';
+      if (vozPT) u.voice = vozPT;
+      u.rate = 0.9;
+      if (i === pedacos.length - 1 && aoAcabar) { u.onend = aoAcabar; u.onerror = aoAcabar; }
+      speechSynthesis.speak(u);
+    });
+  } catch { if (aoAcabar) aoAcabar(); }
+}
+
 /* ---------- Frases de incentivo ---------- */
 const ELOGIOS = [
   'Muito bem!', 'Excelente!', 'Isso mesmo!', 'Fantástico!', 'Que cabeça!', 'Bravo!',

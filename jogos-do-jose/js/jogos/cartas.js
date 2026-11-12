@@ -15,6 +15,18 @@ const TEMAS_MEMORIA = [
   ['⚽', '🏀', '🎾', '⛳', '🏆', '🥇', '🎳', '🏓', '🏸', '🥊', '🎣', '🏐'],
 ];
 
+// Legendas das fotografias: a letra encolhe só o necessário para o nome caber inteiro (sem partir palavras).
+export function ajustarLegenda(leg) {
+  leg.style.fontSize = '';
+  let tam = parseFloat(getComputedStyle(leg).fontSize);
+  for (let k = 0; k < 12 && tam > 10.5; k++) {
+    const sobra = Math.max(leg.scrollWidth / leg.clientWidth, leg.scrollHeight / leg.clientHeight);
+    if (sobra <= 1.02) break;
+    tam = Math.max(10.5, Math.min(tam - 0.5, tam / Math.sqrt(sobra)));
+    leg.style.fontSize = `${tam}px`;
+  }
+}
+
 // Escolhe o número de colunas que dá cartas maiores no espaço disponível.
 function melhorGrelha(n, largura, altura, proporcao, folga = 12) {
   let melhor = { colunas: 4, tam: 60 };
@@ -28,7 +40,7 @@ function melhorGrelha(n, largura, altura, proporcao, folga = 12) {
 }
 
 /**
- * itens (opcional): [{ chave, nome, foto }] — fotografias com legenda. Sem itens, usa desenhos.
+ * itens (opcional): [{ chave, nome, curto, foto }] — fotografias com legenda (curto: nome curto para a carta). Sem itens, usa desenhos.
  * pares (opcional): quantos pares; por omissão depende do nível.
  */
 export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, costas }) {
@@ -38,7 +50,7 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
     ? amostra(itens, Math.min(pares, itens.length))
     : amostra(TEMAS_MEMORIA[inteiro(0, TEMAS_MEMORIA.length - 1)], pares).map(e => ({ chave: e, emoji: e }));
   const baralho = baralhar([...escolhidos, ...escolhidos]);
-  const proporcao = comFotos ? 1.22 : 1.2;
+  const proporcao = comFotos ? 1.34 : 1.2;
   let abertas = [];
   let encontrados = 0;
   let tentativas = 0;
@@ -54,10 +66,17 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
     const largura = Math.min(util - 4, 1100);
     const altura = Math.max(320, window.innerHeight - 230);
     const folga = largura < 420 ? 8 : 12;
-    const { colunas, tam } = melhorGrelha(baralho.length, largura, altura, proporcao, folga);
+    let { colunas, tam } = melhorGrelha(baralho.length, largura, altura, proporcao, folga);
+    // Fotografias num telemóvel: cartas com pelo menos ~77 px (4 colunas num telemóvel de 360 px), para a legenda se ler (a página pode deslizar um pouco).
+    const minimo = comFotos && largura < 420 ? 77 : 0;
+    if (tam < minimo) {
+      colunas = Math.max(2, Math.floor((largura + folga) / (minimo + folga)));
+      tam = Math.floor((largura - (colunas - 1) * folga) / colunas);
+    }
     grelha.style.gridTemplateColumns = `repeat(${colunas}, auto)`;
     grelha.style.gap = `${folga}px`;
     grelha.style.setProperty('--tam', `${Math.max(48, Math.min(tam, Math.floor((largura - (colunas - 1) * folga) / colunas)))}px`);
+    if (comFotos) grelha.querySelectorAll('.legenda').forEach(ajustarLegenda);
   }
   const infoT = el('span', {}, 'Tentativas: 0');
   const infoP = el('span', {}, `Pares: 0 de ${escolhidos.length}`);
@@ -68,7 +87,7 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
     comFotos
       ? el('div', { class: 'lado face', 'aria-hidden': 'true' },
         el('img', { src: it.foto, alt: '', loading: 'eager', decoding: 'async', draggable: 'false' }),
-        el('span', { class: 'legenda' }, it.nome))
+        el('span', { class: 'legenda' }, it.curto || it.nome))
       : el('div', { class: 'lado face', 'aria-hidden': 'true' }, it.emoji)));
   grelha.append(...cartas);
   alvo.append(
@@ -77,6 +96,8 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
     grelha);
   tamanho();
   window.addEventListener('resize', tamanho);
+  // A letra da app pode chegar depois de as cartas aparecerem: volta-se a acertar o tamanho das legendas.
+  if (comFotos && document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (vivo) tamanho(); }).catch(() => {});
 
   function virar(k) {
     const c = cartas[k];

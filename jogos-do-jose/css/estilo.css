@@ -744,14 +744,15 @@ h1, h2, h3, p { margin: 0; }
 .pac-mesa.cartas-pequenas .carta .figura-trad { top: 38%; }
 
 /* ---------- Fotografias ---------- */
-.memoria.com-fotos .mem-carta { height: calc(var(--tam) * 1.22); }
-.mem-carta .face img { position: absolute; left: 0; top: 0; width: 100%; height: calc(var(--tam) * .93); object-fit: cover; border-radius: 12px 12px 0 0; }
+.memoria.com-fotos .mem-carta { height: calc(var(--tam) * 1.34); }
+.mem-carta .face img { position: absolute; left: 0; top: 0; width: 100%; height: calc(100% - var(--tam) * .41); object-fit: cover; border-radius: 12px 12px 0 0; }
 .mem-carta .face .legenda {
   position: absolute; left: 0; right: 0; bottom: 0;
-  height: calc(var(--tam) * .29);
+  height: calc(var(--tam) * .41);
   display: grid; place-items: center;
-  font-size: max(14px, calc(var(--tam) * .115));
-  font-weight: 800; line-height: 1.05; padding: 0 4px; text-align: center; overflow: hidden;
+  font-size: max(14px, calc(var(--tam) * .125));
+  font-weight: 800; line-height: 1.05; padding: 0 3px; text-align: center; overflow: hidden;
+  overflow-wrap: normal; word-break: normal; hyphens: manual; background: #fff; border-radius: 0 0 12px 12px;
   color: var(--texto);
 }
 .foto-quiz { display: block; width: min(320px, 80vw); aspect-ratio: 1; object-fit: cover; margin: 12px auto 0; border-radius: 18px; box-shadow: var(--sombra); border: 4px solid #fff; }
@@ -1076,3 +1077,44 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .leve .siga-botao, .leve .siga-botao.aceso { transition: none; }
 @media (max-width: 340px) { .ordem-item { font-size: .84rem; } html.letra-2 .ordem-item { font-size: .74rem; } }
 .leve .ordem-item.pista { animation: none; background: var(--ambar-claro); }
+
+/* ---------- Para Ler e Rir ---------- */
+.lista-leitura { display: grid; gap: 10px; max-width: 680px; margin: 0 auto; }
+.item-leitura {
+  display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; width: 100%;
+  border: 3px solid var(--linha); border-radius: 18px; background: var(--cartao); color: inherit; font: inherit;
+  text-align: left; cursor: pointer; box-shadow: 0 4px 0 var(--linha);
+}
+.item-leitura:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--linha); }
+.item-leitura .num {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--fundo-2, #eef5ee); font-weight: 800; color: var(--texto-suave);
+}
+.item-leitura.lido .num { background: var(--verde); color: #fff; }
+.item-leitura .txt { display: flex; flex-direction: column; min-width: 0; }
+.item-leitura b { font-size: 1.05rem; line-height: 1.25; }
+.item-leitura small { color: var(--texto-suave); font-size: .85rem; margin-top: 2px; }
+.leitura {
+  max-width: 680px; margin: 0 auto; background: var(--cartao); border-radius: 22px; box-shadow: var(--sombra);
+  padding: 22px 20px 18px; border: 3px solid var(--linha);
+}
+.leitura .etiqueta {
+  display: inline-block; font-size: .8rem; font-weight: 800; letter-spacing: .03em; text-transform: uppercase;
+  color: var(--verde); background: var(--verde-claro); padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
+}
+.leitura h2 { font-size: 1.45rem; line-height: 1.2; margin: 4px 0 12px; }
+.leitura-texto p { font-size: 1.1rem; line-height: 1.6; margin: 0 0 14px; }
+.leitura-texto p:last-child { margin-bottom: 0; }
+.leitura-texto.poema p { white-space: pre-line; }
+.leitura-texto .verso { display: block; padding-left: 1.3em; text-indent: -1.3em; white-space: normal; }
+.leitura.anedota .leitura-texto p { font-size: 1.2rem; }
+.leitura .moral { margin-top: 16px; padding: 12px 14px; border-radius: 14px; background: #fff7e0; border: 2px solid #f3d68a; font-size: 1.05rem; line-height: 1.45; }
+.leitura .fonte { margin-top: 12px; font-size: .8rem; color: var(--texto-suave); }
+.leitura-botoes { max-width: 680px; margin: 16px auto 0; flex-wrap: wrap; justify-content: center; }
+@media (max-width: 420px) {
+  .leitura { padding: 16px 14px 14px; border-radius: 18px; }
+  .leitura h2 { font-size: 1.25rem; }
+  .leitura-texto p { font-size: 1rem; }
+  .leitura.anedota .leitura-texto p { font-size: 1.08rem; }
+  .leitura-texto.poema p { font-size: .95rem; }
+}

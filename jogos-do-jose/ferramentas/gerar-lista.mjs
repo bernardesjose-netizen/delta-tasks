@@ -18,7 +18,10 @@ function percorrer(dir) {
 percorrer(raiz);
 const hash = createHash('sha1');
 for (const f of lista) hash.update(f).update(readFileSync(join(raiz, f)));
-const versao = `jogos-do-jose-${hash.digest('hex').slice(0, 10)}`;
+// Geração das fotografias: muda quando são todas refeitas (f2 = versão leve, 300 px). O service worker só
+// reaproveita fotografias guardadas por versões da mesma geração; as outras são trocadas pelas novas.
+const GERACAO_FOTOS = 'f2';
+const versao = `jogos-do-jose-${GERACAO_FOTOS}-${hash.digest('hex').slice(0, 10)}`;
 const ficheiros = ['./', ...lista];
 writeFileSync(join(raiz, 'ficheiros.js'), `// Gerado por ferramentas/gerar-lista.mjs — não editar à mão.\nself.VERSAO = '${versao}';\nself.FICHEIROS = ${JSON.stringify(ficheiros, null, 1)};\n`);
 console.log(`${ficheiros.length} ficheiros, versão ${versao}`);

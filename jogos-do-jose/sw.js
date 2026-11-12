@@ -1,21 +1,28 @@
 // Guarda os jogos (e as fotografias) no aparelho para funcionarem mesmo sem internet.
 // Pensado para telemóveis fracos: nunca bloqueia a página, descarrega aos poucos e, nas
-// atualizações, reaproveita as fotografias que já estão guardadas.
+// atualizações, reaproveita as fotografias que já estão guardadas (da mesma geração).
 importScripts('ficheiros.js'); // define self.FICHEIROS e self.VERSAO (gerado por ferramentas/gerar-lista.mjs)
 const VERSAO = self.VERSAO;
 const FICHEIROS = self.FICHEIROS;
 const imutavel = f => f.startsWith('./fotos/') || f.startsWith('./icones/');
+// Ex.: 'jogos-do-jose-f2'. Só se reaproveitam fotografias de versões da mesma geração.
+const geracao = nome => nome.slice(0, nome.lastIndexOf('-'));
 
 let aGuardar = null;
 function guardarTudo() {
   if (aGuardar) return aGuardar;
   aGuardar = (async () => {
     const cache = await caches.open(VERSAO);
+    const antigas = (await caches.keys()).filter(n => n !== VERSAO && geracao(n) === geracao(VERSAO));
+    const procurarAntigo = async f => {
+      for (const n of antigas) { const r = await (await caches.open(n)).match(f); if (r) return r; }
+      return null;
+    };
     for (let i = 0; i < FICHEIROS.length; i += 4) {
       await Promise.all(FICHEIROS.slice(i, i + 4).map(async f => {
         if (await cache.match(f)) return;
-        // Fotografias e ícones não mudam: se já existirem numa versão antiga, copiam-se sem rede.
-        const antigo = imutavel(f) ? await caches.match(f) : null;
+        // Fotografias e ícones não mudam dentro da mesma geração: copiam-se sem rede.
+        const antigo = imutavel(f) ? await procurarAntigo(f) : null;
         if (antigo) { await cache.put(f, antigo); return; }
         const r = await fetch(f, { cache: 'no-cache' });
         if (r.ok) await cache.put(f, r);
