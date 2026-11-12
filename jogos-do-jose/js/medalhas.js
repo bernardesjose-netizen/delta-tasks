@@ -35,6 +35,8 @@ export const MEDALHAS = [
   { id: 'domino10', icone: '🥇', nome: 'Rei do dominó', desc: 'Ganhar 10 jogos de dominó.', ok: d => ((d.domino && d.domino.ganhos) || 0) >= 10 },
   { id: 'relampago', icone: '⚡', nome: 'Relâmpago certeiro', desc: 'Fazer as Contas Relâmpago sem enganos.', ok: d => (feitos(d).relampagoPerfeito || 0) >= 1 },
   { id: 'cores', icone: '🎨', nome: 'Olho de lince', desc: 'Fazer as Cores Trocadas sem enganos.', ok: d => (feitos(d).coresPerfeito || 0) >= 1 },
+  { id: 'siga', icone: '🐘', nome: 'Memória de elefante', desc: 'Chegar ao fim da Siga a Sequência no nível Desafio.', ok: d => (feitos(d).sigaDesafio || 0) >= 1 },
+  { id: 'ordem', icone: '🗂️', nome: 'Tudo arrumado', desc: 'Fazer o Pôr por Ordem sem nenhum engano.', ok: d => (feitos(d).ordemPerfeita || 0) >= 1 },
   { id: 'leitor', icone: '📖', nome: 'Bom leitor', desc: 'Ler 5 textos em voz alta.', ok: d => (feitos(d).leituras || 0) >= 5 },
   { id: 'puzzle16', icone: '🖼️', nome: 'Puzzle grande', desc: 'Acabar um puzzle de 16 peças.', ok: d => ((d.jogos.puzzle && d.jogos.puzzle.melhor && d.jogos.puzzle.melhor[3]) || 0) >= 1 },
   { id: 'viajante', icone: '📷', nome: 'Viajante', desc: 'Jogar com fotografias de 10 temas diferentes.', ok: d => (d.temasVistos || []).length >= 10 },

@@ -19,6 +19,7 @@ const cartas = nome => () => import('./jogos/cartas.js').then(m => m[nome]);
 const fotos = nome => () => import('./jogos/fotos.js').then(m => m[nome]);
 const desenhos = nome => () => import('./jogos/desenhos.js').then(m => m[nome]);
 const treinoJ = nome => () => import('./jogos/treino.js').then(m => m[nome]);
+const desafios = nome => () => import('./jogos/desafios.js').then(m => m[nome]);
 
 const JOGOS = {
   memfotos: {
@@ -94,7 +95,7 @@ const JOGOS = {
   },
   leitura: {
     seccao: 'cabeca', grupo: 'rapido', nome: 'Leitura em Voz Alta', icone: '📖', cor: '#7c2d12',
-    desc: 'Camões, Pessoa, Florbela e cantigas populares para ler em voz alta.',
+    desc: 'Camões, Pessoa, Florbela, Eça, cantigas e trava-línguas para ler em voz alta.',
     ajuda: 'Leia o texto em voz alta, com calma. O relógio mede o tempo e mostra quantas palavras leu por minuto.',
     niveis: ['Textos curtos e provérbios.', 'Poemas de tamanho médio.', 'Poemas e prosa mais longos.'],
     carregar: treinoJ('leitura'),
@@ -148,6 +149,13 @@ const JOGOS = {
     niveis: ['Saltos pequenos (de 1, 2, 5, 10…).', 'Saltos maiores e números a dobrar.', 'Sequências com truque.'],
     carregar: cerebro('sequencias'),
   },
+  ordem: {
+    seccao: 'cabeca', nome: 'Pôr por Ordem', icone: '🔢', cor: '#00796b',
+    desc: 'Números, meses, tamanhos, preços e datas da História: arrume tudo.',
+    ajuda: 'Toque nos cartões pela ordem certa: primeiro o 1.º, depois o 2.º, e assim por diante. Se se enganar, tente outra vez — não há pressa.',
+    niveis: ['4 cartões: números, tamanhos, dias e dinheiro.', '4 ou 5 cartões: meses, horas, contas e História.', '5 ou 6 cartões, um pouco mais parecidos.'],
+    carregar: desafios('ordem'),
+  },
   anagramas: {
     seccao: 'cabeca', nome: 'Palavra Baralhada', icone: '🔀', cor: '#7c2d12',
     desc: 'Ponha as letras pela ordem certa.',
@@ -175,6 +183,13 @@ const JOGOS = {
     ajuda: 'Olhe para as figuras durante alguns segundos. Depois escolha as que viu.',
     niveis: ['3 figuras para decorar.', '4 figuras para decorar.', '5 figuras para decorar.'],
     carregar: palavras('lembrar'),
+  },
+  siga: {
+    seccao: 'cabeca', nome: 'Siga a Sequência', icone: '🚦', cor: '#6d3fd0',
+    desc: 'Luzes e música: repita a sequência, que vai crescendo.',
+    ajuda: 'Os botões acendem-se um a um, com música. Depois toque neles pela mesma ordem. Sempre que acerta, a sequência cresce mais uma. Tem 3 tentativas e pode pedir para ver outra vez.',
+    niveis: ['4 botões, devagar, até 6 seguidas.', '4 botões, até 8 seguidas.', '6 botões, até 9 seguidas.'],
+    carregar: desafios('siga'),
   },
   oquee: {
     seccao: 'cabeca', nome: 'O Que É Isto?', icone: '🎨', cor: '#2e7d32',
@@ -207,10 +222,10 @@ const SECCOES = {
 
 // Grupos do Treino do Dia: um exercício de cada grupo.
 const GRUPOS_TREINO = [
-  ['relampago', 'contas', 'sequencias', 'mercado'],
+  ['relampago', 'contas', 'sequencias', 'mercado', 'ordem'],
   ['quiz', 'proverbios', 'adivinhas', 'leitura'],
   ['sopa', 'anagramas', 'intruso', 'palavras'],
-  ['cores', 'lembrar', 'contar', 'relogio', 'oquee', 'diferente', 'quizfotos'],
+  ['cores', 'lembrar', 'contar', 'relogio', 'oquee', 'diferente', 'quizfotos', 'siga'],
 ];
 
 /* ---------- Infraestrutura de ecrãs ---------- */
@@ -819,25 +834,42 @@ async function escolherTema(jid) {
   try { temas = (await import('./dados/fotos.js')).TEMAS_FOTOS; } catch (e) { mostrarErro(a, e); return; }
   if (ecraAtual !== minhaVez) return;
   limpar(a);
-  const grelha = el('div', { class: 'grelha-temas' });
-  grelha.append(el('button', { class: 'tema-foto todos', type: 'button', onclick: () => ir(`#/jogo/${jid}/todos`) },
+  const fichaTema = t => el('button', { class: 'tema-foto', type: 'button', onclick: () => ir(`#/jogo/${jid}/${t.id}`) },
+    el('div', { class: 'capa', 'aria-hidden': 'true' }, t.fotos.slice(0, 2).map(f => el('img', { src: f.f, alt: '', loading: 'lazy', decoding: 'async' }))),
+    el('b', {}, `${t.icone} ${t.tema}`),
+    el('span', {}, `${t.fotos.length} fotografias`));
+  const todos = el('div', { class: 'grelha-temas' }, el('button', { class: 'tema-foto todos', type: 'button', onclick: () => ir(`#/jogo/${jid}/todos`) },
     el('div', { class: 'capa', 'aria-hidden': 'true' }, '🎲'),
     el('b', {}, 'Todos misturados'),
     el('span', {}, `${new Set(temas.flatMap(t => t.fotos.map(f => f.fonte || f.f))).size} fotografias`)));
-  for (const t of temas) {
-    grelha.append(el('button', { class: 'tema-foto', type: 'button', onclick: () => ir(`#/jogo/${jid}/${t.id}`) },
-      el('div', { class: 'capa', 'aria-hidden': 'true' }, t.fotos.slice(0, 2).map(f => el('img', { src: f.f, alt: '', loading: 'lazy', decoding: 'async' }))),
-      el('b', {}, `${t.icone} ${t.tema}`),
-      el('span', {}, `${t.fotos.length} fotografias`)));
+  // Temas arrumados por grupos (pela ordem de GRUPOS_FOTOS; grupos desconhecidos vão para o fim).
+  const nomesGrupos = GRUPOS_FOTOS.map(g => g[0]);
+  temas.forEach(t => { if (t.grupo && !nomesGrupos.includes(t.grupo)) nomesGrupos.push(t.grupo); });
+  const blocos = [];
+  for (const nome of nomesGrupos) {
+    const lista = temas.filter(t => t.grupo === nome);
+    if (!lista.length) continue;
+    const g = GRUPOS_FOTOS.find(x => x[0] === nome);
+    blocos.push(el('h3', { class: 'titulo-grupo' }, `${g ? g[1] : '📷'} ${nome}`), el('div', { class: 'grelha-temas' }, lista.map(fichaTema)));
   }
+  const semGrupo = temas.filter(t => !t.grupo);
+  if (semGrupo.length) blocos.push(el('div', { class: 'grelha-temas' }, semGrupo.map(fichaTema)));
   a.append(
     el('div', { class: 'cabeca-jogo' },
       el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, j.icone),
       el('h2', {}, j.nome),
-      el('p', {}, 'Escolha um tema.')),
-    grelha,
+      el('p', {}, `Escolha um dos ${temas.length} temas.`)),
+    todos,
+    ...blocos,
     el('p', { class: 'nota' }, el('a', { href: '#/creditos' }, 'Créditos das fotografias')));
 }
+const GRUPOS_FOTOS = [
+  ['Sporting e desporto', '🦁'],
+  ['Terras e monumentos', '🏰'],
+  ['Natureza e animais', '🌳'],
+  ['Comida e sabores', '🍲'],
+  ['História, arte e tradições', '🎨'],
+];
 
 async function escolherPares(temaId) {
   const a = ecra('Memória de Fotografias', '#/jogo/memfotos');

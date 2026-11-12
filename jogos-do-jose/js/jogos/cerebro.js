@@ -225,6 +225,14 @@ const PRODUTOS = [
   ['🍷', 'uma garrafa de vinho', [300, 900]], ['💐', 'um ramo de flores', [400, 1000]], ['🎫', 'um bilhete de autocarro', [150, 200]],
   ['🍦', 'um gelado', [150, 300]], ['🥐', 'um pastel de nata', [100, 150]], ['🍅', 'um quilo de tomate', [150, 300]],
   ['🥔', 'um saco de batatas', [200, 450]], ['🍬', 'um saco de rebuçados', [100, 250]],
+  ['🍎', 'um quilo de maçãs', [120, 250]], ['🍌', 'um quilo de bananas', [100, 200]], ['🍐', 'um quilo de peras', [150, 280]],
+  ['🍇', 'um cacho de uvas', [150, 350]], ['🍓', 'uma caixa de morangos', [200, 400]], ['🥕', 'um quilo de cenouras', [80, 180]],
+  ['🌽', 'uma maçaroca de milho', [50, 120]], ['🍗', 'um frango assado', [600, 1000]], ['🍕', 'uma pizza', [600, 1200]],
+  ['🍰', 'uma fatia de bolo', [150, 300]], ['🍪', 'um pacote de bolachas', [100, 250]], ['🍚', 'um quilo de arroz', [100, 200]],
+  ['🍝', 'um pacote de massa', [80, 180]], ['🍵', 'um chá', [80, 150]], ['🎂', 'um bolo de aniversário', [1200, 2500]],
+  ['🔋', 'um conjunto de pilhas', [300, 700]], ['💡', 'uma lâmpada', [200, 600]], ['☂️', 'um guarda-chuva', [500, 1500]],
+  ['🕯️', 'uma vela', [100, 400]], ['✏️', 'um lápis', [50, 120]], ['🍤', 'uma embalagem de camarão', [600, 1500]],
+  ['🍮', 'um pudim', [200, 500]],
 ];
 
 function precoAleatorio([min, max], passo) {

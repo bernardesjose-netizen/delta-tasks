@@ -7,7 +7,11 @@ export function el(tag, attrs = {}, ...filhos) {
     if (v == null || v === false) continue;
     if (k === 'class') n.className = v;
     else if (k === 'html') n.innerHTML = v;
-    else if (k === 'style' && typeof v === 'object') Object.assign(n.style, v);
+    else if (k === 'style' && typeof v === 'object') {
+      for (const [prop, valor] of Object.entries(v)) {
+        if (prop.startsWith('--')) n.style.setProperty(prop, valor); else n.style[prop] = valor;
+      }
+    }
     else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
     else if (v === true) n.setAttribute(k, '');
     else n.setAttribute(k, v);
@@ -271,6 +275,8 @@ export const som = {
   carta() { ruido(0, 0.07, 2400, 0.35); nota(880, 0, 0.05, 'triangle', 0.025); },
   peca() { ruido(0, 0.045, 1500, 0.55); ruido(0.05, 0.035, 1100, 0.3); nota(220, 0, 0.06, 'triangle', 0.05); },
   par() { sino(784, 0, 0.12); sino(988, 0.07, 0.11); sino(1175, 0.14, 0.11, 1.2); },
+  // Nota de cada botão da «Siga a Sequência» (escala pentatónica: soa sempre bem).
+  tecla(k = 0) { const f = [392, 523.25, 659.25, 783.99, 880, 1046.5][k % 6]; sino(f, 0, 0.14, 0.6); nota(f / 2, 0, 0.35, 'triangle', 0.045); },
   estrela(k = 0) { sino([1046.5, 1318.5, 1568][k] || 1568, 0, 0.14, 1.1); nota(([1046.5, 1318.5, 1568][k] || 1568) * 4, 0.02, 0.25, 'sine', 0.02); },
   vitoria() {
     [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => sino(f, i * 0.11, 0.12, 0.7));
