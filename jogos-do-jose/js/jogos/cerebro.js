@@ -181,7 +181,7 @@ function horaFalada(h, m) {
   if (m === 0) return `${hh} em ponto`;
   if (m === 30) return `${hh} e meia`;
   if (m === 15) return `${hh} e um quarto`;
-  if (m === 45) return `um quarto para as ${POR_EXTENSO[(h % 12) + 1]}`;
+  if (m === 45) return `um quarto para ${(h % 12) + 1 === 1 ? 'a' : 'as'} ${POR_EXTENSO[(h % 12) + 1]}`;
   return `${hh} e ${m} minutos`;
 }
 
@@ -207,7 +207,7 @@ function gerarHora(nivel) {
     centrado: true,
     opcoes,
     certa,
-    explicacao: `São ${horaFalada(h, m)}. O ponteiro pequeno marca as horas; o grande, laranja, marca os minutos.`,
+    explicacao: `${m === 45 || h % 12 === 1 ? 'É' : 'São'} ${horaFalada(h, m)}. O ponteiro pequeno marca as horas; o grande, laranja, marca os minutos.`,
   };
 }
 
@@ -369,7 +369,7 @@ export async function proverbios(alvo, { nivel, curto, aoTerminar }) {
   const escolhidas = escolherNaoVistos(`prov${nivel}`, lista, N(curto), q => q.inicio);
   const perguntas = escolhidas.map(q => ({
     etiqueta: 'Complete o provérbio',
-    enunciado: `«${q.inicio}…»`,
+    enunciado: `«${q.inicio.replace(/[,;:]$/, '')}…»`,
     ler: `Complete o provérbio: ${q.inicio}…`,
     opcoes: [q.certa, ...(nivel === 1 ? amostra(q.erradas, 2) : q.erradas)],
     certa: q.certa,

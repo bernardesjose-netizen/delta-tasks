@@ -292,10 +292,10 @@ export function domino(alvo, { nivel, aoTerminar }) {
     let ganhei;
     let titulo;
     let frase;
-    if (quemFechou === 'eu') { ganhei = true; titulo = 'Dominó! Ganhou!'; frase = `Jogou todas as pedras. O computador ficou com ${deles} pontos na mão.`; } else if (quemFechou === 'ele') { ganhei = false; titulo = 'Desta vez ganhou o computador'; frase = `Ficou com ${meus} pontos na mão. Para a próxima é que é!`; } else {
+    if (quemFechou === 'eu') { ganhei = true; titulo = 'Dominó! Ganhou!'; frase = `Jogou todas as pedras. O computador ficou com ${deles} ${deles === 1 ? 'ponto' : 'pontos'} na mão.`; } else if (quemFechou === 'ele') { ganhei = false; titulo = 'Desta vez ganhou o computador'; frase = `Ficou com ${meus} pontos na mão. Para a próxima é que é!`; } else {
       ganhei = meus <= deles;
       titulo = ganhei ? 'Jogo fechado — ganhou!' : 'Jogo fechado — ganhou o computador';
-      frase = `Ninguém podia jogar. Tinha ${meus} pontos na mão e o computador ${deles}.`;
+      frase = `Ninguém podia jogar. Tinha ${meus} ${meus === 1 ? 'ponto' : 'pontos'} na mão e o computador ${deles}.`;
     }
     const d = dados.domino || (dados.domino = { ganhos: 0, perdidos: 0 });
     if (ganhei) d.ganhos++; else d.perdidos++;
@@ -335,7 +335,7 @@ export function domino(alvo, { nivel, aoTerminar }) {
     const comecoEu = valor(minha, im) > valor(dele, ie);
     const quem = comecoEu ? 'eu' : 'ele';
     const p = comecoEu ? minha[im] : dele[ie];
-    dizer(comecoEu ? `Começa o ${dados.nome || 'jogador'}, com o ${nomePedra(p)}!` : `Começa o computador, com o ${nomePedra(p)}.`, true);
+    dizer(comecoEu ? `${dados.nome ? `${dados.nome}, começa` : 'Começa'} com o ${nomePedra(p)}!` : `Começa o computador, com o ${nomePedra(p)}.`, true);
     vez = null; // ninguém toca nas pedras enquanto se anuncia quem começa
     desenhar();
     setTimeout(() => { if (vivo) jogar(quem, comecoEu ? im : ie, 'dir'); }, 1600);

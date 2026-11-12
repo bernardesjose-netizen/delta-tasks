@@ -100,13 +100,13 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
   // ---- estrutura do ecrã
   limpar(alvo);
   alvo.classList.add('ecra-cheio');
-  const infoNivel = el('span', {}, `Nível ${nivel} · ${draw === 1 ? 'tira-se 1 carta' : 'tiram-se 3 cartas'}`);
+  const infoNivel = el('span', {}, `${['', 'Tranquilo', 'Normal', 'Desafio'][nivel]} · ${draw === 1 ? 'tira-se 1 carta' : 'tiram-se 3 cartas'}`);
   const infoJogadas = el('span', {}, 'Jogadas: 0');
   const mesa = el('div', { class: 'pac-mesa' });
   const btnDesfazer = el('button', { class: 'btn claro', type: 'button', onclick: desfazer }, '↶ Desfazer');
   const btnAjuda = el('button', { class: 'btn', type: 'button', onclick: ajuda }, '💡 Ajuda');
   const btnNovo = el('button', { class: 'btn laranja', type: 'button', onclick: pedirNovo }, '🔄 Novo jogo');
-  const btnTerminar = el('button', { class: 'btn laranja esconder', type: 'button', onclick: terminarAuto }, '✨ Terminar');
+  const btnTerminar = el('button', { class: 'btn laranja esconder', type: 'button', onclick: terminarAuto }, '✨ Acabar sozinho');
   alvo.append(el('div', { class: 'pac' },
     el('div', { class: 'pac-info' }, infoNivel, el('span', {}, '✔ Este jogo tem solução'), infoJogadas),
     mesa,
@@ -343,7 +343,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
       if (j.d.tipo === 'found') alvoD = st.found[j.c.s].length ? ELS[topo(st.found[j.c.s]).id] : lugaresFund[j.c.s];
       else alvoD = st.tab[j.d.k].length ? ELS[topo(st.tab[j.d.k]).id] : lugaresCol[j.d.k];
       realcar([ELS[j.c.id], alvoD]);
-      aviso(`Experimente mover ${NOMES[j.c.r - 1].toLowerCase()} de ${NOMES_NAIPES[j.c.s]} para o sítio que está a brilhar.`, 3200);
+      aviso(`Experimente mover ${j.c.r === 12 ? 'a' : 'o'} ${NOMES[j.c.r - 1].toLowerCase()} de ${NOMES_NAIPES[j.c.s]} para o sítio que está a brilhar.`, 3200);
       return;
     }
     if (st.stock.length || st.waste.length) {
@@ -401,7 +401,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
       numeros: [
         { valor: String(st.jogadas), rotulo: 'jogadas' },
         { valor: duracao(Date.now() - t0), rotulo: 'tempo' },
-        { valor: String(dados.pac.ganhos[nivel]), rotulo: `vitórias no nível ${nivel}` },
+        { valor: String(dados.pac.ganhos[nivel]), rotulo: `${dados.pac.ganhos[nivel] === 1 ? 'vitória' : 'vitórias'} no nível ${['', 'Tranquilo', 'Normal', 'Desafio'][nivel]}` },
       ],
     });
   }

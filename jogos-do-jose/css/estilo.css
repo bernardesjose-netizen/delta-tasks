@@ -901,7 +901,6 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .tema-quiz .icone { font-size: 1.9rem; line-height: 1; flex: none; }
 .tema-quiz .texto { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
 .tema-quiz b { font-size: 1.02rem; line-height: 1.2; overflow-wrap: break-word; hyphens: none; }
-.tema-quiz.novo { border-color: #9bd8b0; box-shadow: 0 4px 0 #9bd8b0; }
 .tema-quiz small { background: var(--verde); color: #fff; font-size: .7rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; }
 /* No telemóvel: duas colunas e letra um pouco menor, para as palavras compridas («portuguesa») caberem inteiras. */
 @media (max-width: 420px) {

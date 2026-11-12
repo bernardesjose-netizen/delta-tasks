@@ -173,7 +173,7 @@ export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
         el('div', { class: 'etiqueta' }, 'Maior ou Menor'),
         el('div', { class: 'enunciado centrado' }, proxima ? 'Vamos ver…' : 'A próxima carta vai ser maior ou menor?'),
         el('div', { class: 'mm-mesa' }, cartaSolta(atual, largura()), el('div', { class: 'mm-seta', 'aria-hidden': 'true' }, '➜'), cartaSolta(proxima, largura())),
-        el('p', { class: 'dica' }, 'Ás é a mais baixa e o Rei a mais alta. Se sair igual, ganha na mesma!')),
+        el('p', { class: 'dica' }, 'O Ás é a carta mais baixa e o Rei a mais alta. Se sair igual, ganha na mesma!')),
       zona));
     if (!proxima) {
       zona.append(el('div', { class: 'fila-botoes' },
@@ -203,7 +203,7 @@ export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
     } else {
       seguidas = 0;
       som.quase();
-      mostrar(prox, `${consolo()} Desta vez a sorte fugiu.`, 'info');
+      mostrar(prox, 'Desta vez a sorte fugiu. Para a próxima é que é!', 'info');
     }
   }
 

@@ -83,7 +83,7 @@ export function siga(alvo, { nivel, curto, aoTerminar }) {
   function atualizarInfo() {
     tamanhoInfo.textContent = `Sequência: ${seq.length} de ${meta}`;
     coracoes.textContent = `${'💚'.repeat(CHANCES - enganos)}${'♡'.repeat(enganos)}`;
-    coracoes.setAttribute('aria-label', `${CHANCES - enganos} tentativas`);
+    coracoes.setAttribute('aria-label', `${CHANCES - enganos} ${CHANCES - enganos === 1 ? 'tentativa' : 'tentativas'}`);
   }
 
   function acender(k, dur) {
@@ -449,7 +449,7 @@ export function ordem(alvo, { nivel, curto, aoTerminar }) {
           el('div', { class: 'fila-botoes' }, el('button', {
             class: 'btn verde grande largo', type: 'button',
             onclick: () => { r++; if (r < total) mostrar(); else terminar(); },
-          }, r + 1 < total ? 'Seguinte ▶' : 'Ver resultado ▶')));
+          }, r + 1 < total ? 'Continuar ▶' : 'Ver resultado ▶')));
         const ultimo = zona.querySelector('.btn');
         if (ultimo && ultimo.scrollIntoView) depois(() => ultimo.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 150);
         return;
@@ -464,7 +464,7 @@ export function ordem(alvo, { nivel, curto, aoTerminar }) {
       if (errosNoPasso >= 2) {
         const certo = botoes[misturados.findIndex(x => x.i === proximo)];
         certo.classList.add('pista');
-        msg.textContent = `Este é o ${proximo + 1}.º — é o que está a brilhar 😉`;
+        msg.textContent = `O ${proximo + 1}.º é o que está a brilhar 😉`;
       } else msg.textContent = proximo === 0 ? 'Quase! Há outro que vem primeiro.' : 'Quase! Há outro que vem antes deste.';
     }
   }

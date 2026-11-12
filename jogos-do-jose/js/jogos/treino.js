@@ -241,7 +241,7 @@ export function cores(alvo, { nivel, curto, rondas, aoTerminar, modoTeste }) {
         const ms = rel.ms();
         if (erros === 0) marcar('coresPerfeito');
         const res = resultadoTempo({ chave: `cores-${nivel}-${total}`, ms, erros, total, modoTeste });
-        res.titulo = erros === 0 ? 'Olho de lince! 🎨' : 'Cores acabadas!';
+        res.titulo = erros === 0 ? 'Olho de lince! 🎨' : 'Exercício terminado!';
         aoTerminar(res);
       }, 160);
       return;
@@ -305,7 +305,7 @@ export async function palavras(alvo, { nivel, aoTerminar, modoTeste, nPalavras }
         b.classList.toggle('marcada', marcadas.has(x));
         som.clique();
         confirmar.disabled = marcadas.size === 0;
-        confirmar.textContent = `Confirmar ✔ (${marcadas.size} escolhidas)`;
+        confirmar.textContent = `Confirmar ✔ (${marcadas.size} ${marcadas.size === 1 ? 'escolhida' : 'escolhidas'})`;
       },
     }));
     alvo.append(el('div', { class: 'ronda' },
@@ -342,8 +342,8 @@ export async function palavras(alvo, { nivel, aoTerminar, modoTeste, nPalavras }
       }) }, 'Continuar ▶');
       limpar(zona).append(
         el('div', { class: `retorno ${acertos === n ? 'bom' : 'info'}` }, el('div', { class: 'icone' }, acertos === n ? '😃' : '💡'),
-          el('div', {}, el('b', {}, acertos === n ? elogio() : `Lembrou-se de ${acertos} de ${n}. Muito bem!`),
-            el('div', { class: 'info-extra' }, 'As que faltaram estão a amarelo.'))),
+          el('div', {}, el('b', {}, acertos === n ? elogio() : acertos === 0 ? 'Desta vez não se lembrou de nenhuma. Para a próxima é que é!' : `Lembrou-se de ${acertos} de ${n}. Muito bem!`),
+            acertos < n ? el('div', { class: 'info-extra' }, 'As que faltaram estão a amarelo.') : null)),
         el('div', { class: 'fila-botoes' }, seguinte));
       zona.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }

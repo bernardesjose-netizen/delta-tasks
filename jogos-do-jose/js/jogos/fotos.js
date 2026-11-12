@@ -140,7 +140,7 @@ export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
     tabuleiro.classList.add('feito');
     som.vitoria();
     festa(['📷', '⭐', '🎉', '✨', '🌟']);
-    if (dados.def.voz) falar(`Muito bem! É ${foto.nome}.`);
+    if (dados.def.voz) falar(`Muito bem! A fotografia é: ${foto.nome}.`);
     const b = el('button', { class: 'btn verde grande largo', type: 'button', onclick: () => {
       const minimo = total - 1;
       aoTerminar({
@@ -155,7 +155,7 @@ export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
     } }, 'Continuar ▶');
     limpar(zona).append(
       el('div', { class: 'retorno bom' }, el('div', { class: 'icone' }, '😃'),
-        el('div', {}, el('b', {}, `${elogio()} É ${foto.nome}.`), el('div', { class: 'info-extra' }, foto.tema))),
+        el('div', {}, el('b', {}, `${elogio()} A fotografia é: ${foto.nome}.`), el('div', { class: 'info-extra' }, foto.tema))),
       el('div', { class: 'fila-botoes' }, b));
     aviso(`${foto.nome} ✨`, 2500);
     zona.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

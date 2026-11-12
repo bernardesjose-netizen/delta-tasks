@@ -23,7 +23,7 @@ export const TEXTOS = [
   },
   {
     id: 'ser-grande', n: 2, titulo: 'Para ser grande, sê inteiro', autor: 'Fernando Pessoa (Ricardo Reis)',
-    texto: 'Para ser grande, sê inteiro: nada\nTeu exclui ou exagera.\nSê todo em cada coisa. Põe quanto és\nNo mínimo que fazes.\nAssim em cada lago a lua toda\nBrilha, porque alta vive.',
+    texto: 'Para ser grande, sê inteiro: nada\nTeu exagera ou exclui.\nSê todo em cada coisa. Põe quanto és\nNo mínimo que fazes.\nAssim em cada lago a lua toda\nBrilha, porque alta vive.',
   },
   {
     id: 'ser-poeta', n: 2, titulo: 'Ser Poeta (primeira quadra)', autor: 'Florbela Espanca',
@@ -54,7 +54,7 @@ export const TEXTOS = [
     texto: 'As armas e os barões assinalados,\nQue da ocidental praia Lusitana,\nPor mares nunca de antes navegados,\nPassaram ainda além da Taprobana,\nEm perigos e guerras esforçados,\nMais do que prometia a força humana,\nE entre gente remota edificaram\nNovo Reino, que tanto sublimaram;\n\nE também as memórias gloriosas\nDaqueles Reis que foram dilatando\nA Fé, o Império, e as terras viciosas\nDe África e de Ásia andaram devastando,\nE aqueles que por obras valerosas\nSe vão da lei da Morte libertando,\nCantando espalharei por toda parte,\nSe a tanto me ajudar o engenho e arte.',
   },
   {
-    id: 'maias', n: 3, titulo: 'Os Maias (início)', autor: 'Eça de Queirós',
+    id: 'maias', n: 2, titulo: 'Os Maias (início)', autor: 'Eça de Queirós',
     texto: 'A casa que os Maias vieram habitar em Lisboa, no outono de 1875, era conhecida na vizinhança da Rua de S. Francisco de Paula, e em todo o bairro das Janelas Verdes, pela Casa do Ramalhete ou simplesmente o Ramalhete.',
   },
 
@@ -99,7 +99,7 @@ export const TEXTOS = [
   },
   {
     id: 'de-tarde', n: 3, titulo: 'De Tarde', autor: 'Cesário Verde',
-    texto: 'Naquele piquenique de burguesas,\nHouve uma coisa simplesmente bela,\nE que, sem ter histórias nem grandezas,\nEm todo o caso dava uma aguarela.\n\nFoi quando tu, descendo do burrico,\nFoste colher, sem imposturas tolas,\nA um granzoal azul de grão-de-bico\nUm ramalhete rubro de papoulas.\n\nPouco depois, em cima duns penhascos,\nNós acampámos, inda o sol se via;\nE houve talhadas de melão, damascos,\nE pão-de-ló molhado em malvasia.\n\nMas, todo púrpuro a sair da renda\nDos teus dois seios como duas rolas,\nEra o supremo encanto da merenda\nO ramalhete rubro das papoulas!',
+    texto: 'Naquele piquenique de burguesas,\nHouve uma coisa simplesmente bela,\nE que, sem ter história nem grandezas,\nEm todo o caso dava uma aguarela.\n\nFoi quando tu, descendo do burrico,\nFoste colher, sem imposturas tolas,\nA um granzoal azul de grão-de-bico\nUm ramalhete rubro de papoulas.\n\nPouco depois, em cima duns penhascos,\nNós acampámos, inda o sol se via;\nE houve talhadas de melão, damascos,\nE pão de ló molhado em malvasia.\n\nMas, todo púrpuro a sair da renda\nDos teus dois seios como duas rolas,\nEra o supremo encanto da merenda\nO ramalhete rubro das papoulas!',
   },
   {
     id: 'moleirinha', n: 2, titulo: 'A Moleirinha (início)', autor: 'Guerra Junqueiro',
@@ -113,7 +113,7 @@ export const TEXTOS = [
   },
   {
     id: 'sete-anos', n: 3, titulo: 'Sete anos de pastor Jacob servia', autor: 'Luís de Camões',
-    texto: 'Sete anos de pastor Jacob servia\nLabão, pai de Raquel, serrana bela:\nMas não servia ao pai, servia a ela,\nQue a ela só por prémio pretendia.\n\nOs dias na esperança de um só dia\nPassava, contentando-se com vê-la:\nPorém o pai, usando de cautela,\nEm lugar de Raquel lhe deu a Lia.\n\nVendo o triste pastor que com enganos\nAssim lhe era negada a sua pastora,\nComo se a não tivera merecida;\n\nComeçou a servir outros sete anos,\nDizendo: «Mais servira, se não fora\nPara tão longo amor tão curta a vida.»',
+    texto: 'Sete anos de pastor Jacob servia\nLabão, pai de Raquel, serrana bela:\nMas não servia ao pai, servia a ela,\nE a ela só por prémio pretendia.\n\nOs dias na esperança de um só dia\nPassava, contentando-se com vê-la:\nPorém o pai, usando de cautela,\nEm lugar de Raquel lhe dava Lia.\n\nVendo o triste pastor que com enganos\nLhe fora assim negada a sua pastora,\nComo se a não tivera merecida;\n\nComeça de servir outros sete anos,\nDizendo: «Mais servira, se não fora\nPara tão longo amor tão curta a vida.»',
   },
   {
     id: 'fanatismo', n: 3, titulo: 'Fanatismo', autor: 'Florbela Espanca',
@@ -121,7 +121,7 @@ export const TEXTOS = [
   },
   {
     id: 'mao-de-deus', n: 3, titulo: 'Na mão de Deus', autor: 'Antero de Quental',
-    texto: 'Na mão de Deus, na sua mão direita,\nDescansou afinal meu coração.\nDo palácio encantado da Ilusão\nDesci a passo e passo a escada estreita.\n\nComo as flores mortais, com que se enfeita\nA ignorância infantil, despojo vão,\nDepus do Ideal e da Paixão\nA forma transitória e imperfeita.\n\nComo criança, em lóbrega jornada,\nQue a mãe leva ao colo agasalhada\nE atravessa, sorrindo vagamente,\n\nSelvas, mares, areias do deserto…\nDorme o teu sono, coração liberto,\nDorme na mão de Deus eternamente!',
+    texto: 'Na mão de Deus, na sua mão direita,\nDescansou afinal meu coração.\nDo palácio encantado da Ilusão\nDesci a passo e passo a escada estreita.\n\nComo as flores mortais, com que se enfeita\nA ignorância infantil, despojo vão,\nDepus do Ideal e da Paixão\nA forma transitória e imperfeita.\n\nComo criança, em lôbrega jornada,\nQue a mãe leva ao colo agasalhada\nE atravessa, sorrindo vagamente,\n\nSelvas, mares, areias do deserto…\nDorme o teu sono, coração liberto,\nDorme na mão de Deus eternamente!',
   },
   {
     id: 'mostrengo', n: 3, titulo: 'O Mostrengo (Mensagem)', autor: 'Fernando Pessoa',
@@ -129,7 +129,7 @@ export const TEXTOS = [
   },
   {
     id: 'tesouro', n: 3, titulo: 'O Tesouro (início)', autor: 'Eça de Queirós',
-    texto: 'Os três irmãos de Medranhos, Rui, Guanes e Rostabal, eram então, em todo o Reino das Astúrias, os fidalgos mais famintos e os mais remendados.\n\nNos Paços de Medranhos, a que o vento da serra levara vidraça e telha, passavam eles as tardes desse inverno, engelhados nos seus pelotes de camelão, batendo as solas rotas sobre as lajes da cozinha, diante da vasta lareira negra, onde desde há muito não estalava lume, nem fervia a panela de ferro. Ao escurecer devoravam uma côdea de pão negro, esfregada com alho. Depois, sem candeia, através do pátio, fendendo a neve, iam dormir à estrebaria, para aproveitar o calor das três éguas lazarentas que, esfaimadas como eles, roíam as traves da manjedoura. E a miséria tornara estes senhores mais bravios que lobos.',
+    texto: 'Os três irmãos de Medranhos, Rui, Guanes e Rostabal, eram então, em todo o Reino das Astúrias, os fidalgos mais famintos e os mais remendados.\n\nNos Paços de Medranhos, a que o vento da serra levara vidraça e telha, passavam eles as tardes desse inverno, engelhados nos seus pelotes de camelão, batendo as solas rotas sobre as lajes da cozinha, diante da vasta lareira negra, onde desde muito não estalava lume, nem fervia a panela de ferro. Ao escurecer devoravam uma côdea de pão negro, esfregada com alho. Depois, sem candeia, através do pátio, fendendo a neve, iam dormir à estrebaria, para aproveitar o calor das três éguas lazarentas que, esfaimadas como eles, roíam as traves da manjedoura. E a miséria tornara estes senhores mais bravios que lobos.',
   },
   {
     id: 'pupilas', n: 3, titulo: 'As Pupilas do Senhor Reitor (início)', autor: 'Júlio Dinis',

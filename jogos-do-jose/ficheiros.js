@@ -1,5 +1,5 @@
 // Gerado por ferramentas/gerar-lista.mjs — não editar à mão.
-self.VERSAO = 'jogos-do-jose-f2-0c92fdbc9b';
+self.VERSAO = 'jogos-do-jose-f2-ae91175dc3';
 self.FICHEIROS = [
  "./",
  "./css/estilo.css",
@@ -314,7 +314,7 @@ self.FICHEIROS = [
  "./fotos/comboios/museu-ferroviario.jpg",
  "./fotos/comboios/santa-apolonia.jpg",
  "./fotos/descobrimentos/afonso-de-albuquerque.jpg",
- "./fotos/descobrimentos/bartolomeu-dias.jpg",
+ "./fotos/descobrimentos/bartolomeu-dias-v2.jpg",
  "./fotos/descobrimentos/caravela-vera-cruz.jpg",
  "./fotos/descobrimentos/diogo-cao.jpg",
  "./fotos/descobrimentos/fernao-de-magalhaes.jpg",
@@ -472,7 +472,7 @@ self.FICHEIROS = [
  "./fotos/fcporto/estadio-das-antas.jpg",
  "./fotos/fcporto/estadio-do-dragao.jpg",
  "./fotos/fcporto/falcao.jpg",
- "./fotos/fcporto/fernando-couto.jpg",
+ "./fotos/fcporto/fernando-couto-v2.jpg",
  "./fotos/fcporto/helton.jpg",
  "./fotos/fcporto/hulk.jpg",
  "./fotos/fcporto/james-rodriguez.jpg",
@@ -918,7 +918,7 @@ self.FICHEIROS = [
  "./fotos/pintura/conversa-com-o-vizinho.jpg",
  "./fotos/pintura/o-fado-malhoa.jpg",
  "./fotos/pintura/o-grupo-do-leao.jpg",
- "./fotos/pintura/os-bebados-malhoa.jpg",
+ "./fotos/pintura/os-bebados-malhoa-v2.jpg",
  "./fotos/pintura/outono-malhoa.jpg",
  "./fotos/pintura/paineis-de-sao-vicente.jpg",
  "./fotos/pintura/primavera-malhoa.jpg",

@@ -443,7 +443,7 @@ export const consolo = () => escolher(CONSOLO);
 
 export function fraseFinal(estrelas) {
   const nome = dados.nome ? `, ${dados.nome}` : '';
-  if (estrelas >= 3) return escolher([`Uma ronda de mestre${nome}! 🏆`, `Perfeito${nome}! Que cabeça! 🏆`, `Brilhante${nome}! Ninguém o para! 🏆`]);
+  if (estrelas >= 3) return escolher([`Uma ronda de mestre${nome}! 🏆`, `Perfeito${nome}! Que cabeça! 🏆`, `Brilhante${nome}! Está imparável! 🏆`]);
   if (estrelas === 2) return escolher([`Muito bom trabalho${nome}! 👏`, `Grande ronda${nome}! 👏`, `Está cada vez melhor${nome}! 👏`]);
   return escolher([`Bom treino${nome}! Cada jogo deixa a cabeça mais ágil. 🌱`, `Bem jogado${nome}! O importante é treinar. 🌱`, `Boa${nome}! Amanhã ainda vai correr melhor. 🌱`]);
 }

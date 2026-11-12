@@ -192,7 +192,7 @@ export function rondaTeclado(alvo, { perguntas, aoTerminar }) {
       const seguinte = el('button', { class: 'btn verde grande largo', type: 'button', onclick: avancar },
         i + 1 < perguntas.length ? 'Continuar ▶' : 'Ver resultado ▶');
       limpar(zonaRetorno).append(
-        retorno('info', '💡', consolo(), ['A resposta certa é ', el('b', { style: { display: 'inline' } }, String(q.resposta)), '.']),
+        retorno('info', '💡', consolo(), ['A resposta certa é: ', el('b', { style: { display: 'inline' } }, String(q.resposta))]),
         el('div', { class: 'fila-botoes' }, seguinte));
       seguinte.focus({ preventScroll: true });
       zonaRetorno.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

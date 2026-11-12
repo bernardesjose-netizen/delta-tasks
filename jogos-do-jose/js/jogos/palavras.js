@@ -89,8 +89,8 @@ export async function sopa(alvo, { nivel, curto, aoTerminar }) {
   const contador = el('div', { class: 'info-jogo' }, el('span', {}, `Encontradas: 0 de ${colocadas.length}`));
   const direcoes = nivel === 1 ? 'As palavras estão na horizontal (→) ou na vertical (↓).'
     : nivel === 2 ? 'As palavras estão na horizontal, na vertical ou na diagonal (↘).'
-      : 'Horizontal, vertical e nas duas diagonais (↘ ↗). Nunca de trás para a frente.';
-  const btnAjuda = el('button', { class: 'btn claro', type: 'button', onclick: ajuda }, '💡 Dar uma ajuda');
+      : 'Na horizontal, na vertical e nas duas diagonais (↘ ↗). Nunca de trás para a frente.';
+  const btnAjuda = el('button', { class: 'btn claro', type: 'button', onclick: ajuda }, '💡 Ajuda');
   alvo.append(el('div', { class: 'sopa-wrap' },
     tabuleiro,
     el('div', { class: 'sopa-lado' },
@@ -244,7 +244,7 @@ export async function anagramas(alvo, { nivel, curto, aoTerminar }) {
     const zonaRetorno = el('div');
     const btnApagar = el('button', { class: 'btn claro', type: 'button', onclick: apagar }, '⌫ Apagar');
     const btnAjuda = el('button', { class: 'btn claro', type: 'button', onclick: ajudar }, '💡 Ajuda');
-    const btnMostrar = el('button', { class: 'btn claro', type: 'button', onclick: () => revelar(false) }, '👀 Mostrar');
+    const btnMostrar = el('button', { class: 'btn claro', type: 'button', onclick: () => revelar(false) }, '👀 Mostrar a palavra');
     alvo.append(el('div', { class: 'ronda' },
       el('div', { class: 'progresso' }, el('span', {}, `${i + 1} de ${lista.length}`),
         el('div', { class: 'barra' }, el('i', { style: { width: `${(i / lista.length) * 100}%` } }))),
@@ -433,7 +433,7 @@ export function lembrar(alvo, { nivel, curto, aoTerminar }) {
         const b = el('button', { class: 'btn verde grande largo', type: 'button', onclick: avancar }, ronda + 1 < rondas ? 'Continuar ▶' : 'Ver resultado ▶');
         limpar(zonaRetorno).append(
           el('div', { class: `retorno ${tudo ? 'bom' : 'info'}` }, el('div', { class: 'icone' }, tudo ? '😃' : '💡'),
-            el('div', {}, el('b', {}, tudo ? elogio() : `Acertou ${certas} de ${quantas}. Boa memória!`),
+            el('div', {}, el('b', {}, tudo ? elogio() : certas === 0 ? 'Desta vez não acertou nenhuma. Para a próxima é que é!' : `Acertou ${certas} de ${quantas}. Boa memória!`),
               tudo ? null : el('div', { class: 'info-extra' }, 'As que faltaram estão marcadas a amarelo.'))),
           el('div', { class: 'fila-botoes' }, b));
         b.focus({ preventScroll: true });

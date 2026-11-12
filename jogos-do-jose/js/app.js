@@ -17,17 +17,17 @@ const NIVEIS = [
 
 // Temas da Cultura Geral: entram as perguntas dessa categoria (cat) e as que têm o tema em «t».
 const TEMAS_QUIZ = [
-  { id: 'leiria', nome: 'Leiria', cat: 'Leiria', icone: '🌲', novo: true },
-  { id: 'centro', nome: 'Zona Centro', cat: 'Zona Centro', icone: '🏞️', novo: true },
-  { id: 'norte', nome: 'Norte de Portugal', cat: 'Norte de Portugal', icone: '🌄', novo: true },
-  { id: 'espanha', nome: 'Espanha', cat: 'Espanha', icone: '💃', novo: true },
-  { id: 'ue', nome: 'União Europeia', cat: 'União Europeia', icone: '⭐', novo: true },
-  { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺', novo: true },
-  { id: 'futebol', nome: 'Futebol', cat: 'Futebol', icone: '⚽', novo: true },
-  { id: 'sporting', nome: 'Sporting', icone: '🦁', novo: true },
-  { id: 'benfica', nome: 'Benfica', icone: '🦅', novo: true },
-  { id: 'fcporto', nome: 'FC Porto', icone: '🐉', novo: true },
-  { id: 'ciclismo', nome: 'Ciclismo', icone: '🚴', novo: true },
+  { id: 'leiria', nome: 'Leiria', cat: 'Leiria', icone: '🌲' },
+  { id: 'centro', nome: 'Zona Centro', cat: 'Zona Centro', icone: '🏞️' },
+  { id: 'norte', nome: 'Norte de Portugal', cat: 'Norte de Portugal', icone: '🌄' },
+  { id: 'espanha', nome: 'Espanha', cat: 'Espanha', icone: '💃' },
+  { id: 'ue', nome: 'União Europeia', cat: 'União Europeia', icone: '⭐' },
+  { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺' },
+  { id: 'futebol', nome: 'Futebol', cat: 'Futebol', icone: '⚽' },
+  { id: 'sporting', nome: 'Sporting', icone: '🦁' },
+  { id: 'benfica', nome: 'Benfica', icone: '🦅' },
+  { id: 'fcporto', nome: 'FC Porto', icone: '🐉' },
+  { id: 'ciclismo', nome: 'Ciclismo', icone: '🚴' },
   { id: 'portugal', nome: 'Portugal', cat: 'Portugal', icone: '🏛️' },
   { id: 'geografia', nome: 'Geografia', cat: 'Geografia', icone: '🌍' },
   { id: 'historia', nome: 'História', cat: 'História', icone: '📜' },
@@ -60,7 +60,7 @@ const JOGOS = {
   quizfotos: {
     seccao: 'fotos', nome: 'Que Fotografia É?', icone: '📷', cor: '#00796b', tema: true,
     desc: 'Veja a fotografia e diga o que é.',
-    ajuda: 'Aparece uma fotografia e escolhe o nome certo. Pode escolher o tema que preferir.',
+    ajuda: 'Aparece uma fotografia: escolha o nome certo.',
     niveis: ['3 opções.', '4 opções.', '4 opções.'],
     carregar: fotos('quizFotos'),
   },
@@ -89,7 +89,7 @@ const JOGOS = {
   memoria: {
     seccao: 'cartas', nome: 'Jogo da Memória', icone: '🎴', cor: '#1d5fd1',
     desc: 'Vire as cartas e encontre os pares iguais.',
-    ajuda: 'Vire duas cartas de cada vez. Se forem iguais, ficam viradas. Se não, voltam a esconder-se — tente lembrar-se onde estavam!',
+    ajuda: 'Vire duas cartas de cada vez. Se forem iguais, ficam viradas. Se não, voltam a esconder-se — tente lembrar-se de onde estavam!',
     niveis: ['6 pares de cartas.', '8 pares de cartas.', '10 pares de cartas.'],
     carregar: cartas('memoria'),
   },
@@ -111,7 +111,7 @@ const JOGOS = {
     seccao: 'cabeca', grupo: 'rapido', nome: 'Cores Trocadas', icone: '🎨', cor: '#c2337a',
     desc: 'Diga a cor da tinta, não a palavra. Mais difícil do que parece!',
     ajuda: 'Aparece o nome de uma cor pintado com outra cor. Toque na cor da TINTA, sem ler a palavra.',
-    niveis: ['4 cores, muitas vezes iguais à palavra.', '4 cores, quase sempre trocadas.', '6 cores, sempre trocadas.'],
+    niveis: ['4 cores, muitas vezes iguais à palavra.', '4 cores, quase sempre trocadas.', '6 cores, quase nunca iguais à palavra.'],
     carregar: treinoJ('cores'),
   },
   palavras: {
@@ -146,7 +146,7 @@ const JOGOS = {
     seccao: 'cabeca', nome: 'Sopa de Letras', icone: '🔤', cor: '#6d3fd0',
     desc: 'Encontre as palavras escondidas na grelha.',
     ajuda: 'Toque na primeira letra da palavra e depois na última. Também pode arrastar o dedo por cima das letras.',
-    niveis: ['Grelha pequena, palavras na horizontal e na vertical.', 'Grelha média, também na diagonal.', 'Grelha grande, em todas as diagonais.'],
+    niveis: ['Grelha pequena, palavras na horizontal e na vertical.', 'Grelha média, também na diagonal.', 'Grelha grande, nas duas diagonais.'],
     carregar: palavras('sopa'),
   },
   proverbios: {
@@ -215,8 +215,8 @@ const JOGOS = {
   siga: {
     seccao: 'cabeca', nome: 'Siga a Sequência', icone: '🚦', cor: '#6d3fd0',
     desc: 'Luzes e música: repita a sequência, que vai crescendo.',
-    ajuda: 'Os botões acendem-se um a um, com música. Depois toque neles pela mesma ordem. Sempre que acerta, a sequência cresce mais uma. Tem 3 tentativas e pode pedir para ver outra vez.',
-    niveis: ['4 botões, devagar, até 6 seguidas.', '4 botões, até 8 seguidas.', '6 botões, até 9 seguidas.'],
+    ajuda: 'Os botões acendem-se um a um, com música. Depois toque neles pela mesma ordem. Sempre que acerta, a sequência ganha mais uma luz. Tem 3 tentativas e pode pedir para ver outra vez.',
+    niveis: ['4 botões, devagar, até 6 luzes.', '4 botões, até 8 luzes.', '6 botões, até 9 luzes.'],
     carregar: desafios('siga'),
   },
   oquee: {
@@ -320,7 +320,7 @@ function cartaoBoasVindas() {
   const gravar = () => { mudarNome(campo.value.trim()); fechar(); };
   campo.addEventListener('keydown', e => { if (e.key === 'Enter') gravar(); });
   return el('div', { class: 'painel boas-vindas' },
-    el('h3', {}, '👋 Bem-vindo!'),
+    el('h3', {}, '👋 Boas-vindas!'),
     el('p', {}, 'Como gosta que lhe chamemos? Não é preciso conta nem palavra-passe: o nome fica só neste aparelho.'),
     el('div', { class: 'linha-nome' }, campo, el('button', { class: 'btn verde', type: 'button', onclick: gravar }, 'Guardar')),
     el('button', { class: 'btn-texto', type: 'button', onclick: fechar }, 'Agora não'));
@@ -373,7 +373,7 @@ function inicio() {
       quemJoga()),
     cartaoBoasVindas() || '',
     el('div', { class: 'resumo' },
-      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '⭐'), el('div', {}, el('b', {}, dados.estrelas), el('span', {}, 'estrelas ganhas'))),
+      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '⭐'), el('div', {}, el('b', {}, dados.estrelas), el('span', {}, dados.estrelas === 1 ? 'estrela ganha' : 'estrelas ganhas'))),
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '🔥'), el('div', {}, el('b', {}, seguidos), el('span', {}, seguidos === 1 ? 'dia seguido' : 'dias seguidos'))),
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, feito ? '✅' : '☀️'), el('div', {}, el('b', {}, feito ? 'Feito!' : 'Por fazer'), el('span', {}, 'treino de hoje')))),
     el('div', { class: 'menu-principal' },
@@ -456,7 +456,7 @@ function escolherNivel(jid, cab = {}) {
             estrelas ? el('div', { class: 'estrelas-jogo' }, '★'.repeat(estrelas) + '☆'.repeat(3 - estrelas)) : null),
           ultimo === n ? el('div', { class: 'ultimo' }, 'Último jogado') : null);
       })),
-    el('p', { class: 'nota' }, 'Nenhum nível é difícil demais: pode sempre tentar outra vez e pedir ajuda.'),
+    el('p', { class: 'nota' }, 'Nenhum nível é difícil de mais: pode sempre tentar outra vez.'),
   );
 }
 
@@ -476,9 +476,9 @@ function escolherTemaQuiz() {
         el('span', { class: 'icone', 'aria-hidden': 'true' }, '🎲'),
         el('span', { class: 'texto' }, el('b', {}, 'De tudo um pouco'), el('small', {}, 'Perguntas misturadas'))),
       TEMAS_QUIZ.map(t => el('button', {
-        class: `tema-quiz${t.novo ? ' novo' : ''}`, type: 'button', onclick: () => ir(`#/jogo/quiz/tema/${t.id}`),
+        class: 'tema-quiz', type: 'button', onclick: () => ir(`#/jogo/quiz/tema/${t.id}`),
       }, el('span', { class: 'icone', 'aria-hidden': 'true' }, t.icone),
-      el('span', { class: 'texto' }, el('b', {}, t.nome), feitos[t.id] ? estrelas(feitos[t.id]) : t.novo ? el('small', {}, 'Novo') : null)))),
+      el('span', { class: 'texto' }, el('b', {}, t.nome), feitos[t.id] ? estrelas(feitos[t.id]) : null)))),
     el('p', { class: 'nota' }, 'Em cada tema saem dez perguntas, das mais fáceis para as mais difíceis.'));
 }
 
@@ -507,6 +507,7 @@ async function jogar(jid, nivel, extra = {}) {
       mostrarResultado(res, {
         repetir: () => router(),
         outro: () => ir(j.tema || jid === 'quiz' ? `#/jogo/${jid}` : `#/${j.seccao}`),
+        outroTexto: j.tema || jid === 'quiz' ? '🎲 Escolher outro tema' : '🎲 Escolher outro jogo',
         nivelAcima: !j.tema && !extra.temaQuiz && nivel < 3 && res.estrelas >= 2 ? () => ir(`#/jogo/${jid}/${nivel + 1}`) : null,
         nivelAbaixo: !j.tema && !extra.temaQuiz && nivel > 1 && res.estrelas === 1 ? () => ir(`#/jogo/${jid}/${nivel - 1}`) : null,
       });
@@ -547,10 +548,10 @@ function mostrarErro(a, e) {
   limpar(a).append(el('div', { class: 'resultado' },
     el('h2', {}, 'Ups! Algo correu mal.'),
     el('p', { class: 'frase' }, 'Não é culpa sua. Experimente voltar ao início e abrir o jogo outra vez.'),
-    el('div', { class: 'fila-botoes' }, el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Ir para o início'))));
+    el('div', { class: 'fila-botoes' }, el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Voltar ao início'))));
 }
 
-function mostrarResultado(res, { repetir, outro, nivelAcima, nivelAbaixo }) {
+function mostrarResultado(res, { repetir, outro, outroTexto, nivelAcima, nivelAbaixo }) {
   if (typeof limpeza === 'function') { try { limpeza(); } catch { /* ignora */ } }
   limpeza = null;
   app.classList.remove('ecra-cheio');
@@ -572,7 +573,7 @@ function mostrarResultado(res, { repetir, outro, nivelAcima, nivelAbaixo }) {
       el('button', { class: 'btn verde grande', type: 'button', onclick: repetir }, '🔁 Jogar outra vez'),
       nivelAcima ? el('button', { class: 'btn roxo grande', type: 'button', onclick: nivelAcima }, '⬆ Experimentar o nível seguinte') : null,
       nivelAbaixo ? el('button', { class: 'btn claro grande', type: 'button', onclick: nivelAbaixo }, '🌱 Experimentar um nível mais calmo') : null,
-      el('button', { class: 'btn claro grande', type: 'button', onclick: outro }, '🎲 Escolher outro'))));
+      el('button', { class: 'btn claro grande', type: 'button', onclick: outro }, outroTexto || '🎲 Escolher outro jogo'))));
 }
 
 /* ---------- Treino do Dia ---------- */
@@ -588,7 +589,7 @@ function treino() {
   a.append(
     el('div', { class: 'cabeca-jogo' },
       el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, '☀️'),
-      el('h2', {}, feito ? 'Treino de hoje concluído! ✅' : 'O treino de hoje'),
+      el('h2', {}, feito ? 'Treino do Dia concluído! ✅' : 'O treino de hoje'),
       el('p', {}, feito ? 'Muito bem! Amanhã há exercícios novos. Se quiser, pode repetir o de hoje.' : 'Quatro exercícios curtos, um de cada tipo. Demora uns 10 minutos.')),
     el('div', { class: 'painel', style: { maxWidth: '640px', margin: '0 auto 16px' } },
       el('h3', {}, 'Exercícios de hoje'),
@@ -601,7 +602,7 @@ function treino() {
     },
     el('div', { class: 'icone', 'aria-hidden': 'true' }, NIVEIS[n].icone),
     el('div', {}, el('b', {}, NIVEIS[n].nome), el('span', {}, ['Para começar o dia com calma.', 'Um bom equilíbrio.', 'Para quem está em grande forma.'][n - 1])),
-    dados.def.nivelTreino === n ? el('div', { class: 'ultimo' }, 'Último usado') : null))),
+    dados.def.nivelTreino === n ? el('div', { class: 'ultimo' }, 'Último jogado') : null))),
   );
 }
 
@@ -621,7 +622,7 @@ function correrTreino(lista, nivel) {
       a.append(el('div', { class: 'resultado' },
         el('div', { class: 'carimbo-grande', 'aria-hidden': 'true' }, el('span', {}, '✔'), el('small', {}, new Date().getDate())),
         el('h2', {}, 'Treino do dia concluído!'),
-        el('p', { class: 'frase' }, `${fraseFinal(media)} Ganhou ${total} estrelas hoje e o carimbo de hoje já está no calendário.`),
+        el('p', { class: 'frase' }, `${fraseFinal(media)} Ganhou ${total} ${total === 1 ? 'estrela' : 'estrelas'} e o carimbo de hoje já está no calendário.`),
         el('div', { class: 'painel', style: { marginTop: '18px', textAlign: 'left' } },
           el('table', { class: 'tabela-prog' }, el('tbody', {},
             resultados.map(r => el('tr', {}, el('td', {}, `${JOGOS[r.jid].icone} ${JOGOS[r.jid].nome}`), el('td', {}, '⭐'.repeat(r.res.estrelas))))))),
@@ -737,7 +738,7 @@ function correrTeste() {
         el('p', { class: 'frase' }, 'A sua cabeça está em forma de quem tem'),
         el('div', { class: 'idade-cabeca' }, String(idade), el('small', {}, 'anos')),
         el('h2', {}, frasePorIdade(idade)),
-        anterior ? el('p', { class: 'frase' }, melhorou ? `🎉 Da última vez foram ${anterior.idade} anos — melhorou ${anterior.idade - idade}!` : `Da última vez foram ${anterior.idade} anos. Amanhã há mais!`) : null,
+        anterior ? el('p', { class: 'frase' }, melhorou ? `🎉 Da última vez foram ${anterior.idade} anos: a sua cabeça ficou ${anterior.idade - idade} ${anterior.idade - idade === 1 ? 'ano' : 'anos'} mais nova!` : `Da última vez foram ${anterior.idade} anos. Amanhã há mais!`) : null,
         el('div', { class: 'numeros' },
           el('div', {}, el('b', {}, `${(m.cores.ms / 1000).toFixed(1).replace('.', ',')} s`), el('span', {}, 'cores trocadas')),
           el('div', {}, el('b', {}, `${(m.relampago.ms / 1000).toFixed(1).replace('.', ',')} s`), el('span', {}, 'contas relâmpago')),
@@ -805,15 +806,15 @@ function progresso() {
     const k = `cores-${n}-15`;
     if (hist[k]) graficos.push(graficoLinha(hist[k], { titulo: `🎨 Cores Trocadas · ${NIVEIS[n].nome} (tempo)`, formatar: v => `${Math.round(v / 1000)} s`, menorMelhor: true }));
   }
-  if (hist['leitura-ppm']) graficos.push(graficoLinha(hist['leitura-ppm'], { titulo: '📖 Leitura em voz alta (palavras por minuto)', formatar: v => `${v}` }));
+  if (hist['leitura-ppm']) graficos.push(graficoLinha(hist['leitura-ppm'], { titulo: '📖 Leitura em Voz Alta (palavras por minuto)', formatar: v => `${v}` }));
   if (dados.testes && dados.testes.length) graficos.unshift(graficoLinha(pontosTeste(), { titulo: '🎯 Teste da Cabeça (idade)', formatar: v => `${v} anos`, menorMelhor: true }));
   const hoje = new Date();
   a.append(
     el('h2', { class: 'titulo-seccao' }, '🏅 O Meu Progresso'),
     el('p', { class: 'sub' }, 'Tudo fica guardado neste aparelho.'),
     el('div', { class: 'resumo' },
-      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '⭐'), el('div', {}, el('b', {}, dados.estrelas), el('span', {}, 'estrelas'))),
-      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '🔥'), el('div', {}, el('b', {}, seguidos), el('span', {}, 'dias seguidos'))),
+      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '⭐'), el('div', {}, el('b', {}, dados.estrelas), el('span', {}, dados.estrelas === 1 ? 'estrela' : 'estrelas'))),
+      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '🔥'), el('div', {}, el('b', {}, seguidos), el('span', {}, seguidos === 1 ? 'dia seguido' : 'dias seguidos'))),
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '🏅'), el('div', {}, el('b', {}, `${nGanhas}/${MEDALHAS.length}`), el('span', {}, 'medalhas')))),
     el('div', { class: 'painel' }, el('h3', {}, '📅 Calendário de treinos'), calendario(hoje.getFullYear(), hoje.getMonth())),
     el('div', { class: 'painel' },
@@ -824,12 +825,12 @@ function progresso() {
         el('span', {}, ganhas[m.id] ? `Ganha a ${ganhas[m.id].split('-').reverse().join('/')}` : m.desc))))),
     graficos.length ? el('div', { class: 'painel' }, el('h3', {}, '📈 A sua evolução'), graficos) : '',
     el('div', { class: 'painel' },
-      el('h3', {}, '🃏 Cartas e dominó'),
+      el('h3', {}, '🃏 Cartas e Dominó'),
       el('table', { class: 'tabela-prog' }, el('tbody', {},
         [1, 2, 3].map(n => el('tr', {},
           el('td', {}, `Paciência · ${NIVEIS[n].nome}`),
           el('td', {}, `${dados.pac.ganhos[n] || 0} ${dados.pac.ganhos[n] === 1 ? 'vitória' : 'vitórias'} em ${dados.pac.jogados[n] || 0} ${dados.pac.jogados[n] === 1 ? 'jogo' : 'jogos'}`))),
-        el('tr', {}, el('td', {}, 'Dominó'), el('td', {}, dados.domino ? `${dados.domino.ganhos} ganhos · ${dados.domino.perdidos} perdidos` : 'ainda por jogar'))))),
+        el('tr', {}, el('td', {}, 'Dominó'), el('td', {}, dados.domino ? `${dados.domino.ganhos} ${dados.domino.ganhos === 1 ? 'vitória' : 'vitórias'} · ${dados.domino.perdidos} ${dados.domino.perdidos === 1 ? 'derrota' : 'derrotas'}` : 'ainda por jogar'))))),
     el('div', { class: 'painel' },
       el('h3', {}, '🎲 Jogos'),
       jogados.length
@@ -879,7 +880,7 @@ function definicoes() {
   campoNome.addEventListener('change', () => { mudarNome(campoNome.value.trim()); dados.boasVindas = true; guardar(); aviso('Nome guardado. 👍'); });
   const campoClube = el('select', { class: 'campo-nome', id: 'clube' }, CLUBES.map(([id, nome]) => el('option', { value: id }, nome)));
   campoClube.value = dados.def.clube || '';
-  campoClube.addEventListener('change', () => { dados.def.clube = campoClube.value; guardar(); aplicarDefinicoes(); aviso(campoClube.value ? 'As cartas da Memória ficam com as cores do clube. ⚽' : 'Cartas com as cores do jogo.'); });
+  campoClube.addEventListener('change', () => { dados.def.clube = campoClube.value; guardar(); aplicarDefinicoes(); aviso(campoClube.value ? 'As costas das cartas ficam com as cores do clube. ⚽' : 'Cartas com as cores do jogo.'); });
   let tApagar = null;
   const btnApagar = el('button', { class: 'btn claro', type: 'button' }, '🗑️ Apagar o progresso');
   btnApagar.addEventListener('click', () => {
@@ -927,7 +928,7 @@ function definicoes() {
       estadoOffline(),
       el('p', { style: { marginTop: '10px' } }, 'Depois de abrir os jogos uma vez com internet, ficam guardados neste aparelho e funcionam sem rede.')),
     el('div', { class: 'painel' },
-      el('h3', {}, '📱 Pôr no ecrã inicial'),
+      el('h3', {}, '📱 Pôr no ecrã principal'),
       el('p', {}, 'Para abrir os jogos como uma aplicação: no iPhone ou iPad, toque em «Partilhar» e depois em «Adicionar ao ecrã principal». No Android, abra o menu ⋮ do Chrome e escolha «Adicionar ao ecrã principal» (ou «Instalar aplicação»). Depois de instalado, funciona mesmo sem internet.')),
     el('div', { class: 'painel' },
       el('h3', {}, '📷 Fotografias'),
@@ -941,11 +942,11 @@ function definicoes() {
 
 /* ---------- Para Ler e Rir (só para entretenimento: sem pontos nem relógio) ---------- */
 const LER = {
-  anedotas: { nome: 'Anedotas', icone: '😄', desc: 'Cem anedotas para rir com a família.', chave: 'ANEDOTAS', cor: 'laranja' },
+  anedotas: { nome: 'Anedotas', icone: '😄', desc: 'Anedotas para rir com a família.', chave: 'ANEDOTAS', cor: 'laranja' },
   fabulas: { nome: 'Fábulas', icone: '🦊', desc: 'Esopo, Fedro e La Fontaine, com a moral da história.', chave: 'FABULAS', cor: 'verde', tipo: 'Fábula' },
   contos: { nome: 'Contos e lendas', icone: '🏰', desc: 'Histórias e lendas da tradição portuguesa.', chave: 'CONTOS', cor: 'azul', tipo: 'Conto' },
   divertidas: { nome: 'Histórias divertidas', icone: '😂', desc: 'Casos da aldeia para sorrir.', chave: 'DIVERTIDAS', cor: 'roxo', tipo: 'História divertida' },
-  poemas: { nome: 'Poemas populares', icone: '🎶', desc: 'Quadras, cantigas e poemas de sempre.', chave: 'POEMAS', cor: 'foto', tipo: 'Poema' },
+  poemas: { nome: 'Poemas e quadras', icone: '🎶', desc: 'Quadras, cantigas e poemas de sempre.', chave: 'POEMAS', cor: 'foto', tipo: 'Poema' },
 };
 const lidos = cat => (dados.lidos || (dados.lidos = {}))[cat] || (dados.lidos[cat] = []);
 
@@ -1037,8 +1038,8 @@ async function lerTexto(cat, id) {
     t.moral ? el('div', { class: 'moral' }, el('b', {}, '💡 Moral da história: '), t.moral) : null,
     t.fonte ? el('p', { class: 'fonte' }, 'Texto: ', el('a', { href: t.fonte, target: '_blank', rel: 'noopener' }, 'ver a fonte')) : null),
   el('div', { class: 'fila-botoes leitura-botoes' },
-    seguinte ? el('button', { class: 'btn verde grande', type: 'button', onclick: () => ir(`#/ler/${cat}/${seguinte.id}`) }, 'Seguinte ▶') : null,
     anterior ? el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir(`#/ler/${cat}/${anterior.id}`) }, '◀ Anterior') : null,
+    seguinte ? el('button', { class: 'btn verde grande', type: 'button', onclick: () => ir(`#/ler/${cat}/${seguinte.id}`) }, 'Seguinte ▶') : null,
     el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir(`#/ler/${cat}`) }, '📋 Ver a lista')));
 }
 

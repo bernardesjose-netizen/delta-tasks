@@ -3,12 +3,23 @@ import { el, limpar, baralhar, amostra, escolher, som, elogio, outraVez, falar, 
 import { rondaEscolha } from '../motor.js';
 
 /* ---------- O que é isto? ---------- */
+// Nomes genéricos (que também serviriam para outro desenho da mesma categoria) e radicais das palavras,
+// para nunca dar como errada uma opção que também está certa («Peixe» para o peixe tropical, «Carro» para o táxi).
+const GENERICOS = ['passaro', 'arvore', 'flor', 'peixe', 'carro', 'pintainho', 'nuvem', 'estrela', 'lua', 'sapato', 'oculos', 'comboio', 'baleia', 'cao'];
+const semAcentos = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const radicais = t => semAcentos(t).split(/[\s-]+/).filter(p => p.length >= 4).map(p => p.slice(0, 4));
+function confundivel(certo, outro) {
+  if (GENERICOS.indexOf(semAcentos(outro)) >= 0) return true;
+  const r = radicais(certo);
+  return radicais(outro).some(p => r.indexOf(p) >= 0);
+}
+
 export async function oQueE(alvo, { nivel, curto, aoTerminar }) {
   const { EMOJIS } = await import('../dados/emojis.js');
   const n = curto ? 5 : 10;
   const escolhidos = escolherNaoVistos('oquee', EMOJIS, n, x => x.e);
   const perguntas = escolhidos.map(x => {
-    const mesma = EMOJIS.filter(y => y.cat === x.cat && y.nome !== x.nome);
+    const mesma = EMOJIS.filter(y => y.cat === x.cat && y.nome !== x.nome && !confundivel(x.nome, y.nome));
     const outras = EMOJIS.filter(y => y.cat !== x.cat);
     const nErradas = nivel === 3 ? 3 : 2;
     const erradas = amostra(nivel === 1 ? outras : mesma.length >= nErradas ? mesma : outras, nErradas).map(y => y.nome);
