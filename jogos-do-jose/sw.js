@@ -71,8 +71,11 @@ self.addEventListener('fetch', e => {
     if (guardado) return guardado;
     try {
       const r = await fetch(pedido);
-      if (r && r.ok) cache.put(pedido, r.clone());
-      return r;
+      if (r && r.ok) { cache.put(pedido, r.clone()); return r; }
+      // Logo a seguir a uma atualização, a página que já estava aberta ainda pode pedir uma
+      // fotografia que entretanto foi trocada: se o servidor já não a tiver, serve-se a cópia antiga.
+      const antiga = await caches.match(pedido, { ignoreSearch: true });
+      return antiga || r;
     } catch (erro) {
       const antigo = await caches.match(pedido, { ignoreSearch: true });
       if (antigo) return antigo;
