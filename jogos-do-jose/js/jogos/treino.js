@@ -104,7 +104,7 @@ export function relampago(alvo, { nivel, curto, rondas, aoTerminar, modoTeste })
     onclick: () => tecla(d),
   }, d === 'apagar' ? '⌫' : d === 'ok' ? '✔ OK' : d));
   conteudo.append(el('div', { class: 'cartao-pergunta' }, el('div', { class: 'etiqueta' }, 'Contas Relâmpago'), conta), visor, msg, el('div', { class: 'teclado' }, teclas));
-  alvo.append(el('div', { class: 'ronda' }, barra.elemento, conteudo));
+  alvo.append(el('div', { class: 'ronda compacto' }, barra.elemento, conteudo));
 
   function mostrar() {
     const c = contas[i];
@@ -210,11 +210,11 @@ export function cores(alvo, { nivel, curto, rondas, aoTerminar, modoTeste }) {
   conteudo.append(
     el('div', { class: 'cartao-pergunta' },
       el('div', { class: 'etiqueta' }, 'Cores Trocadas'),
-      el('div', { class: 'enunciado centrado' }, 'Toque na cor da TINTA, não leia a palavra!'),
+      el('div', { class: 'enunciado centrado' }, 'Toque na cor da TINTA, não na palavra!'),
       palavraEl),
     msg,
     el('div', { class: 'grelha-cores' }, botoes));
-  alvo.append(el('div', { class: 'ronda' }, barra.elemento, conteudo));
+  alvo.append(el('div', { class: 'ronda compacto' }, barra.elemento, conteudo));
 
   function mostrar() {
     const { palavra, tinta } = lista[i];
