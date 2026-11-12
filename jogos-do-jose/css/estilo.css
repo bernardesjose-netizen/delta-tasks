@@ -254,7 +254,7 @@ h1, h2, h3, p { margin: 0; }
 .ficha-jogo .estrelas-jogo { color: #c98a00; font-size: .85rem; margin-top: 2px; }
 
 /* ---------- Escolha de nível ---------- */
-.niveis { display: grid; gap: 16px; max-width: 640px; margin: 10px auto 0; }
+.niveis { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; max-width: 640px; margin: 10px auto 0; }
 .nivel-btn {
   display: flex;
   align-items: center;
@@ -884,6 +884,32 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .autor-texto { color: var(--texto-suave); font-style: italic; margin-top: 2px; }
 .faixa-recorde { display: inline-block; background: linear-gradient(90deg, #f2b705, #ffd84d); color: #3d2c00; font-weight: 900; font-size: 1.2rem; padding: 8px 20px; border-radius: 999px; box-shadow: 0 3px 0 #c99200; margin-bottom: 8px; animation: pulsar .7s 3; }
 .titulo-grupo { font-size: 1.1rem; font-weight: 800; margin: 18px 0 10px; color: var(--marca-escura); }
+
+/* ---------- Cultura Geral: perguntas por tema ---------- */
+.titulo-grupo.centrado { margin-top: 28px; margin-bottom: 4px; font-size: 1.25rem; }
+.temas-quiz { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); max-width: 640px; margin: 10px auto 0; }
+.tema-quiz {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 100px; min-width: 0; padding: 10px 8px;
+  border: 3px solid var(--linha); border-radius: 18px; background: var(--cartao); color: inherit; font: inherit;
+  text-align: center; cursor: pointer; box-shadow: 0 4px 0 var(--linha); transition: transform .06s, box-shadow .06s;
+}
+.tema-quiz:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--linha); }
+.tema-quiz .icone { font-size: 1.9rem; line-height: 1; flex: none; }
+.tema-quiz .texto { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
+.tema-quiz b { font-size: 1.02rem; line-height: 1.2; overflow-wrap: break-word; hyphens: none; }
+.tema-quiz.novo { border-color: #9bd8b0; box-shadow: 0 4px 0 #9bd8b0; }
+.tema-quiz small { background: var(--verde); color: #fff; font-size: .7rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; }
+/* No telemóvel: duas colunas e letra um pouco menor, para as palavras compridas («portuguesa») caberem inteiras. */
+@media (max-width: 420px) {
+  .temas-quiz { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tema-quiz { padding: 8px 4px; gap: 4px; min-height: 92px; }
+  .tema-quiz .icone { font-size: 1.5rem; }
+  .tema-quiz b { font-size: .9rem; }
+  html.letra-2 .tema-quiz b { font-size: .76rem; }
+}
+@media (max-width: 340px) { .tema-quiz b { font-size: .82rem; } html.letra-2 .tema-quiz b { font-size: .68rem; } }
+/* Ecrãs muito estreitos com letra grande: botões de nível mais compactos, para o texto não sair do botão. */
+@media (max-width: 340px) { .nivel-btn { padding: 14px 12px; gap: 10px; } .nivel-btn .icone { font-size: 2.2rem; } html.letra-2 .nivel-btn b { font-size: 1.05rem; } html.letra-2 .nivel-btn span { font-size: .8rem; } .nivel-btn > div:nth-child(2) { min-width: 0; } }
 .idade-cabeca { font-size: 6rem; font-weight: 900; color: var(--marca); line-height: 1; margin: 6px 0; animation: estrela-pop .6s cubic-bezier(.2, 1.6, .4, 1) both; }
 .idade-cabeca small { font-size: 1.6rem; margin-left: 8px; color: var(--texto-suave); }
 .idade-pequena { font-size: 2.4rem; font-weight: 900; color: var(--marca); }

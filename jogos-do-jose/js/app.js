@@ -13,6 +13,28 @@ const NIVEIS = [
   { nome: 'Desafio', icone: '🌳' },
 ];
 
+// Temas da Cultura Geral: entram as perguntas dessa categoria (cat) e as que têm o tema em «t».
+const TEMAS_QUIZ = [
+  { id: 'leiria', nome: 'Leiria', cat: 'Leiria', icone: '🌲', novo: true },
+  { id: 'centro', nome: 'Zona Centro', cat: 'Zona Centro', icone: '🏞️', novo: true },
+  { id: 'norte', nome: 'Norte de Portugal', cat: 'Norte de Portugal', icone: '🌄', novo: true },
+  { id: 'espanha', nome: 'Espanha', cat: 'Espanha', icone: '💃', novo: true },
+  { id: 'eua', nome: 'Estados Unidos', cat: 'Estados Unidos', icone: '🗽', novo: true },
+  { id: 'ue', nome: 'União Europeia', cat: 'União Europeia', icone: '⭐', novo: true },
+  { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺', novo: true },
+  { id: 'portugal', nome: 'Portugal', cat: 'Portugal', icone: '🏛️' },
+  { id: 'geografia', nome: 'Geografia', cat: 'Geografia', icone: '🌍' },
+  { id: 'historia', nome: 'História', cat: 'História', icone: '📜' },
+  { id: 'natureza', nome: 'Natureza e animais', cat: 'Natureza e animais', icone: '🐾' },
+  { id: 'ciencia', nome: 'Ciência e corpo humano', cat: 'Ciência e corpo humano', icone: '🔬' },
+  { id: 'desporto', nome: 'Desporto', cat: 'Desporto', icone: '⚽' },
+  { id: 'musica', nome: 'Música, cinema e TV', cat: 'Música, cinema e TV', icone: '🎬' },
+  { id: 'cozinha', nome: 'Cozinha e sabores', cat: 'Cozinha e sabores', icone: '🍲' },
+  { id: 'lingua', nome: 'Língua portuguesa', cat: 'Língua portuguesa', icone: '📝' },
+  { id: 'tradicoes', nome: 'Tradições e costumes', cat: 'Tradições e costumes', icone: '🎉' },
+  { id: 'arte', nome: 'Arte e literatura', cat: 'Arte e literatura', icone: '🎨' },
+];
+
 const cerebro = nome => () => import('./jogos/cerebro.js').then(m => m[nome]);
 const palavras = nome => () => import('./jogos/palavras.js').then(m => m[nome]);
 const cartas = nome => () => import('./jogos/cartas.js').then(m => m[nome]);
@@ -24,7 +46,7 @@ const desafios = nome => () => import('./jogos/desafios.js').then(m => m[nome]);
 const JOGOS = {
   memfotos: {
     seccao: 'fotos', nome: 'Memória de Fotografias', icone: '📸', cor: '#2e7d32', tema: true,
-    desc: 'Pares de fotografias: Sporting, Algarve, monumentos e muito mais.',
+    desc: 'Pares de fotografias: Sporting, Leiria, monumentos, viagens e muito mais.',
     ajuda: 'Escolha um tema e quantas fotografias quer. Depois vire duas cartas de cada vez e encontre os pares.',
     niveis: ['4 pares.', '6 pares.', '8 pares.'],
     carregar: fotos('memoriaFotos'),
@@ -38,7 +60,7 @@ const JOGOS = {
   },
   puzzle: {
     seccao: 'fotos', nome: 'Puzzle de Fotografias', icone: '🖼️', cor: '#558b2f',
-    desc: 'Troque as peças e descubra uma fotografia de Portugal.',
+    desc: 'Troque as peças e descubra a fotografia.',
     ajuda: 'Toque numa peça e depois noutra para as trocar de lugar. As peças no sítio certo ficam com um contorno verde.',
     niveis: ['4 peças grandes.', '9 peças.', '16 peças.'],
     carregar: fotos('puzzle'),
@@ -109,7 +131,7 @@ const JOGOS = {
   },
   quiz: {
     seccao: 'cabeca', nome: 'Cultura Geral', icone: '🌍', cor: '#1d5fd1',
-    desc: 'Portugal, história, desporto, música, cozinha e muito mais.',
+    desc: 'Por nível ou por tema: Leiria, Espanha, Europa, desporto e muito mais.',
     ajuda: 'Escolha a resposta certa. Se errar, pode tentar outra vez. No fim de cada pergunta há uma curiosidade.',
     niveis: ['Perguntas fáceis, com 3 opções.', 'Perguntas do dia a dia, com 4 opções.', 'Perguntas para quem sabe muito!'],
     carregar: cerebro('quiz'),
@@ -215,7 +237,7 @@ const JOGOS = {
 };
 
 const SECCOES = {
-  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Algarve, monumentos, cidades e muitos outros temas.' },
+  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Leiria, monumentos, Espanha, Estados Unidos e muitos outros temas.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
   cabeca: { titulo: 'Treino da Cabeça', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
@@ -374,13 +396,22 @@ function escolherNivel(jid) {
       })),
     el('p', { class: 'nota' }, 'Nenhum nível é difícil demais: pode sempre tentar outra vez e pedir ajuda.'),
   );
+  if (jid === 'quiz') {
+    a.append(
+      el('h3', { class: 'titulo-grupo centrado' }, '📚 Ou escolha um tema'),
+      el('p', { class: 'sub centrado' }, 'Dez perguntas sobre o tema, das mais fáceis para as mais difíceis.'),
+      el('div', { class: 'temas-quiz' }, TEMAS_QUIZ.map(t => el('button', {
+        class: `tema-quiz${t.novo ? ' novo' : ''}`, type: 'button', onclick: () => ir(`#/jogo/quiz/tema/${t.id}`),
+      }, el('span', { class: 'icone', 'aria-hidden': 'true' }, t.icone),
+      el('span', { class: 'texto' }, el('b', {}, t.nome), t.novo ? el('small', {}, 'Novo') : null)))));
+  }
 }
 
 /* ---------- Jogar ---------- */
 async function jogar(jid, nivel, extra = {}) {
   const j = JOGOS[jid];
   if (!j || ![1, 2, 3].includes(nivel)) { ir('#/'); return; }
-  const titulo = j.tema ? j.nome : `${j.nome} · ${NIVEIS[nivel].nome}`;
+  const titulo = j.tema ? j.nome : extra.temaQuiz ? `${j.nome} · ${extra.temaQuiz.nome}` : `${j.nome} · ${NIVEIS[nivel].nome}`;
   const pai = j.tema ? (jid === 'memfotos' && extra.tema ? `#/jogo/${jid}/${extra.tema}` : `#/jogo/${jid}`) : `#/jogo/${jid}`;
   const a = ecra(titulo, pai);
   a.append(el('div', { class: 'a-carregar' }, 'A preparar…'));
@@ -399,9 +430,9 @@ async function jogar(jid, nivel, extra = {}) {
       registar(jid, nivel, res, extra);
       mostrarResultado(res, {
         repetir: () => router(),
-        outro: () => ir(j.tema ? `#/jogo/${jid}` : `#/${j.seccao}`),
-        nivelAcima: !j.tema && nivel < 3 && res.estrelas >= 2 ? () => ir(`#/jogo/${jid}/${nivel + 1}`) : null,
-        nivelAbaixo: !j.tema && nivel > 1 && res.estrelas === 1 ? () => ir(`#/jogo/${jid}/${nivel - 1}`) : null,
+        outro: () => ir(j.tema || extra.temaQuiz ? `#/jogo/${jid}` : `#/${j.seccao}`),
+        nivelAcima: !j.tema && !extra.temaQuiz && nivel < 3 && res.estrelas >= 2 ? () => ir(`#/jogo/${jid}/${nivel + 1}`) : null,
+        nivelAbaixo: !j.tema && !extra.temaQuiz && nivel > 1 && res.estrelas === 1 ? () => ir(`#/jogo/${jid}/${nivel - 1}`) : null,
       });
     },
   });
@@ -870,6 +901,7 @@ const GRUPOS_FOTOS = [
   ['Natureza e animais', '🌳'],
   ['Comida e sabores', '🍲'],
   ['História, arte e tradições', '🎨'],
+  ['Viagens pelo mundo', '✈️'],
 ];
 
 async function escolherPares(temaId) {
@@ -927,6 +959,10 @@ function router() {
   if (p0 === 'teste') return teste();
   if (p0 === 'progresso') return progresso();
   if (p0 === 'definicoes') return definicoes();
+  if (p0 === 'jogo' && p1 === 'quiz' && p2 === 'tema') {
+    const t = TEMAS_QUIZ.find(x => x.id === partes[3]);
+    return t ? jogar('quiz', 2, { temaQuiz: t }) : escolherNivel('quiz');
+  }
   if (p0 === 'jogo' && p1 && !p2) return escolherNivel(p1);
   if (p0 === 'jogo' && p1 && p2) return jogar(p1, Number(p2));
   return inicio();

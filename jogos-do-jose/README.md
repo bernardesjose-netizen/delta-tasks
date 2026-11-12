@@ -4,12 +4,14 @@ Jogos simples e encorajadores para treinar a cabeça, pensados para seniores: le
 botões largos, sem pressas e sempre com uma palavra de incentivo.
 
 - **Fotografias de Portugal:** Memória de Fotografias (escolhe-se o tema e o número de pares), Que Fotografia É?
-  e Puzzle de Fotografias. 815 fotografias em 51 temas, arrumados em 6 grupos: Sporting, Algarve, Lisboa, Porto,
-  monumentos, Património Mundial, faróis, reis e rainhas, pintura portuguesa e muitos outros.
+  e Puzzle de Fotografias. 966 fotografias em 55 temas, arrumados em 7 grupos: Sporting, Algarve, Lisboa, Porto,
+  Leiria, Zona Centro, Norte, monumentos, Património Mundial, faróis, reis e rainhas, pintura portuguesa, artesanato
+  e, em «Viagens pelo mundo», Espanha, Estados Unidos e União Europeia.
   Fotografias do Wikimedia Commons com licenças livres (créditos dentro da app, em Definições).
 - **Cartas e Dominó:** Dominó tradicional contra o computador (3 níveis); cartas com desenho tradicional:
   Paciência (3 níveis, todos os jogos verificados para terem solução), Jogo da Memória, Maior ou Menor.
-- **Treino da Cabeça:** Cultura Geral (656 perguntas), Contas de Cabeça, Sopa de Letras (46 temas),
+- **Treino da Cabeça:** Cultura Geral (788 perguntas, por nível ou por tema: Leiria, Zona Centro, Norte de Portugal,
+  Espanha, Estados Unidos, União Europeia, Artesanato português e mais 11), Contas de Cabeça, Sopa de Letras (46 temas),
   Provérbios (287), Adivinhas (103), Qual é o Intruso? (134), Sequências, Pôr por Ordem, Palavra Baralhada (242),
   Que Horas São?, Contas do Mercado, Lembra-se?, Siga a Sequência (luzes e música), Quantos São?,
   O Que É Isto? (487 desenhos) e Encontre o Diferente.

@@ -65,7 +65,7 @@ export async function quizFotos(alvo, { tema, nivel = 1, curto, aoTerminar }) {
 export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
   // Só temas com fotografias cheias de pormenor (num fundo branco liso as peças seriam todas iguais).
   const BONS = ['monumentos', 'patrimonio', 'cidades', 'castelos', 'aldeias', 'ilhas', 'paisagens', 'pontes', 'algarve', 'aves', 'selvagens', 'quinta', 'transportes', 'pratos', 'doces',
-    'lisboa', 'porto', 'alentejo', 'norte', 'beiras', 'palacios', 'igrejas', 'farois', 'praias', 'rios', 'jardins', 'mar', 'aves-rapina', 'racas', 'pintura', 'descobrimentos', 'comboios', 'artesanato'];
+    'lisboa', 'porto', 'alentejo', 'norte', 'beiras', 'palacios', 'igrejas', 'farois', 'praias', 'rios', 'jardins', 'mar', 'aves-rapina', 'racas', 'pintura', 'descobrimentos', 'comboios', 'artesanato', 'leiria', 'espanha', 'eua', 'ue'];
   const temas = (await carregarTemas()).filter(t => tema ? t.id === tema : BONS.includes(t.id));
   const [foto] = escolherNaoVistos('puzzle', fotosDoTema(temas.length ? temas : await carregarTemas(), 'todos'), 1, f => f.f);
   const n = nivel === 1 ? 2 : nivel === 2 ? 3 : 4;

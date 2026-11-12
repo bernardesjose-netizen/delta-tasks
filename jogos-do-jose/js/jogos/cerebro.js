@@ -341,14 +341,22 @@ export function contar(alvo, { nivel, curto, aoTerminar }) {
 }
 
 /* ---------- Jogos com banco de conteúdos ---------- */
-export async function quiz(alvo, { nivel, curto, aoTerminar }) {
+export async function quiz(alvo, { nivel, curto, temaQuiz, aoTerminar }) {
   const { PERGUNTAS } = await import('../dados/perguntas.js');
-  const lista = PERGUNTAS.filter(q => q.n === nivel);
-  const escolhidas = escolherNaoVistos(`quiz${nivel}`, lista, N(curto), q => `${q.p}|${q.certa}`);
+  let escolhidas;
+  if (temaQuiz) {
+    // Perguntas por tema: misturam os três níveis, das mais fáceis para as mais difíceis.
+    const lista = PERGUNTAS.filter(q => q.cat === temaQuiz.cat || (q.t && q.t.indexOf(temaQuiz.id) >= 0));
+    escolhidas = escolherNaoVistos(`quiz-${temaQuiz.id}`, lista, Math.min(N(curto), lista.length), q => `${q.p}|${q.certa}`)
+      .sort((x, y) => x.n - y.n);
+  } else {
+    const lista = PERGUNTAS.filter(q => q.n === nivel);
+    escolhidas = escolherNaoVistos(`quiz${nivel}`, lista, N(curto), q => `${q.p}|${q.certa}`);
+  }
   const perguntas = escolhidas.map(q => ({
-    etiqueta: q.cat,
+    etiqueta: temaQuiz ? temaQuiz.nome : q.cat,
     enunciado: q.p,
-    opcoes: [q.certa, ...(nivel === 1 ? amostra(q.erradas, 2) : q.erradas)],
+    opcoes: [q.certa, ...((temaQuiz ? q.n : nivel) === 1 ? amostra(q.erradas, 2) : q.erradas)],
     certa: q.certa,
     explicacao: q.info,
   }));
