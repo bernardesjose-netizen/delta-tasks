@@ -119,6 +119,36 @@ export function diasSeguidos() {
   return n;
 }
 
+/* ---------- Recordes e histórico (para os gráficos) ---------- */
+// Guarda o recorde de `chave`. menor=true quando um valor mais baixo é melhor (tempos).
+export function verRecorde(chave, valor, menor = true) {
+  const r = dados.recordes || (dados.recordes = {});
+  const anterior = r[chave];
+  const bateu = anterior == null || (menor ? valor < anterior : valor > anterior);
+  if (bateu) r[chave] = valor;
+  guardar();
+  return { bateu, primeiro: anterior == null, anterior };
+}
+// Um valor por dia (o melhor desse dia), para os gráficos de evolução.
+export function registarHistorico(chave, valor, menor = true) {
+  const h = dados.historico || (dados.historico = {});
+  const lista = h[chave] || (h[chave] = []);
+  const hoje = hojeISO();
+  const ultimo = lista[lista.length - 1];
+  if (ultimo && ultimo.d === hoje) {
+    if (menor ? valor < ultimo.v : valor > ultimo.v) ultimo.v = valor;
+  } else lista.push({ d: hoje, v: valor });
+  if (lista.length > 120) lista.splice(0, lista.length - 120);
+  guardar();
+}
+// Contadores e marcas para as medalhas.
+export function marcar(chave, incremento = 1) {
+  const f = dados.feitos || (dados.feitos = {});
+  f[chave] = (f[chave] || 0) + incremento;
+  guardar();
+  return f[chave];
+}
+
 export function registarJogo(id, nivel, estrelas, extra = {}) {
   const j = dados.jogos[id] || (dados.jogos[id] = { vezes: 0, melhor: {}, ultimoNivel: 1 });
   j.vezes++;
@@ -214,9 +244,19 @@ function ruido(inicio, dur, freq, vol) {
   src.connect(f).connect(g).connect(a.destination);
   src.start(t);
 }
+// Vibração curta nos telemóveis que a suportam (pode desligar-se nas Definições).
+export function vibrar(padrao) {
+  if (dados.def.vibrar === false) return;
+  try { if (navigator.vibrate) navigator.vibrate(padrao); } catch { /* sem vibração */ }
+}
+
 export const som = {
-  certo() { sino(1046.5, 0, 0.13); sino(1568, 0.09, 0.12, 1.1); },
-  quase() { nota(392, 0, 0.18, 'triangle', 0.09); nota(330, 0.12, 0.28, 'triangle', 0.08); },
+  certo() { sino(1046.5, 0, 0.13); sino(1568, 0.09, 0.12, 1.1); vibrar(15); },
+  quase() { nota(392, 0, 0.18, 'triangle', 0.09); nota(330, 0.12, 0.28, 'triangle', 0.08); vibrar([30, 40, 30]); },
+  rapido() { sino(1318.5, 0, 0.1, 0.5); vibrar(10); },
+  combo(n = 3) { const base = n >= 10 ? 1568 : n >= 5 ? 1318.5 : 1174.7; [0, 0.08, 0.16].forEach((t, i) => sino(base * [1, 1.26, 1.5][i], t, 0.1, 0.8)); vibrar([15, 30, 15]); },
+  recorde() { [784, 988, 1175, 1568, 1976].forEach((f, i) => sino(f, i * 0.09, 0.11, 1)); vibrar([20, 40, 20, 40, 60]); },
+  medalha() { [659.25, 830.6, 987.8, 1318.5].forEach((f, i) => sino(f, i * 0.13, 0.12, 1.3)); nota(329.6, 0, 1.2, 'triangle', 0.05); vibrar([30, 50, 30]); },
   clique() { ruido(0, 0.03, 3200, 0.18); },
   carta() { ruido(0, 0.07, 2400, 0.35); nota(880, 0, 0.05, 'triangle', 0.025); },
   peca() { ruido(0, 0.045, 1500, 0.55); ruido(0.05, 0.035, 1100, 0.3); nota(220, 0, 0.06, 'triangle', 0.05); },

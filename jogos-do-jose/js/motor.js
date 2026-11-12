@@ -1,7 +1,14 @@
 // Motores reutilizáveis: ronda de escolha múltipla e ronda com teclado numérico.
 import {
-  el, limpar, baralhar, som, falar, calar, dados, elogio, outraVez, consolo, estrelasPorPercentagem, vozDisponivel, duracao,
+  el, limpar, baralhar, som, falar, calar, dados, elogio, outraVez, consolo, estrelasPorPercentagem, vozDisponivel, duracao, aviso,
 } from './util.js';
+
+// Sequências de respostas certas: um pequeno prémio aos 3, 5, 10, 15 e 20 seguidas.
+const MARCOS = [3, 5, 10, 15, 20];
+function celebrarSequencia(n) {
+  if (!MARCOS.includes(n)) return;
+  setTimeout(() => { som.combo(n); aviso(`🔥 ${n} certas seguidas!`, 2200); }, 380);
+}
 
 function barraProgresso(i, total) {
   return el('div', { class: 'progresso' },
@@ -37,6 +44,8 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
   let i = 0;
   let pontos = 0;
   let aPrimeira = 0;
+  let seguidas = 0;
+  let melhorSeguidas = 0;
   const t0 = Date.now();
   let vivo = true;
 
@@ -78,12 +87,13 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
         som.certo();
         b.classList.add('certa');
         pontos += tentativas === 0 ? 1 : 0.5;
-        if (tentativas === 0) aPrimeira++;
+        if (tentativas === 0) { aPrimeira++; seguidas++; melhorSeguidas = Math.max(melhorSeguidas, seguidas); celebrarSequencia(seguidas); } else seguidas = 0;
         botoes.forEach(x => { if (x !== b) x.classList.add('esbatida'); });
         terminarPergunta(retorno('bom', '😃', elogio(), q.explicacao));
         return;
       }
       tentativas++;
+      seguidas = 0;
       b.disabled = true;
       b.classList.add('tentada');
       som.quase();
@@ -108,6 +118,7 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
       estrelas: estrelasPorPercentagem(pontos / total),
       numeros: [
         { valor: `${aPrimeira} de ${total}`, rotulo: 'certas à primeira' },
+        ...(melhorSeguidas >= 3 ? [{ valor: `🔥 ${melhorSeguidas}`, rotulo: 'certas seguidas' }] : []),
         { valor: duracao(Date.now() - t0), rotulo: 'tempo' },
       ],
     });
@@ -125,6 +136,7 @@ export function rondaTeclado(alvo, { perguntas, aoTerminar }) {
   let i = 0;
   let pontos = 0;
   let aPrimeira = 0;
+  let seguidas = 0;
   const t0 = Date.now();
   let atual = null;
 
@@ -158,7 +170,7 @@ export function rondaTeclado(alvo, { perguntas, aoTerminar }) {
         bloqueado = true;
         som.certo();
         pontos += tentativas === 0 ? 1 : 0.5;
-        if (tentativas === 0) aPrimeira++;
+        if (tentativas === 0) { aPrimeira++; seguidas++; celebrarSequencia(seguidas); } else seguidas = 0;
         visor.style.borderColor = 'var(--verde)';
         visor.style.background = 'var(--verde-claro)';
         limpar(zonaRetorno).append(retorno('bom', '😃', elogio()));
@@ -166,6 +178,7 @@ export function rondaTeclado(alvo, { perguntas, aoTerminar }) {
         return;
       }
       tentativas++;
+      seguidas = 0;
       som.quase();
       visor.classList.add('abanar');
       setTimeout(() => visor.classList.remove('abanar'), 450);

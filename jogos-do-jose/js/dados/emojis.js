@@ -42,7 +42,7 @@ export const EMOJIS = [
   { e: '🥓', nome: 'Bacon', cat: 'Legumes e comida' },
   { e: '🍗', nome: 'Perna de frango', cat: 'Legumes e comida' },
   { e: '🥩', nome: 'Bife', cat: 'Legumes e comida' },
-  { e: '🍕', nome: 'Piza', cat: 'Legumes e comida' },
+  { e: '🍕', nome: 'Pizza', cat: 'Legumes e comida' },
   { e: '🍔', nome: 'Hambúrguer', cat: 'Legumes e comida' },
   { e: '🍟', nome: 'Batatas fritas', cat: 'Legumes e comida' },
   { e: '🌭', nome: 'Cachorro-quente', cat: 'Legumes e comida' },
@@ -285,7 +285,7 @@ export const EMOJIS = [
 
   // ───────────── DESPORTO E LAZER ─────────────
   { e: '⚽', nome: 'Bola de futebol', cat: 'Desporto e lazer' },
-  { e: '🏀', nome: 'Bola de basquete', cat: 'Desporto e lazer' },
+  { e: '🏀', nome: 'Bola de basquetebol', cat: 'Desporto e lazer' },
   { e: '🏉', nome: 'Bola de râguebi', cat: 'Desporto e lazer' },
   { e: '🎾', nome: 'Bola de ténis', cat: 'Desporto e lazer' },
   { e: '🏐', nome: 'Bola de voleibol', cat: 'Desporto e lazer' },
@@ -372,7 +372,7 @@ export const EMOJIS = [
   { e: '📷', nome: 'Câmara fotográfica', cat: 'Ferramentas e objetos' },
   { e: '💻', nome: 'Computador', cat: 'Ferramentas e objetos' },
   { e: '🔋', nome: 'Pilha', cat: 'Ferramentas e objetos' },
-  { e: '🛒', nome: 'Carrinho do super', cat: 'Ferramentas e objetos' },
+  { e: '🛒', nome: 'Carrinho de compras', cat: 'Ferramentas e objetos' },
   { e: '⛏️', nome: 'Picareta', cat: 'Ferramentas e objetos' },
   { e: '🗑️', nome: 'Caixote do lixo', cat: 'Ferramentas e objetos' },
   { e: '🌡️', nome: 'Termómetro', cat: 'Ferramentas e objetos' },

@@ -539,7 +539,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
     if (melhor && melhor.tipo === 'found' && a.grupo.length === 1 && a.o.tipo !== 'found' && podeFundacao(a.c)) { mover(a.o, melhor); return; }
     if (melhor && !(a.o.tipo === 'tab' && melhor.tipo === 'tab' && a.o.k === melhor.k)) {
       som.quase();
-      aviso('Aí não pode ser. As cartas descem alternando as cores (vermelha, preta, vermelha…).', 3000);
+      aviso('Aí não pode ser. As cartas descem com as cores alternadas: vermelha, preta, vermelha…', 3000);
     }
     desenhar([]);
   };

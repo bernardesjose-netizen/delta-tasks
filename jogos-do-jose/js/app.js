@@ -1,8 +1,10 @@
 // Jogos do José — navegação, menus, Treino do Dia, progresso e definições.
 import {
   el, limpar, dados, guardar, registarJogo, diasSeguidos, hojeISO, dataPorExtenso, fraseFinal, festa, som, calar,
-  geradorSemente, vozDisponivel, aviso,
+  geradorSemente, vozDisponivel, aviso, marcar,
 } from './util.js';
+import { novasMedalhas, MEDALHAS } from './medalhas.js';
+import { graficoLinha } from './grafico.js';
 
 const NIVEIS = [
   null,
@@ -16,6 +18,7 @@ const palavras = nome => () => import('./jogos/palavras.js').then(m => m[nome]);
 const cartas = nome => () => import('./jogos/cartas.js').then(m => m[nome]);
 const fotos = nome => () => import('./jogos/fotos.js').then(m => m[nome]);
 const desenhos = nome => () => import('./jogos/desenhos.js').then(m => m[nome]);
+const treinoJ = nome => () => import('./jogos/treino.js').then(m => m[nome]);
 
 const JOGOS = {
   memfotos: {
@@ -67,6 +70,34 @@ const JOGOS = {
     ajuda: 'Veja a carta e diga se a próxima vai ser maior ou menor. Se sair igual, ganha na mesma.',
     niveis: ['8 cartas.', '10 cartas.', '12 cartas.'],
     carregar: cartas('maiorMenor'),
+  },
+  relampago: {
+    seccao: 'cabeca', grupo: 'rapido', nome: 'Contas Relâmpago', icone: '⚡', cor: '#e8590c',
+    desc: '20 contas seguidas contra o relógio. Bata o seu recorde!',
+    ajuda: 'Escreva o resultado no teclado: quando estiver certo, passa sozinho para a conta seguinte. O relógio pode parar com «Pausa».',
+    niveis: ['Somas e subtrações até 10.', 'Até 20 e tabuadas do 2 ao 5.', 'Até 50, tabuadas e divisões.'],
+    carregar: treinoJ('relampago'),
+  },
+  cores: {
+    seccao: 'cabeca', grupo: 'rapido', nome: 'Cores Trocadas', icone: '🎨', cor: '#c2337a',
+    desc: 'Diga a cor da tinta, não a palavra. Mais difícil do que parece!',
+    ajuda: 'Aparece o nome de uma cor pintado com outra cor. Toque na cor da TINTA, sem ler a palavra.',
+    niveis: ['4 cores, muitas vezes iguais à palavra.', '4 cores, quase sempre trocadas.', '6 cores, sempre trocadas.'],
+    carregar: treinoJ('cores'),
+  },
+  palavras: {
+    seccao: 'cabeca', grupo: 'rapido', nome: 'Memória de Palavras', icone: '📝', cor: '#1d5fd1',
+    desc: 'Decore uma lista de palavras e depois encontre-as.',
+    ajuda: 'Tem alguns segundos para decorar as palavras. Depois toque nas que viu, no meio de outras.',
+    niveis: ['6 palavras, com desenhos.', '9 palavras.', '12 palavras.'],
+    carregar: treinoJ('palavras'),
+  },
+  leitura: {
+    seccao: 'cabeca', grupo: 'rapido', nome: 'Leitura em Voz Alta', icone: '📖', cor: '#7c2d12',
+    desc: 'Camões, Pessoa, Florbela e cantigas populares para ler em voz alta.',
+    ajuda: 'Leia o texto em voz alta, com calma. O relógio mede o tempo e mostra quantas palavras leu por minuto.',
+    niveis: ['Textos curtos e provérbios.', 'Poemas de tamanho médio.', 'Poemas e prosa mais longos.'],
+    carregar: treinoJ('leitura'),
   },
   contas: {
     seccao: 'cabeca', nome: 'Contas de Cabeça', icone: '➕', cor: '#e8590c',
@@ -171,15 +202,15 @@ const JOGOS = {
 const SECCOES = {
   fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Algarve, monumentos, cidades e muitos outros temas.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
-  cabeca: { titulo: 'Treino da Cabeça', icone: '🧠', sub: 'Perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
+  cabeca: { titulo: 'Treino da Cabeça', icone: '🧠', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
 
 // Grupos do Treino do Dia: um exercício de cada grupo.
 const GRUPOS_TREINO = [
-  ['contas', 'sequencias', 'mercado'],
-  ['quiz', 'proverbios', 'adivinhas'],
-  ['sopa', 'anagramas', 'intruso'],
-  ['lembrar', 'contar', 'relogio', 'oquee', 'diferente', 'quizfotos'],
+  ['relampago', 'contas', 'sequencias', 'mercado'],
+  ['quiz', 'proverbios', 'adivinhas', 'leitura'],
+  ['sopa', 'anagramas', 'intruso', 'palavras'],
+  ['cores', 'lembrar', 'contar', 'relogio', 'oquee', 'diferente', 'quizfotos'],
 ];
 
 /* ---------- Infraestrutura de ecrãs ---------- */
@@ -248,10 +279,11 @@ function inicio() {
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, feito ? '✅' : '☀️'), el('div', {}, el('b', {}, feito ? 'Feito!' : 'Por fazer'), el('span', {}, 'treino de hoje')))),
     el('div', { class: 'menu-principal' },
       botaoMenu('laranja destaque', '☀️', 'Treino do Dia', feito ? 'Já está feito! Pode repetir se quiser.' : '4 exercícios rápidos, diferentes todos os dias.', '#/treino', feito ? '✅' : null),
+      botaoMenu('azul', '🎯', 'Teste da Cabeça', ultimoTeste() ? `Da última vez: ${ultimoTeste().idade} anos. Consegue melhorar?` : 'Que idade tem a sua cabeça? 3 exercícios rápidos.', '#/teste'),
       botaoMenu('verde', '🃏', 'Cartas e Dominó', 'Paciência, dominó, memória e maior ou menor.', '#/cartas'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
-      botaoMenu('azul', '🧠', 'Treino da Cabeça', 'Cultura geral, contas, sopa de letras, desenhos…', '#/cabeca'),
-      botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Estrelas, dias seguidos e vitórias.', '#/progresso'),
+      botaoMenu('azul', '🧠', 'Treino da Cabeça', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
+      botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Calendário, medalhas, recordes e gráficos.', '#/progresso'),
       botaoMenu('claro', '⚙️', 'Definições', 'Tamanho da letra, sons, voz e nome.', '#/definicoes')),
     el('div', { class: 'frase-dia' }, el('small', {}, 'Provérbio do dia'), frase),
   );
@@ -281,9 +313,12 @@ function seccao(id) {
   const s = SECCOES[id];
   const a = ecra(s.titulo, '#/');
   a.append(el('h2', { class: 'titulo-seccao' }, `${s.icone} ${s.titulo}`), el('p', { class: 'sub' }, s.sub));
+  const grupos = id === 'cabeca' ? [['rapido', '⏱️ Treino rápido, com recorde'], [undefined, '🧩 Perguntas, palavras e memória']] : [[undefined, null]];
+  for (const [grupo, tituloGrupo] of grupos) {
+  if (tituloGrupo) a.append(el('h3', { class: 'titulo-grupo' }, tituloGrupo));
   const grelha = el('div', { class: 'grelha-jogos' });
   for (const [jid, j] of Object.entries(JOGOS)) {
-    if (j.seccao !== id) continue;
+    if (j.seccao !== id || j.grupo !== grupo) continue;
     const reg = dados.jogos[jid];
     const melhor = reg ? Math.max(0, ...Object.values(reg.melhor || {})) : 0;
     grelha.append(el('button', { class: 'ficha-jogo', type: 'button', style: { '--cor': j.cor }, onclick: () => ir(`#/jogo/${jid}`) },
@@ -295,6 +330,7 @@ function seccao(id) {
     grelha.lastChild.style.setProperty('--cor', j.cor);
   }
   a.append(grelha);
+  }
 }
 
 /* ---------- Escolha de nível ---------- */
@@ -344,11 +380,12 @@ async function jogar(jid, nivel, extra = {}) {
     curto: false,
     aoTerminar: res => {
       if (ecraAtual !== minhaVez) return;
-      registarJogo(jid, nivel, res.estrelas);
+      registar(jid, nivel, res, extra);
       mostrarResultado(res, {
         repetir: () => router(),
         outro: () => ir(j.tema ? `#/jogo/${jid}` : `#/${j.seccao}`),
         nivelAcima: !j.tema && nivel < 3 && res.estrelas >= 2 ? () => ir(`#/jogo/${jid}/${nivel + 1}`) : null,
+        nivelAbaixo: !j.tema && nivel > 1 && res.estrelas === 1 ? () => ir(`#/jogo/${jid}/${nivel - 1}`) : null,
       });
     },
   });
@@ -356,6 +393,27 @@ async function jogar(jid, nivel, extra = {}) {
   if (r instanceof Promise) r.then(f => { if (ecraAtual === minhaVez) limpeza = f; else if (typeof f === 'function') f(); }).catch(e => mostrarErro(a, e));
 }
 let ecraAtual = null;
+
+// Regista o jogo, conta as rondas perfeitas e os temas de fotografias vistos.
+function registar(jid, nivel, res, extra = {}) {
+  registarJogo(jid, nivel, res.estrelas);
+  if (res.estrelas >= 3) marcar('tresEstrelas');
+  if (extra.tema && extra.tema !== 'todos') {
+    const t = dados.temasVistos || (dados.temasVistos = []);
+    if (!t.includes(extra.tema)) { t.push(extra.tema); guardar(); }
+  }
+}
+
+// Medalhas ganhas agora: um cartão que fica no ecrã (não se perde se a pessoa avançar depressa).
+function blocoMedalhas(atrasoSom = 2400) {
+  const novas = novasMedalhas();
+  if (!novas.length) return null;
+  setTimeout(() => som.medalha(), atrasoSom);
+  return el('div', { class: 'novas-medalhas' },
+    el('h3', {}, novas.length === 1 ? '🏅 Ganhou uma medalha nova!' : `🏅 Ganhou ${novas.length} medalhas novas!`),
+    el('div', { class: 'medalhas' }, novas.map(m => el('div', { class: 'medalha ganha nova' },
+      el('div', { class: 'medalha-icone', 'aria-hidden': 'true' }, m.icone), el('b', {}, m.nome), el('span', {}, m.desc)))));
+}
 
 function mostrarErro(a, e) {
   console.error(e);
@@ -365,7 +423,7 @@ function mostrarErro(a, e) {
     el('div', { class: 'fila-botoes' }, el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Ir para o início'))));
 }
 
-function mostrarResultado(res, { repetir, outro, nivelAcima }) {
+function mostrarResultado(res, { repetir, outro, nivelAcima, nivelAbaixo }) {
   if (typeof limpeza === 'function') { try { limpeza(); } catch { /* ignora */ } }
   limpeza = null;
   app.classList.remove('ecra-cheio');
@@ -373,16 +431,20 @@ function mostrarResultado(res, { repetir, outro, nivelAcima }) {
   atualizarEstrelas();
   window.scrollTo(0, 0);
   for (let k = 0; k < res.estrelas; k++) setTimeout(() => som.estrela(k), 250 + k * 380);
-  if (res.estrelas >= 3) setTimeout(() => { som.vitoria(); festa(); }, 250 + 3 * 380);
+  if (res.recorde) setTimeout(() => { som.recorde(); festa(['🏆', '⭐', '✨', '🎉']); }, 250 + 3 * 380);
+  else if (res.estrelas >= 3) setTimeout(() => { som.vitoria(); festa(); }, 250 + 3 * 380);
   app.append(el('div', { class: 'resultado' },
     el('div', { class: 'grande-estrelas', 'aria-label': `${res.estrelas} de 3 estrelas` },
       [1, 2, 3].map(k => el('span', { class: k <= res.estrelas ? '' : 'apagada', style: { animationDelay: `${0.25 + (k - 1) * 0.38}s` } }, '⭐'))),
+    res.recorde ? el('div', { class: 'faixa-recorde' }, '🏆 Novo recorde pessoal!') : null,
     el('h2', {}, res.titulo || (res.estrelas >= 3 ? 'Fantástico!' : res.estrelas === 2 ? 'Muito bem!' : 'Ronda terminada!')),
     el('p', { class: 'frase' }, fraseFinal(res.estrelas)),
     el('div', { class: 'numeros' }, (res.numeros || []).map(n => el('div', {}, el('b', {}, n.valor), el('span', {}, n.rotulo)))),
+    blocoMedalhas(),
     el('div', { class: 'fila-botoes' },
       el('button', { class: 'btn verde grande', type: 'button', onclick: repetir }, '🔁 Jogar outra vez'),
       nivelAcima ? el('button', { class: 'btn roxo grande', type: 'button', onclick: nivelAcima }, '⬆ Experimentar o nível seguinte') : null,
+      nivelAbaixo ? el('button', { class: 'btn claro grande', type: 'button', onclick: nivelAbaixo }, '🌱 Experimentar um nível mais calmo') : null,
       el('button', { class: 'btn claro grande', type: 'button', onclick: outro }, '🎲 Escolher outro'))));
 }
 
@@ -417,19 +479,49 @@ function treino() {
 }
 
 function correrTreino(lista, nivel) {
+  correrSequencia(lista.map(jid => ({ jid, nivel, opcoes: { curto: true } })), {
+    titulo: 'Treino do Dia', pai: '#/treino', registarCada: true,
+    aoFim: resultados => {
+      const h = hojeISO();
+      if (!dados.treinos.includes(h)) dados.treinos.push(h);
+      if (dados.treinos.length > 400) dados.treinos = dados.treinos.slice(-400);
+      guardar();
+      const a = ecra('Treino do Dia', '#/');
+      const total = resultados.reduce((t, r) => t + r.res.estrelas, 0);
+      const media = Math.round(total / resultados.length);
+      som.vitoria();
+      festa(['☀️', '⭐', '🎉', '🌟', '👏']);
+      a.append(el('div', { class: 'resultado' },
+        el('div', { class: 'carimbo-grande', 'aria-hidden': 'true' }, el('span', {}, '✔'), el('small', {}, new Date().getDate())),
+        el('h2', {}, 'Treino do dia concluído!'),
+        el('p', { class: 'frase' }, `${fraseFinal(media)} Ganhou ${total} estrelas hoje e o carimbo de hoje já está no calendário.`),
+        el('div', { class: 'painel', style: { marginTop: '18px', textAlign: 'left' } },
+          el('table', { class: 'tabela-prog' }, el('tbody', {},
+            resultados.map(r => el('tr', {}, el('td', {}, `${JOGOS[r.jid].icone} ${JOGOS[r.jid].nome}`), el('td', {}, '⭐'.repeat(r.res.estrelas))))))),
+        el('p', { class: 'frase' }, `🔥 ${diasSeguidos()} ${diasSeguidos() === 1 ? 'dia seguido' : 'dias seguidos'} a treinar. Volte amanhã para manter a sequência!`),
+        blocoMedalhas(1500),
+        el('div', { class: 'fila-botoes' },
+          el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Voltar ao início'),
+          el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir('#/progresso') }, '📅 Ver o calendário'))));
+    },
+  });
+}
+
+// Corre uma sequência de exercícios com um ecrã de passagem entre eles.
+function correrSequencia(passos, { titulo, pai, registarCada, aoFim }) {
   const resultados = [];
-  const minhaVez = Symbol('treino');
+  const minhaVez = Symbol('sequencia');
   ecraAtual = minhaVez;
 
   function intervalo(k) {
     if (ecraAtual !== minhaVez) return;
-    const jid = lista[k];
+    const { jid } = passos[k];
     const j = JOGOS[jid];
-    const a = ecra(`Treino do Dia · ${k + 1} de ${lista.length}`, '#/treino');
+    const a = ecra(`${titulo} · ${k + 1} de ${passos.length}`, pai);
     ecraAtual = minhaVez;
     a.append(el('div', { class: 'resultado' },
-      el('div', { class: 'grande-estrelas', 'aria-hidden': 'true' }, j.icone),
-      el('h2', {}, `Exercício ${k + 1} de ${lista.length}`),
+      iconeJogo(j, 'icone-grande'),
+      el('h2', {}, `Exercício ${k + 1} de ${passos.length}`),
       el('p', { class: 'frase', style: { fontWeight: 800, color: 'var(--texto)' } }, j.nome),
       el('p', { class: 'frase' }, j.ajuda),
       el('div', { class: 'fila-botoes' }, el('button', { class: 'btn verde grande', type: 'button', onclick: () => correr(k) }, k === 0 ? 'Começar ▶' : 'Continuar ▶'))));
@@ -437,9 +529,9 @@ function correrTreino(lista, nivel) {
   }
 
   async function correr(k) {
-    const jid = lista[k];
+    const { jid, nivel, opcoes } = passos[k];
     const j = JOGOS[jid];
-    const a = ecra(`Treino do Dia · ${j.nome}`, '#/treino');
+    const a = ecra(`${titulo} · ${j.nome}`, pai);
     ecraAtual = minhaVez;
     a.append(el('div', { class: 'a-carregar' }, 'A preparar…'));
     let iniciar;
@@ -447,83 +539,174 @@ function correrTreino(lista, nivel) {
     if (ecraAtual !== minhaVez) return;
     limpar(a);
     const r = iniciar(a, {
+      ...opcoes,
       nivel,
-      curto: true,
       aoTerminar: res => {
         if (ecraAtual !== minhaVez) return;
-        registarJogo(jid, nivel, res.estrelas);
-        resultados.push({ jid, estrelas: res.estrelas });
-        if (k + 1 < lista.length) intervalo(k + 1);
-        else fim();
+        if (registarCada) registar(jid, nivel, res);
+        resultados.push({ jid, res });
+        if (k + 1 < passos.length) intervalo(k + 1);
+        else aoFim(resultados);
       },
     });
     limpeza = r instanceof Promise ? null : r;
     if (r instanceof Promise) r.then(f => { if (ecraAtual === minhaVez) limpeza = f; else if (typeof f === 'function') f(); }).catch(e => mostrarErro(a, e));
   }
 
-  function fim() {
-    const h = hojeISO();
-    if (!dados.treinos.includes(h)) dados.treinos.push(h);
-    if (dados.treinos.length > 400) dados.treinos = dados.treinos.slice(-400);
-    guardar();
-    const a = ecra('Treino do Dia', '#/');
-    const total = resultados.reduce((s, r) => s + r.estrelas, 0);
-    const media = Math.round(total / resultados.length);
-    som.vitoria();
-    festa(['☀️', '⭐', '🎉', '🌟', '👏']);
-    a.append(el('div', { class: 'resultado' },
-      el('div', { class: 'grande-estrelas', 'aria-hidden': 'true' }, '🏆'),
-      el('h2', {}, 'Treino do dia concluído!'),
-      el('p', { class: 'frase' }, `${fraseFinal(media)} Ganhou ${total} estrelas hoje.`),
-      el('div', { class: 'painel', style: { marginTop: '18px', textAlign: 'left' } },
-        el('table', { class: 'tabela-prog' }, el('tbody', {},
-          resultados.map(r => el('tr', {}, el('td', {}, `${JOGOS[r.jid].icone} ${JOGOS[r.jid].nome}`), el('td', {}, '⭐'.repeat(r.estrelas))))))),
-      el('p', { class: 'frase' }, `🔥 ${diasSeguidos()} ${diasSeguidos() === 1 ? 'dia seguido' : 'dias seguidos'} a treinar. Volte amanhã para manter a sequência!`),
-      el('div', { class: 'fila-botoes' },
-        el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Voltar ao início'),
-        el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir('#/cabeca') }, '🧠 Jogar mais'))));
-  }
-
   intervalo(0);
 }
 
+/* ---------- Teste da Cabeça ---------- */
+const pontosTeste = () => (dados.testes || []).map(t => ({ d: t.d, v: t.idade }));
+const ultimoTeste = () => (dados.testes && dados.testes.length ? dados.testes[dados.testes.length - 1] : null);
+
+function frasePorIdade(idade) {
+  if (idade <= 35) return 'Uma cabeça jovem e ágil! 🧠✨';
+  if (idade <= 50) return 'Está em grande forma! 💪';
+  if (idade <= 65) return 'Boa forma — e treinar um bocadinho todos os dias ajuda sempre! 🌿';
+  return 'Cada treino conta. Volte amanhã e veja a diferença! 🌱';
+}
+
+function teste() {
+  const a = ecra('Teste da Cabeça', '#/');
+  const ultimo = ultimoTeste();
+  a.append(
+    el('div', { class: 'cabeca-jogo' },
+      el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, '🎯'),
+      el('h2', {}, 'Que idade tem a sua cabeça?'),
+      el('p', {}, 'São três exercícios rápidos: Cores Trocadas, Contas Relâmpago e Memória de Palavras. Demora uns 3 minutos. Faça com calma, mas sem distrações.')),
+    ultimo ? el('div', { class: 'painel centrado' }, el('h3', {}, 'Da última vez'), el('p', { class: 'idade-pequena' }, `${ultimo.idade} anos`), el('p', { class: 'nota' }, `em ${ultimo.d.split('-').reverse().join('/')}`)) : '',
+    el('div', { class: 'fila-botoes' }, el('button', { class: 'btn verde grande', type: 'button', onclick: correrTeste }, '▶ Começar o teste')),
+    el('div', { class: 'painel' }, graficoLinha(pontosTeste(), { titulo: '📈 A sua evolução', formatar: v => `${v} anos`, menorMelhor: true })),
+    el('p', { class: 'nota' }, 'É só um jogo para treinar a cabeça a brincar — não é um teste médico.'),
+  );
+}
+
+function correrTeste() {
+  correrSequencia([
+    { jid: 'cores', nivel: 2, opcoes: { rondas: 10, modoTeste: true } },
+    { jid: 'relampago', nivel: 2, opcoes: { rondas: 10, modoTeste: true } },
+    { jid: 'palavras', nivel: 1, opcoes: { modoTeste: true } },
+  ], {
+    titulo: 'Teste da Cabeça', pai: '#/teste',
+    aoFim: async resultados => {
+      const { idadeDaCabeca } = await import('./jogos/treino.js');
+      const m = {};
+      resultados.forEach(r => { m[r.jid] = r.res.metricas; });
+      const idade = idadeDaCabeca(m);
+      const lista = dados.testes || (dados.testes = []);
+      const hoje = hojeISO();
+      const anterior = lista.filter(t => t.d !== hoje).slice(-1)[0];
+      const deHoje = lista.find(t => t.d === hoje);
+      if (deHoje) deHoje.idade = Math.min(deHoje.idade, idade); else lista.push({ d: hoje, idade });
+      if (lista.length > 200) lista.splice(0, lista.length - 200);
+      registarJogo('teste', 1, idade <= 50 ? 3 : idade <= 65 ? 2 : 1);
+      guardar();
+      const a = ecra('Teste da Cabeça', '#/');
+      som.vitoria();
+      festa(['🧠', '⭐', '✨', '🎯']);
+      const melhorou = anterior && idade < anterior.idade;
+      a.append(el('div', { class: 'resultado' },
+        el('p', { class: 'frase' }, 'A sua cabeça está em forma de quem tem'),
+        el('div', { class: 'idade-cabeca' }, String(idade), el('small', {}, 'anos')),
+        el('h2', {}, frasePorIdade(idade)),
+        anterior ? el('p', { class: 'frase' }, melhorou ? `🎉 Da última vez foram ${anterior.idade} anos — melhorou ${anterior.idade - idade}!` : `Da última vez foram ${anterior.idade} anos. Amanhã há mais!`) : null,
+        el('div', { class: 'numeros' },
+          el('div', {}, el('b', {}, `${(m.cores.ms / 1000).toFixed(1).replace('.', ',')} s`), el('span', {}, 'cores trocadas')),
+          el('div', {}, el('b', {}, `${(m.relampago.ms / 1000).toFixed(1).replace('.', ',')} s`), el('span', {}, 'contas relâmpago')),
+          el('div', {}, el('b', {}, `${m.palavras.acertos} de ${m.palavras.total}`), el('span', {}, 'palavras lembradas'))),
+        el('div', { class: 'painel', style: { marginTop: '18px' } }, graficoLinha(pontosTeste(), { titulo: '📈 A sua evolução', formatar: v => `${v} anos`, menorMelhor: true })),
+        blocoMedalhas(1800),
+        el('p', { class: 'nota' }, 'É só um jogo para treinar a cabeça a brincar — não é um teste médico.'),
+        el('div', { class: 'fila-botoes' },
+          el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Voltar ao início'),
+          el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir('#/cabeca') }, '🧠 Treinar mais'))));
+    },
+  });
+}
+
 /* ---------- Progresso ---------- */
+const MESES_NOME = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+// Calendário do mês com um carimbo em cada dia de treino.
+function calendario(ano, mes) {
+  const caixa = el('div', { class: 'calendario' });
+  const dias = new Set(dados.dias);
+  const treinos = new Set(dados.treinos);
+  const desenhar = (y, m) => {
+    limpar(caixa);
+    const primeiro = new Date(y, m, 1);
+    const nDias = new Date(y, m + 1, 0).getDate();
+    const vazio = (primeiro.getDay() + 6) % 7; // segunda-feira primeiro
+    const hoje = hojeISO();
+    let jogados = 0;
+    const celulas = [];
+    for (let k = 0; k < vazio; k++) celulas.push(el('div', { class: 'cal-dia vazio' }));
+    for (let d = 1; d <= nDias; d++) {
+      const iso = hojeISO(new Date(y, m, d));
+      const treinou = treinos.has(iso);
+      const jogou = dias.has(iso);
+      if (jogou) jogados++;
+      celulas.push(el('div', { class: `cal-dia${jogou ? ' jogou' : ''}${treinou ? ' treinou' : ''}${iso === hoje ? ' hoje' : ''}`, title: treinou ? 'Treino do Dia feito' : jogou ? 'Jogou neste dia' : '' },
+        el('span', { class: 'num' }, d), jogou ? el('span', { class: 'carimbo', 'aria-label': treinou ? 'treino feito' : 'jogou' }, treinou ? '★' : '✔') : null));
+    }
+    const anterior = el('button', { class: 'btn claro', type: 'button', 'aria-label': 'Mês anterior', onclick: () => { const d = new Date(y, m - 1, 1); desenhar(d.getFullYear(), d.getMonth()); } }, '◀');
+    const seguinte = el('button', { class: 'btn claro', type: 'button', 'aria-label': 'Mês seguinte', onclick: () => { const d = new Date(y, m + 1, 1); desenhar(d.getFullYear(), d.getMonth()); } }, '▶');
+    caixa.append(
+      el('div', { class: 'cal-topo' }, anterior, el('b', {}, `${MESES_NOME[m][0].toUpperCase()}${MESES_NOME[m].slice(1)} de ${y}`), seguinte),
+      el('div', { class: 'cal-grelha' }, ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map(n => el('div', { class: 'cal-nome' }, n)), celulas),
+      el('p', { class: 'nota' }, `${jogados} ${jogados === 1 ? 'dia' : 'dias'} com jogos neste mês · ✔ jogou · ★ fez o Treino do Dia`));
+  };
+  desenhar(ano, mes);
+  return caixa;
+}
+
 function progresso() {
   const a = ecra('O Meu Progresso', '#/');
+  novasMedalhas(); // atribui as que já foram merecidas (ex.: dias seguidos)
   const seguidos = diasSeguidos();
-  const dias = new Set(dados.dias);
-  const semana = [];
-  for (let k = 6; k >= 0; k--) {
-    const d = new Date();
-    d.setDate(d.getDate() - k);
-    semana.push({ d, jogou: dias.has(hojeISO(d)) });
+  const jogados = Object.entries(dados.jogos).filter(([jid]) => JOGOS[jid]).sort((x, y) => y[1].vezes - x[1].vezes);
+  const ganhas = dados.medalhas || {};
+  const nGanhas = MEDALHAS.filter(m => ganhas[m.id]).length;
+  const hist = dados.historico || {};
+  const graficos = [];
+  for (const n of [1, 2, 3]) {
+    const k = `relampago-${n}-20`;
+    if (hist[k]) graficos.push(graficoLinha(hist[k], { titulo: `⚡ Contas Relâmpago · ${NIVEIS[n].nome} (tempo)`, formatar: v => `${Math.round(v / 1000)} s`, menorMelhor: true }));
   }
-  const nomesDia = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  const jogados = Object.entries(dados.jogos).sort((x, y) => y[1].vezes - x[1].vezes);
+  for (const n of [1, 2, 3]) {
+    const k = `cores-${n}-15`;
+    if (hist[k]) graficos.push(graficoLinha(hist[k], { titulo: `🎨 Cores Trocadas · ${NIVEIS[n].nome} (tempo)`, formatar: v => `${Math.round(v / 1000)} s`, menorMelhor: true }));
+  }
+  if (hist['leitura-ppm']) graficos.push(graficoLinha(hist['leitura-ppm'], { titulo: '📖 Leitura em voz alta (palavras por minuto)', formatar: v => `${v}` }));
+  if (dados.testes && dados.testes.length) graficos.unshift(graficoLinha(pontosTeste(), { titulo: '🎯 Teste da Cabeça (idade)', formatar: v => `${v} anos`, menorMelhor: true }));
+  const hoje = new Date();
   a.append(
     el('h2', { class: 'titulo-seccao' }, '🏅 O Meu Progresso'),
     el('p', { class: 'sub' }, 'Tudo fica guardado neste aparelho.'),
     el('div', { class: 'resumo' },
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '⭐'), el('div', {}, el('b', {}, dados.estrelas), el('span', {}, 'estrelas'))),
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '🔥'), el('div', {}, el('b', {}, seguidos), el('span', {}, 'dias seguidos'))),
-      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '📅'), el('div', {}, el('b', {}, dados.dias.length), el('span', {}, 'dias a jogar'))),
-      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '☀️'), el('div', {}, el('b', {}, dados.treinos.length), el('span', {}, 'treinos do dia')))),
+      el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '🏅'), el('div', {}, el('b', {}, `${nGanhas}/${MEDALHAS.length}`), el('span', {}, 'medalhas')))),
+    el('div', { class: 'painel' }, el('h3', {}, '📅 Calendário de treinos'), calendario(hoje.getFullYear(), hoje.getMonth())),
     el('div', { class: 'painel' },
-      el('h3', {}, 'Últimos 7 dias'),
-      el('div', { class: 'semana' }, semana.map(s => el('div', { class: s.jogou ? 'jogou' : '' },
-        nomesDia[s.d.getDay()], el('b', {}, s.jogou ? '✔' : '·'))))),
+      el('h3', {}, `🏅 Medalhas (${nGanhas} de ${MEDALHAS.length})`),
+      el('div', { class: 'medalhas' }, MEDALHAS.map(m => el('div', { class: `medalha${ganhas[m.id] ? ' ganha' : ''}` },
+        el('div', { class: 'medalha-icone', 'aria-hidden': 'true' }, m.icone),
+        el('b', {}, m.nome),
+        el('span', {}, ganhas[m.id] ? `Ganha a ${ganhas[m.id].split('-').reverse().join('/')}` : m.desc))))),
+    graficos.length ? el('div', { class: 'painel' }, el('h3', {}, '📈 A sua evolução'), graficos) : '',
     el('div', { class: 'painel' },
-      el('h3', {}, '🃏 Paciências ganhas'),
-      el('table', { class: 'tabela-prog' }, el('tbody', {}, [1, 2, 3].map(n => el('tr', {},
-        el('td', {}, `${NIVEIS[n].icone} ${NIVEIS[n].nome}`),
-        el('td', {}, `${dados.pac.ganhos[n] || 0} ${dados.pac.ganhos[n] === 1 ? 'vitória' : 'vitórias'} em ${dados.pac.jogados[n] || 0} ${dados.pac.jogados[n] === 1 ? 'jogo' : 'jogos'}`)))))),
-    dados.domino ? el('div', { class: 'painel' },
-      el('h3', {}, '🎲 Dominó'),
-      el('p', {}, `Ganhou ${dados.domino.ganhos} ${dados.domino.ganhos === 1 ? 'vez' : 'vezes'}; o computador ganhou ${dados.domino.perdidos}.`)) : null,
+      el('h3', {}, '🃏 Cartas e dominó'),
+      el('table', { class: 'tabela-prog' }, el('tbody', {},
+        [1, 2, 3].map(n => el('tr', {},
+          el('td', {}, `Paciência · ${NIVEIS[n].nome}`),
+          el('td', {}, `${dados.pac.ganhos[n] || 0} ${dados.pac.ganhos[n] === 1 ? 'vitória' : 'vitórias'} em ${dados.pac.jogados[n] || 0} ${dados.pac.jogados[n] === 1 ? 'jogo' : 'jogos'}`))),
+        el('tr', {}, el('td', {}, 'Dominó'), el('td', {}, dados.domino ? `${dados.domino.ganhos} ganhos · ${dados.domino.perdidos} perdidos` : 'ainda por jogar'))))),
     el('div', { class: 'painel' },
       el('h3', {}, '🎲 Jogos'),
       jogados.length
-        ? el('table', { class: 'tabela-prog' }, el('tbody', {}, jogados.filter(([jid]) => JOGOS[jid]).map(([jid, r]) => el('tr', {},
+        ? el('table', { class: 'tabela-prog' }, el('tbody', {}, jogados.map(([jid, r]) => el('tr', {},
           el('td', {}, `${JOGOS[jid].icone} ${JOGOS[jid].nome}`),
           el('td', {}, `${r.vezes} ${r.vezes === 1 ? 'vez' : 'vezes'} · melhor ${'★'.repeat(Math.max(0, ...Object.values(r.melhor || {})))}`)))))
         : el('p', {}, 'Ainda não jogou nenhum jogo. Que tal começar pelo Treino do Dia?')),
@@ -580,7 +763,7 @@ function definicoes() {
     const def = dados.def;
     const nome = dados.nome;
     Object.keys(dados).forEach(k => delete dados[k]);
-    Object.assign(dados, { nome, def, estrelas: 0, jogos: {}, dias: [], treinos: [], vistos: {}, pac: { ganhos: { 1: 0, 2: 0, 3: 0 }, jogados: { 1: 0, 2: 0, 3: 0 } } });
+    Object.assign(dados, { nome, def, estrelas: 0, jogos: {}, dias: [], treinos: [], vistos: {}, pac: { ganhos: { 1: 0, 2: 0, 3: 0 }, jogados: { 1: 0, 2: 0, 3: 0 } }, medalhas: {}, recordes: {}, historico: {}, feitos: {}, testes: [], temasVistos: [] });
     guardar();
     atualizarEstrelas();
     aviso('O progresso foi apagado. Começamos do zero! 🌱');
@@ -599,6 +782,8 @@ function definicoes() {
         segmentos([[true, '🔊 Ligados'], [false, '🔇 Desligados']], dados.def.som, v => { dados.def.som = v; if (v) som.certo(); })),
       vozDisponivel() ? el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Ler as perguntas em voz alta'),
         segmentos([[true, 'Sim'], [false, 'Não']], dados.def.voz, v => { dados.def.voz = v; })) : null,
+      'vibrate' in navigator ? el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Vibrar ao acertar e ao errar'),
+        segmentos([[true, 'Sim'], [false, 'Não']], dados.def.vibrar !== false, v => { dados.def.vibrar = v; if (v) navigator.vibrate(30); })) : null,
       el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Letras das cartas'),
         segmentos([['int', 'A K Q J'], ['pt', 'A R D V']], dados.def.letras === 'pt' ? 'pt' : 'int', v => { dados.def.letras = v; }))),
     el('div', { class: 'painel' },
@@ -703,6 +888,7 @@ function router() {
     return jogar(p1, p1 === 'memfotos' ? nivelDePares(Number(partes[3])) : 1, { tema: p2, pares: Number(partes[3]) || undefined });
   }
   if (p0 === 'treino') return treino();
+  if (p0 === 'teste') return teste();
   if (p0 === 'progresso') return progresso();
   if (p0 === 'definicoes') return definicoes();
   if (p0 === 'jogo' && p1 && !p2) return escolherNivel(p1);

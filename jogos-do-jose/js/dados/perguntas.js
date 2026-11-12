@@ -262,7 +262,7 @@ export const PERGUNTAS = [
   { n: 1, cat: 'Língua portuguesa', p: 'Qual destas palavras quer dizer o mesmo que «alegre»?', certa: 'Contente', erradas: ['Triste', 'Zangado', 'Cansado'], info: 'Palavras com o mesmo sentido chamam-se sinónimos.' },
   { n: 1, cat: 'Língua portuguesa', p: 'Qual é o plural de «pão»?', certa: 'Pães', erradas: ['Pãos', 'Pões', 'Pãoes'], info: 'Mão faz mãos, cão faz cães e pão faz pães!' },
   { n: 1, cat: 'Língua portuguesa', p: 'Qual é o feminino de «galo»?', certa: 'Galinha', erradas: ['Gala', 'Galeta', 'Galoa'], info: 'E a cria da galinha é o pinto.' },
-  { n: 1, cat: 'Língua portuguesa', p: 'Qual é o contrário de «alto»?', certa: 'Baixo', erradas: ['Largo', 'Grande', 'Comprido'], info: 'Muito bem! Alto e baixo são antónimos.' },
+  { n: 1, cat: 'Língua portuguesa', p: 'Qual é o contrário de «alto»?', certa: 'Baixo', erradas: ['Largo', 'Grande', 'Comprido'], info: 'Alto e baixo são antónimos: palavras de sentido contrário.' },
   { n: 1, cat: 'Língua portuguesa', p: 'Quantas vogais tem o alfabeto?', certa: '5', erradas: ['4', '6', '7'], info: 'As vogais são a, e, i, o, u.' },
   { n: 1, cat: 'Língua portuguesa', p: 'Como se chama em Portugal o «ônibus» do Brasil?', certa: 'Autocarro', erradas: ['Elétrico', 'Comboio', 'Metro'], info: 'Ao «trem» do Brasil chamamos nós comboio.' },
   { n: 1, cat: 'Língua portuguesa', p: 'Como se chama um conjunto de ovelhas?', certa: 'Rebanho', erradas: ['Cardume', 'Enxame', 'Manada'], info: 'Quem guarda o rebanho é o pastor.' },
