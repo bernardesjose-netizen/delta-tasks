@@ -560,7 +560,7 @@ export const PERGUNTAS = [
   { n: 3, cat: 'Língua portuguesa', p: 'Como se chama a palavra que imita um som, como «tique-taque»?', certa: 'Onomatopeia', erradas: ['Metáfora', 'Sinónimo', 'Hipérbole'], info: 'Outros exemplos: «miau», «cocorocó» e «pum».' },
   { n: 3, cat: 'Língua portuguesa', p: 'Qual é o feminino de «réu»?', certa: 'Ré', erradas: ['Réua', 'Reia', 'Rea'], info: 'Tal como judeu faz judia, réu faz ré.' },
   { n: 3, cat: 'Língua portuguesa', p: 'Qual destas palavras está bem escrita?', certa: 'Exceção', erradas: ['Excessão', 'Exeção', 'Esceção'], info: 'Com o Acordo Ortográfico, «excepção» perdeu o p.' },
-  { n: 3, cat: 'Língua portuguesa', p: 'Qual destas palavras está bem escrita?', certa: 'Hesitar', erradas: ['Ezitar', 'Hezitar', 'Esitar'], info: 'O «h» de hesitar não se lê, mas escreve-se!' },
+  { n: 3, cat: 'Língua portuguesa', p: 'Como se escreve corretamente este verbo?', certa: 'Hesitar', erradas: ['Ezitar', 'Hezitar', 'Esitar'], info: 'O «h» de hesitar não se lê, mas escreve-se!' },
   { n: 3, cat: 'Língua portuguesa', p: 'O que quer dizer «ir aos arames»?', certa: 'Ficar muito zangado', erradas: ['Fazer acrobacias', 'Ir às compras', 'Arranjar a luz'], info: 'É o mesmo que «perder as estribeiras».' },
   { n: 3, cat: 'Língua portuguesa', p: 'Qual é o aumentativo de «cão»?', certa: 'Canzarrão', erradas: ['Cãozinho', 'Canil', 'Canito'], info: 'E «canzoada» é um grupo de muitos cães juntos.' },
   { n: 3, cat: 'Língua portuguesa', p: 'Qual é o plural de «alemão»?', certa: 'Alemães', erradas: ['Alemãos', 'Alemões', 'Alemanes'], info: 'Também «capitão» faz «capitães».' },
