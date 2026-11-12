@@ -83,7 +83,7 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
   const cartas = baralho.map((it, k) => el('button', { class: 'mem-carta', type: 'button', 'aria-label': `Carta ${k + 1}`, onclick: () => virar(k) },
     costas
       ? el('div', { class: 'lado costas com-img', 'aria-hidden': 'true' }, el('img', { src: costas, alt: '', draggable: 'false' }))
-      : el('div', { class: 'lado costas', 'aria-hidden': 'true' }, 'J'),
+      : el('div', { class: 'lado costas', 'aria-hidden': 'true' }, el('span', { class: 'marca' }, '?')),
     comFotos
       ? el('div', { class: 'lado face', 'aria-hidden': 'true' },
         el('img', { src: it.foto, alt: '', loading: 'eager', decoding: 'async', draggable: 'false' }),

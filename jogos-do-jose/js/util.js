@@ -74,10 +74,26 @@ export function duracao(ms) {
 export const euros = v => `${v.toFixed(2).replace('.', ',')} €`;
 export const semAcentos = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
 
+/* ---------- Pessoas que jogam neste aparelho (sem contas nem palavras-passe) ---------- */
+// Cada pessoa tem o seu progresso. A primeira usa a chave antiga, para ninguém perder o que já tinha.
+const CHAVE_PESSOAS = 'jogos-pessoas';
+function lerPessoas() {
+  try {
+    const p = JSON.parse(localStorage.getItem(CHAVE_PESSOAS) || 'null');
+    if (p && Array.isArray(p.lista) && p.lista.length && p.lista.some(x => x.id === p.atual)) return p;
+  } catch { /* nada */ }
+  return { atual: 'p1', lista: [{ id: 'p1', nome: '' }] };
+}
+export const pessoas = lerPessoas();
+const chaveDe = id => (id === 'p1' ? 'jogos-do-jose-v1' : `jogos-v1-${id}`);
+function guardarPessoas() {
+  try { localStorage.setItem(CHAVE_PESSOAS, JSON.stringify(pessoas)); } catch { /* nada */ }
+}
+
 /* ---------- Memória (fica guardada no aparelho) ---------- */
-const CHAVE = 'jogos-do-jose-v1';
+const CHAVE = chaveDe(pessoas.atual);
 const PADRAO = () => ({
-  nome: 'José',
+  nome: '',
   def: { som: true, voz: false, letra: 1 },
   estrelas: 0,
   jogos: {},
@@ -100,6 +116,60 @@ function ler() {
 }
 
 export const dados = ler();
+// O jogo deixou de ter um nome de pessoa por omissão: quem tinha o nome antigo, sem o ter escolhido,
+// volta a ver as boas-vindas e escolhe como quer ser tratado (ou não).
+if (!dados.universal) {
+  if (dados.nome === 'José') { dados.nome = ''; dados.boasVindas = false; }
+  dados.universal = true;
+  try { localStorage.setItem(CHAVE, JSON.stringify(dados)); } catch { /* nada */ }
+}
+{
+  const eu = pessoas.lista.find(p => p.id === pessoas.atual);
+  if (eu && eu.nome !== dados.nome) { eu.nome = dados.nome; if (pessoas.lista.length > 1) guardarPessoas(); }
+}
+
+export function mudarNome(nome) {
+  dados.nome = nome;
+  const eu = pessoas.lista.find(p => p.id === pessoas.atual);
+  if (eu) eu.nome = nome;
+  guardar();
+  guardarPessoas();
+}
+export function trocarPessoa(id) {
+  guardar();
+  pessoas.atual = id;
+  guardarPessoas();
+  location.hash = '#/';
+  location.reload();
+}
+export function novaPessoa(nome) {
+  const id = `p${Date.now().toString(36)}`;
+  pessoas.lista.push({ id, nome });
+  const novo = { ...PADRAO(), nome, universal: true, boasVindas: true, def: { ...dados.def } };
+  try { localStorage.setItem(chaveDe(id), JSON.stringify(novo)); } catch { /* nada */ }
+  trocarPessoa(id);
+}
+export function apagarPessoa(id) {
+  if (id === pessoas.atual) return;
+  pessoas.lista = pessoas.lista.filter(p => p.id !== id);
+  try { localStorage.removeItem(chaveDe(id)); } catch { /* nada */ }
+  guardarPessoas();
+}
+
+// Clube do coração (opcional): só muda as cores das costas das cartas. Por ordem alfabética, sem destaques.
+export const CLUBES = [
+  ['', 'Nenhum (cores do jogo)'],
+  ['academica', 'Académica', '#1a1a1a', '#5a5a5a'],
+  ['belenenses', 'Belenenses', '#1d4f9c', '#7fb2e5'],
+  ['benfica', 'Benfica', '#c8102e', '#ffffff'],
+  ['boavista', 'Boavista', '#1a1a1a', '#ffffff'],
+  ['braga', 'Braga', '#d4151c', '#ffffff'],
+  ['porto', 'FC Porto', '#0b4ea2', '#ffffff'],
+  ['maritimo', 'Marítimo', '#1f8a3b', '#d4151c'],
+  ['sporting', 'Sporting', '#008a4b', '#ffffff'],
+  ['vitoria', 'Vitória de Guimarães', '#1a1a1a', '#f2f2f2'],
+  ['selecao', 'Seleção Nacional', '#d4151c', '#0f7a3d'],
+];
 
 // Telemóveis fracos (pouca memória ou poucos núcleos): ativa-se o modo leve.
 export function aparelhoFraco() {

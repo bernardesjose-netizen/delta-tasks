@@ -1,11 +1,13 @@
-// Jogos do José — navegação, menus, Treino do Dia, progresso e definições.
+// Jogos e Passatempos — navegação, menus, Treino do Dia, progresso e definições.
 import {
   el, limpar, dados, guardar, registarJogo, diasSeguidos, hojeISO, dataPorExtenso, fraseFinal, festa, som, calar,
   geradorSemente, vozDisponivel, aviso, marcar, modoLeve, aparelhoFraco, falarLongo, baralhar,
+  pessoas, mudarNome, trocarPessoa, novaPessoa, apagarPessoa, CLUBES,
 } from './util.js';
 import { novasMedalhas, MEDALHAS } from './medalhas.js';
 import { graficoLinha } from './grafico.js';
 
+const NOME_JOGO = 'Jogos e Passatempos';
 const NIVEIS = [
   null,
   { nome: 'Tranquilo', icone: '🌱' },
@@ -21,6 +23,7 @@ const TEMAS_QUIZ = [
   { id: 'espanha', nome: 'Espanha', cat: 'Espanha', icone: '💃', novo: true },
   { id: 'ue', nome: 'União Europeia', cat: 'União Europeia', icone: '⭐', novo: true },
   { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺', novo: true },
+  { id: 'futebol', nome: 'Futebol', cat: 'Futebol', icone: '⚽', novo: true },
   { id: 'portugal', nome: 'Portugal', cat: 'Portugal', icone: '🏛️' },
   { id: 'geografia', nome: 'Geografia', cat: 'Geografia', icone: '🌍' },
   { id: 'historia', nome: 'História', cat: 'História', icone: '📜' },
@@ -45,7 +48,7 @@ const desafios = nome => () => import('./jogos/desafios.js').then(m => m[nome]);
 const JOGOS = {
   memfotos: {
     seccao: 'fotos', nome: 'Memória de Fotografias', icone: '📸', cor: '#2e7d32', tema: true,
-    desc: 'Pares de fotografias: Sporting, Leiria, monumentos, viagens e muito mais.',
+    desc: 'Pares de fotografias: cidades, monumentos, animais, futebol e muito mais.',
     ajuda: 'Escolha um tema e quantas fotografias quer. Depois vire duas cartas de cada vez e encontre os pares.',
     niveis: ['4 pares.', '6 pares.', '8 pares.'],
     carregar: fotos('memoriaFotos'),
@@ -236,7 +239,7 @@ const JOGOS = {
 };
 
 const SECCOES = {
-  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Leiria, monumentos, Espanha, Europa e muitos outros temas.' },
+  fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: cidades, monumentos, natureza, comida, futebol, viagens e muitos outros temas.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
   cabeca: { titulo: 'Treino da Cabeça', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
@@ -261,6 +264,10 @@ function aplicarDefinicoes() {
   document.documentElement.classList.remove('letra-0', 'letra-1', 'letra-2');
   document.documentElement.classList.add(`letra-${dados.def.letra}`);
   document.documentElement.classList.toggle('leve', modoLeve());
+  // Cores do clube do coração nas costas das cartas (se a pessoa escolheu um).
+  const clube = CLUBES.find(c => c[0] && c[0] === dados.def.clube);
+  const raiz = document.documentElement.style;
+  if (clube) { raiz.setProperty('--costas1', clube[2]); raiz.setProperty('--costas2', clube[3]); } else { raiz.removeProperty('--costas1'); raiz.removeProperty('--costas2'); }
 }
 function atualizarEstrelas() {
   topoEstrelas.textContent = `⭐ ${dados.estrelas}`;
@@ -274,7 +281,7 @@ function ecra(titulo, pai) {
   app.classList.remove('ecra-cheio');
   limpar(app);
   topoTitulo.textContent = titulo;
-  document.title = titulo === 'Jogos do José' ? titulo : `${titulo} · Jogos do José`;
+  document.title = titulo === NOME_JOGO ? titulo : `${titulo} · ${NOME_JOGO}`;
   paiAtual = pai;
   btnVoltar.hidden = !pai;
   atualizarEstrelas();
@@ -301,15 +308,66 @@ function saudacao() {
   return h < 6 ? 'Boa noite' : h < 13 ? 'Bom dia' : h < 20 ? 'Boa tarde' : 'Boa noite';
 }
 
+// Boas-vindas (só da primeira vez): o nome é opcional e fica apenas neste aparelho.
+function cartaoBoasVindas() {
+  if (dados.boasVindas) return null;
+  const campo = el('input', { class: 'campo-nome', type: 'text', maxlength: 20, placeholder: 'O seu nome (opcional)', autocomplete: 'given-name', 'aria-label': 'O seu nome' });
+  const fechar = () => { dados.boasVindas = true; guardar(); router(); };
+  const gravar = () => { mudarNome(campo.value.trim()); fechar(); };
+  campo.addEventListener('keydown', e => { if (e.key === 'Enter') gravar(); });
+  return el('div', { class: 'painel boas-vindas' },
+    el('h3', {}, '👋 Bem-vindo!'),
+    el('p', {}, 'Como gosta que lhe chamemos? Não é preciso conta nem palavra-passe: o nome fica só neste aparelho.'),
+    el('div', { class: 'linha-nome' }, campo, el('button', { class: 'btn verde', type: 'button', onclick: gravar }, 'Guardar')),
+    el('button', { class: 'btn-texto', type: 'button', onclick: fechar }, 'Agora não'));
+}
+
+// Quando há mais do que uma pessoa neste aparelho: quem está a jogar e como trocar.
+function quemJoga() {
+  if (pessoas.lista.length < 2) return null;
+  return el('button', { class: 'quem-joga', type: 'button', onclick: () => ir('#/pessoas') },
+    `👤 A jogar: ${dados.nome || 'sem nome'}`, el('span', {}, ' · trocar'));
+}
+
+function ecraPessoas() {
+  const a = ecra('Quem vai jogar?', '#/');
+  const campo = el('input', { class: 'campo-nome', type: 'text', maxlength: 20, placeholder: 'Nome', 'aria-label': 'Nome da pessoa' });
+  const juntar = () => { const n = campo.value.trim(); if (!n) { campo.focus(); return; } novaPessoa(n); };
+  campo.addEventListener('keydown', e => { if (e.key === 'Enter') juntar(); });
+  const lista = el('div', { class: 'lista-pessoas' }, pessoas.lista.map((p, i) => {
+    const eu = p.id === pessoas.atual;
+    const nome = p.nome || `Pessoa ${i + 1}`;
+    const apagar = eu ? null : el('button', { class: 'btn-texto', type: 'button' }, 'Apagar');
+    if (apagar) {
+      apagar.addEventListener('click', () => {
+        if (!apagar.dataset.confirmar) { apagar.dataset.confirmar = '1'; apagar.textContent = 'Toque outra vez para apagar'; return; }
+        apagarPessoa(p.id); ecraPessoas();
+      });
+    }
+    return el('div', { class: `pessoa${eu ? ' atual' : ''}` },
+      el('button', { class: `btn grande${eu ? ' claro' : ''}`, type: 'button', onclick: () => (eu ? ir('#/') : trocarPessoa(p.id)) }, `👤 ${nome}`, eu ? el('small', {}, ' · a jogar agora') : null),
+      apagar);
+  }));
+  a.append(
+    el('h2', { class: 'titulo-seccao' }, '👥 Quem vai jogar?'),
+    el('p', { class: 'sub' }, 'Cada pessoa tem as suas estrelas, medalhas e recordes neste aparelho. Não há contas nem palavras-passe.'),
+    lista,
+    el('div', { class: 'painel' },
+      el('h3', {}, '➕ Juntar outra pessoa'),
+      el('div', { class: 'linha-nome' }, campo, el('button', { class: 'btn verde', type: 'button', onclick: juntar }, 'Juntar'))));
+}
+
 function inicio() {
-  const a = ecra('Jogos do José', null);
+  const a = ecra(NOME_JOGO, null);
   const feito = dados.treinos.includes(hojeISO());
   const seguidos = diasSeguidos();
   const frase = el('p', {}, '…');
   a.append(
     el('div', { class: 'saudacao' },
       el('h2', {}, `${saudacao()}${dados.nome ? `, ${dados.nome}` : ''}! 👋`),
-      el('p', {}, `${dataPorExtenso()}. Vamos treinar a cabeça a brincar?`)),
+      el('p', {}, `${dataPorExtenso()}. Vamos treinar a cabeça a brincar?`),
+      quemJoga()),
+    cartaoBoasVindas() || '',
     el('div', { class: 'resumo' },
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '⭐'), el('div', {}, el('b', {}, dados.estrelas), el('span', {}, 'estrelas ganhas'))),
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '🔥'), el('div', {}, el('b', {}, seguidos), el('span', {}, seguidos === 1 ? 'dia seguido' : 'dias seguidos'))),
@@ -322,7 +380,7 @@ function inicio() {
       botaoMenu('azul', '💡', 'Treino da Cabeça', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
       botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, lendas e poemas populares.', '#/ler'),
       botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Calendário, medalhas, recordes e gráficos.', '#/progresso'),
-      botaoMenu('claro', '⚙️', 'Definições', 'Tamanho da letra, sons, voz e nome.', '#/definicoes')),
+      botaoMenu('claro', '⚙️', 'Definições', 'Nome, tamanho da letra, sons, voz e quem joga.', '#/definicoes')),
     el('div', { class: 'frase-dia' }, el('small', {}, 'Provérbio do dia'), frase),
   );
   import('./dados/conteudos.js').then(({ PROVERBIOS }) => {
@@ -795,8 +853,11 @@ function definicoes() {
     });
     return caixa;
   }
-  const campoNome = el('input', { class: 'campo-nome', id: 'nome', type: 'text', maxlength: 20, value: dados.nome, autocomplete: 'given-name' });
-  campoNome.addEventListener('change', () => { dados.nome = campoNome.value.trim(); guardar(); aviso('Nome guardado. 👍'); });
+  const campoNome = el('input', { class: 'campo-nome', id: 'nome', type: 'text', maxlength: 20, value: dados.nome, placeholder: 'Opcional', autocomplete: 'given-name' });
+  campoNome.addEventListener('change', () => { mudarNome(campoNome.value.trim()); dados.boasVindas = true; guardar(); aviso('Nome guardado. 👍'); });
+  const campoClube = el('select', { class: 'campo-nome', id: 'clube' }, CLUBES.map(([id, nome]) => el('option', { value: id }, nome)));
+  campoClube.value = dados.def.clube || '';
+  campoClube.addEventListener('change', () => { dados.def.clube = campoClube.value; guardar(); aplicarDefinicoes(); aviso(campoClube.value ? 'As cartas da Memória ficam com as cores do clube. ⚽' : 'Cartas com as cores do jogo.'); });
   let tApagar = null;
   const btnApagar = el('button', { class: 'btn claro', type: 'button' }, '🗑️ Apagar o progresso');
   btnApagar.addEventListener('click', () => {
@@ -809,8 +870,9 @@ function definicoes() {
     clearTimeout(tApagar);
     const def = dados.def;
     const nome = dados.nome;
+    const boasVindas = dados.boasVindas;
     Object.keys(dados).forEach(k => delete dados[k]);
-    Object.assign(dados, { nome, def, estrelas: 0, jogos: {}, dias: [], treinos: [], vistos: {}, pac: { ganhos: { 1: 0, 2: 0, 3: 0 }, jogados: { 1: 0, 2: 0, 3: 0 } }, medalhas: {}, recordes: {}, historico: {}, feitos: {}, testes: [], temasVistos: [] });
+    Object.assign(dados, { nome, def, universal: true, boasVindas, estrelas: 0, jogos: {}, dias: [], treinos: [], vistos: {}, pac: { ganhos: { 1: 0, 2: 0, 3: 0 }, jogados: { 1: 0, 2: 0, 3: 0 } }, medalhas: {}, recordes: {}, historico: {}, feitos: {}, testes: [], temasVistos: [] });
     guardar();
     atualizarEstrelas();
     aviso('O progresso foi apagado. Começamos do zero! 🌱');
@@ -822,7 +884,10 @@ function definicoes() {
     el('h2', { class: 'titulo-seccao' }, '⚙️ Definições'),
     el('p', { class: 'sub' }, 'As alterações ficam guardadas automaticamente.'),
     el('div', { class: 'painel' },
-      el('div', { class: 'opcao-def' }, el('label', { for: 'nome' }, 'Como se chama?'), campoNome),
+      el('div', { class: 'opcao-def' }, el('label', { for: 'nome' }, 'Como gosta que lhe chamemos?'), campoNome),
+      el('div', { class: 'opcao-def' }, el('label', { for: 'clube' }, 'Clube do coração (muda as cores das costas das cartas)'), campoClube),
+      el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, `Quem joga neste aparelho: ${pessoas.lista.length === 1 ? 'só uma pessoa' : `${pessoas.lista.length} pessoas`}`),
+        el('button', { class: 'btn claro', type: 'button', onclick: () => ir('#/pessoas') }, '👥 Pessoas')),
       el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Tamanho da letra'),
         segmentos([[0, 'Normal'], [1, 'Grande'], [2, 'Muito grande']], dados.def.letra, v => { dados.def.letra = v; aplicarDefinicoes(); })),
       el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Sons'),
@@ -1035,12 +1100,12 @@ async function escolherTema(jid) {
     el('p', { class: 'nota' }, el('a', { href: '#/creditos' }, 'Créditos das fotografias')));
 }
 const GRUPOS_FOTOS = [
-  ['Sporting e desporto', '🦁'],
   ['Cidades e regiões', '🏙️'],
   ['Monumentos e paisagens', '🏰'],
   ['Natureza e animais', '🌳'],
   ['Comida e sabores', '🍲'],
   ['História, arte e tradições', '🎨'],
+  ['Desporto', '⚽'],
   ['Viagens pelo mundo', '✈️'],
 ];
 
@@ -1090,6 +1155,7 @@ function router() {
   const [p0, p1, p2] = partes;
   if (p0 === 'cartas' || p0 === 'cabeca' || p0 === 'fotos') return seccao(p0);
   if (p0 === 'creditos') return creditos();
+  if (p0 === 'pessoas') return ecraPessoas();
   if (p0 === 'ler') {
     if (!p1 || !LER[p1]) return lerInicio();
     if (p1 === 'anedotas') return lerAnedotas();

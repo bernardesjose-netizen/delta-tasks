@@ -1,4 +1,4 @@
-/* Jogos do José — estilos
+/* Jogos e Passatempos — estilos
    Pensado para leitura fácil: letra grande, alto contraste, botões largos. */
 
 :root {
@@ -548,12 +548,15 @@ h1, h2, h3, p { margin: 0; }
   box-shadow: 0 4px 0 rgba(0, 0, 0, .15);
 }
 .mem-carta .costas {
-  background: repeating-linear-gradient(45deg, #1b7a43 0 10px, #23904f 10px 20px);
+  background: repeating-linear-gradient(45deg, var(--costas1, #1b7a43) 0 10px, var(--costas2, #23904f) 10px 20px);
   border: 4px solid #fff;
-  outline: 2px solid #1b7a43;
-  color: rgba(255, 255, 255, .85);
-  font-size: calc(var(--tam, 110px) * .35);
+  outline: 2px solid var(--costas1, #1b7a43);
   font-weight: 900;
+}
+.mem-carta .costas .marca {
+  display: grid; place-items: center; width: 46%; height: 38%; border-radius: 30%;
+  background: #fff; color: var(--costas1, #1b7a43); font-size: calc(var(--tam, 110px) * .3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
 }
 .mem-carta .costas.com-img { background: repeating-linear-gradient(0deg, #00703c 0 12%, #fff 12% 24%); outline-color: #00703c; }
 .mem-carta .costas.com-img img { width: 64%; height: 70%; object-fit: contain; background: #fff; padding: 6%; border-radius: 18%; box-shadow: 0 2px 6px rgba(0, 0, 0, .3); }
@@ -702,7 +705,7 @@ h1, h2, h3, p { margin: 0; }
 }
 .carta .centro.figura-carta { font-size: calc(var(--cw) * .5); }
 .carta.costas {
-  background: repeating-linear-gradient(45deg, #2a63c9 0 6px, #3471dc 6px 12px);
+  background: repeating-linear-gradient(45deg, var(--costas1, #2a63c9) 0 6px, var(--costas2, #3471dc) 6px 12px);
   border: calc(var(--cw) * .05) solid #fff;
 }
 .carta.costas > * { display: none; }
@@ -1118,3 +1121,17 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
   .leitura.anedota .leitura-texto p { font-size: 1.08rem; }
   .leitura-texto.poema p { font-size: .95rem; }
 }
+
+/* ---------- Boas-vindas e pessoas ---------- */
+.boas-vindas { border: 3px solid #9bd8b0; }
+.boas-vindas h3 { margin: 0 0 6px; }
+.linha-nome { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 6px; }
+.linha-nome .campo-nome { flex: 1 1 180px; min-width: 0; }
+.btn-texto { background: none; border: 0; color: var(--texto-suave); font: inherit; font-size: .95rem; text-decoration: underline; cursor: pointer; padding: 8px 4px; }
+.quem-joga { margin-top: 8px; background: var(--cartao); border: 2px solid var(--linha); border-radius: 999px; padding: 6px 14px; font: inherit; font-weight: 800; color: var(--texto); cursor: pointer; }
+.quem-joga span { font-weight: 600; color: var(--verde); }
+.lista-pessoas { display: grid; gap: 12px; max-width: 520px; margin: 0 auto 16px; }
+.pessoa { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pessoa .btn { flex: 1 1 220px; justify-content: flex-start; text-align: left; }
+.pessoa.atual .btn { border-color: var(--verde); }
+.pessoa small { font-weight: 600; color: var(--texto-suave); }

@@ -29,11 +29,7 @@ export async function memoriaFotos(alvo, { tema, pares, nivel, aoTerminar }) {
   const temas = await carregarTemas();
   const fotos = fotosDoTema(temas, tema);
   const itens = fotos.map(f => ({ chave: f.f, nome: f.nome, curto: f.c, foto: f.f }));
-  // No tema do Sporting, as cartas têm nas costas o emblema clássico (1945–2001).
-  const costas = tema === 'sporting' ? 'fotos/sporting/emblema-costas.png' : undefined;
-  // A carta do emblema clássico ficaria igual às costas e confundia: aqui não entra.
-  const cartas = costas ? itens.filter(i => !i.foto.endsWith('emblema-1945-2001.jpg')) : itens;
-  return memoria(alvo, { nivel, aoTerminar, itens: cartas, costas, pares: pares || (nivel === 1 ? 4 : nivel === 2 ? 6 : 8) });
+  return memoria(alvo, { nivel, aoTerminar, itens, pares: pares || (nivel === 1 ? 4 : nivel === 2 ? 6 : 8) });
 }
 
 /* ---------- Que fotografia é? ---------- */
@@ -65,7 +61,7 @@ export async function quizFotos(alvo, { tema, nivel = 1, curto, aoTerminar }) {
 export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
   // Só temas com fotografias cheias de pormenor (num fundo branco liso as peças seriam todas iguais).
   const BONS = ['monumentos', 'patrimonio', 'cidades', 'castelos', 'aldeias', 'ilhas', 'paisagens', 'pontes', 'algarve', 'aves', 'selvagens', 'quinta', 'transportes', 'pratos', 'doces',
-    'lisboa', 'porto', 'alentejo', 'norte', 'beiras', 'palacios', 'igrejas', 'farois', 'praias', 'rios', 'jardins', 'mar', 'aves-rapina', 'racas', 'pintura', 'descobrimentos', 'comboios', 'artesanato', 'leiria', 'espanha', 'ue'];
+    'lisboa', 'porto', 'alentejo', 'norte', 'beiras', 'palacios', 'igrejas', 'farois', 'praias', 'rios', 'jardins', 'mar', 'aves-rapina', 'racas', 'pintura', 'descobrimentos', 'comboios', 'artesanato', 'leiria', 'espanha', 'ue', 'estadios'];
   const temas = (await carregarTemas()).filter(t => tema ? t.id === tema : BONS.includes(t.id));
   const [foto] = escolherNaoVistos('puzzle', fotosDoTema(temas.length ? temas : await carregarTemas(), 'todos'), 1, f => f.f);
   const n = nivel === 1 ? 2 : nivel === 2 ? 3 : 4;
