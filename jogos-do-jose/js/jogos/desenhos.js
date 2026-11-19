@@ -20,7 +20,7 @@ export async function oQueE(alvo, { nivel, curto, aoTerminar }) {
   const escolhidos = escolherNaoVistos('oquee', EMOJIS, n, x => x.e);
   const perguntas = escolhidos.map(x => {
     const mesma = EMOJIS.filter(y => y.cat === x.cat && y.nome !== x.nome && !confundivel(x.nome, y.nome));
-    const outras = EMOJIS.filter(y => y.cat !== x.cat);
+    const outras = EMOJIS.filter(y => y.cat !== x.cat && !confundivel(x.nome, y.nome));
     const nErradas = nivel === 4 ? 4 : nivel === 3 ? 3 : 2;
     const erradas = amostra(nivel === 1 ? outras : mesma.length >= nErradas ? mesma : outras, nErradas).map(y => y.nome);
     return {
