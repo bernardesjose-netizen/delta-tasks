@@ -173,7 +173,7 @@ export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
         el('div', { class: 'etiqueta' }, 'Maior ou Menor'),
         el('div', { class: 'enunciado centrado' }, proxima ? 'Vamos ver…' : 'A próxima carta vai ser maior ou menor?'),
         el('div', { class: 'mm-mesa' }, cartaSolta(atual, largura()), el('div', { class: 'mm-seta', 'aria-hidden': 'true' }, '➜'), cartaSolta(proxima, largura())),
-        el('p', { class: 'dica' }, 'O Ás é a carta mais baixa e o Rei a mais alta. Se sair igual, ganha na mesma!')),
+        el('p', { class: 'dica' }, 'O Ás é a carta mais alta e o 2 a mais baixa. Se sair igual, ganha na mesma!')),
       zona));
     if (!proxima) {
       zona.append(el('div', { class: 'fila-botoes' },
@@ -192,7 +192,9 @@ export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
   function apostar(dir) {
     const prox = baralho.pop();
     jogada++;
-    const dif = Math.sign(prox.r - atual.r);
+    // O Ás é a carta mais valiosa (vale mais do que o Rei), como nos jogos de cartas portugueses.
+    const valor = c => (c.r === 1 ? 14 : c.r);
+    const dif = Math.sign(valor(prox) - valor(atual));
     const acertou = dif === 0 || dif === dir;
     if (acertou) {
       certas++;
