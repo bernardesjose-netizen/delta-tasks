@@ -25,7 +25,6 @@ const TEMAS_QUIZ = [
   { id: 'ue', nome: 'União Europeia', cat: 'União Europeia', icone: '⭐' },
   { id: 'europa', nome: 'Europa', cat: 'Europa', icone: '🏰' },
   { id: 'eua', nome: 'Estados Unidos', cat: 'Estados Unidos', icone: '🗽' },
-  { id: 'aviacao', nome: 'Companhias aéreas', cat: 'Companhias aéreas', icone: '✈️' },
   { id: 'carros', nome: 'Carros', cat: 'Carros', icone: '🚗' },
   { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺' },
   { id: 'marcas', nome: 'Marcas portuguesas', cat: 'Marcas portuguesas', icone: '🏷️' },
