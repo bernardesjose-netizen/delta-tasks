@@ -1,5 +1,6 @@
-// Jogo da memória (com desenhos ou fotografias).
+// Jogo da memória (com desenhos ou fotografias) e Maior ou Menor.
 import { el, limpar, baralhar, amostra, som, elogio, aviso, duracao, inteiro, consolo, falar, dados } from '../util.js';
+import { cartaSolta } from '../baralho.js';
 
 /* ================= Jogo da memória ================= */
 const TEMAS_MEMORIA = [
@@ -147,4 +148,80 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
   }
 
   return () => { vivo = false; window.removeEventListener('resize', tamanho); };
+}
+
+/* ================= Maior ou Menor ================= */
+export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
+  const total = curto ? 6 : nivel === 1 ? 8 : nivel === 2 ? 10 : nivel === 4 ? 15 : 12;
+  const baralho = baralhar(Array.from({ length: 52 }, (_, k) => ({ s: k % 4, r: Math.floor(k / 4) + 1 })));
+  let atual = baralho.pop();
+  let jogada = 0;
+  let certas = 0;
+  let seguidas = 0;
+  let melhorSeguidas = 0;
+  const t0 = Date.now();
+  // As cartas encolhem também em ecrãs baixos, para os botões «Maior» e «Menor» ficarem à vista.
+  const largura = () => Math.max(72, Math.min(150, Math.floor((window.innerWidth - 120) / 2), Math.floor((window.innerHeight - 420) / 1.4)));
+
+  function mostrar(proxima, texto, tipo) {
+    limpar(alvo);
+    const zona = el('div');
+    const fim = jogada >= total;
+    alvo.append(el('div', { class: 'ronda' },
+      el('div', { class: 'progresso' }, el('span', {}, `${Math.min(jogada + 1, total)} de ${total}`),
+        el('div', { class: 'barra' }, el('i', { style: { width: `${(jogada / total) * 100}%` } }))),
+      el('div', { class: 'cartao-pergunta' },
+        el('div', { class: 'etiqueta' }, 'Maior ou Menor'),
+        el('div', { class: 'enunciado centrado' }, proxima ? 'Vamos ver…' : 'A próxima carta vai ser maior ou menor?'),
+        el('div', { class: 'mm-mesa' }, cartaSolta(atual, largura()), el('div', { class: 'mm-seta', 'aria-hidden': 'true' }, '➜'), cartaSolta(proxima, largura())),
+        el('p', { class: 'dica' }, 'O Ás é a carta mais alta e o 2 a mais baixa. Se sair igual, ganha na mesma!')),
+      zona));
+    if (!proxima) {
+      zona.append(el('div', { class: 'fila-botoes' },
+        el('button', { class: 'btn verde grande', type: 'button', onclick: () => apostar(1) }, '⬆ Maior'),
+        el('button', { class: 'btn grande', type: 'button', onclick: () => apostar(-1) }, '⬇ Menor')));
+      return;
+    }
+    zona.append(
+      el('div', { class: `retorno ${tipo}` }, el('div', { class: 'icone' }, tipo === 'bom' ? '😃' : '🙂'), el('div', {}, el('b', {}, texto))),
+      el('div', { class: 'fila-botoes' }, el('button', {
+        class: 'btn verde grande largo', type: 'button',
+        onclick: () => { if (fim) terminar(); else { atual = proxima; mostrar(); } },
+      }, fim ? 'Ver resultado ▶' : 'Próxima carta ▶')));
+  }
+
+  function apostar(dir) {
+    const prox = baralho.pop();
+    jogada++;
+    // O Ás é a carta mais valiosa (vale mais do que o Rei), como nos jogos de cartas portugueses.
+    const valor = c => (c.r === 1 ? 14 : c.r);
+    const dif = Math.sign(valor(prox) - valor(atual));
+    const acertou = dif === 0 || dif === dir;
+    if (acertou) {
+      certas++;
+      seguidas++;
+      melhorSeguidas = Math.max(melhorSeguidas, seguidas);
+      som.certo();
+      mostrar(prox, dif === 0 ? 'Saiu igual — conta como certo! 😉' : `${elogio()}${seguidas >= 3 ? ` Já vai com ${seguidas} seguidas!` : ''}`, 'bom');
+    } else {
+      seguidas = 0;
+      som.quase();
+      mostrar(prox, 'Desta vez a sorte fugiu. Para a próxima é que é!', 'info');
+    }
+  }
+
+  function terminar() {
+    const p = certas / total;
+    aoTerminar({
+      estrelas: p >= 0.75 ? 3 : p >= 0.5 ? 2 : 1,
+      numeros: [
+        { valor: `${certas} de ${total}`, rotulo: 'palpites certos' },
+        { valor: String(melhorSeguidas), rotulo: 'melhor sequência' },
+        { valor: duracao(Date.now() - t0), rotulo: 'tempo' },
+      ],
+    });
+  }
+
+  mostrar();
+  return () => {};
 }

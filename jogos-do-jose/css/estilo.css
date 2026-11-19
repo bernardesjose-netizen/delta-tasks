@@ -569,6 +569,14 @@ h1, h2, h3, p { margin: 0; }
 .info-jogo span { background: var(--cartao); padding: 6px 14px; border-radius: 999px; box-shadow: var(--sombra); }
 
 /* ---------- Maior ou menor ---------- */
+.mm-mesa { display: flex; justify-content: center; align-items: center; gap: 18px; margin: 10px 0 18px; min-height: 220px; }
+.mm-carta { width: 140px; height: 196px; border-radius: 14px; background: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, .18); border: 2px solid #ddd; position: relative; display: grid; place-items: center; font-weight: 800; }
+.mm-carta .mm-canto { position: absolute; top: 8px; left: 10px; font-size: 1.9rem; line-height: 1; text-align: center; }
+.mm-carta .mm-centro { font-size: 4rem; }
+.mm-carta.vermelha { color: #c81e1e; }
+.mm-carta.preta { color: #1d2633; }
+.mm-carta.costas { background: repeating-linear-gradient(45deg, #b4461b 0 10px, #c9541f 10px 20px); border: 5px solid #fff; outline: 2px solid #b4461b; }
+.mm-seta { font-size: 2.5rem; color: var(--texto-suave); }
 
 /* ---------- Resultado ---------- */
 .resultado { text-align: center; max-width: 640px; margin: 10px auto; animation: aparecer .4s ease-out; }
@@ -1722,6 +1730,7 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .app.apertado .ronda:not(.escolha) .etiqueta { display: none; }
 .app.apertado .ronda:not(.escolha) .enunciado { font-size: 1.1rem; }
 .app.apertado .ronda:not(.escolha) .dica { font-size: .9rem; margin-top: 2px; }
+.app.apertado .mm-seta { font-size: 2rem; }
 .app.apertado .ordem-grelha { gap: 8px; }
 .app.apertado .ordem-item { min-height: 54px; padding-top: 6px; padding-bottom: 6px; }
 .app.apertado .fila-botoes .btn.grande { min-height: 56px; padding-top: 8px; padding-bottom: 8px; }
@@ -1744,5 +1753,6 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .app.apertado .casas { margin: 8px 0 12px; }
 .app.apertado .casa { width: 42px; height: 50px; font-size: 1.6rem; }
 .app.apertado .letra { width: 48px; height: 52px; font-size: 1.6rem; }
+.app.apertado .mm-mesa { min-height: 0; margin: 6px 0 8px; }
 .app.apertado .grelha-palavras { gap: 8px; margin-top: 8px; }
 .app.apertado .palavra-cartao { min-height: 48px; padding: 6px 8px; font-size: 1rem; }

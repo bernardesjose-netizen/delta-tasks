@@ -102,7 +102,13 @@ const JOGOS = {
     niveis: ['6 pares de cartas.', '8 pares de cartas.', '10 pares de cartas.', '12 pares de cartas.'],
     carregar: cartas('memoria'),
   },
-
+  maiormenor: {
+    seccao: 'cartas', grupo: 'cartas', nome: 'Maior ou Menor', icone: '🔼', cor: '#c2337a',
+    desc: 'Adivinhe se a próxima carta é maior ou menor.',
+    ajuda: 'Veja a carta e diga se a próxima vai ser maior ou menor. Se sair igual, ganha na mesma.',
+    niveis: ['8 cartas.', '10 cartas.', '12 cartas.', '15 cartas.'],
+    carregar: cartas('maiorMenor'),
+  },
   relampago: {
     seccao: 'cabeca', grupo: 'rapido', nome: 'Contas Relâmpago', icone: '⚡', cor: '#e8590c',
     desc: '20 contas seguidas contra o relógio. Bata o seu recorde!',
