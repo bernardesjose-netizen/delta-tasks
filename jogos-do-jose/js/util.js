@@ -479,8 +479,21 @@ export function aviso(texto, ms = 2600) {
   m.style.animation = '';
   clearTimeout(tMsg);
   msgDesde = Date.now();
+  posicionarAviso(m);
   const tempo = Math.min(15000, Math.max(ms + 2500, 5500, 2000 + String(texto).length * 75));
   tMsg = setTimeout(() => { m.hidden = true; }, tempo);
+}
+// O aviso fica em baixo; se aí tapar um botão ou uma resposta, passa para cima (sobre a barra do título).
+function posicionarAviso(m) {
+  m.classList.remove('em-cima');
+  const app = document.getElementById('app');
+  if (!app) return;
+  const r = m.getBoundingClientRect();
+  const tapa = [].some.call(app.querySelectorAll('button, input, select, [role="button"]'), b => {
+    const q = b.getBoundingClientRect();
+    return q.width > 0 && q.height > 0 && q.bottom > r.top - 6 && q.top < r.bottom + 6 && q.right > r.left && q.left < r.right;
+  });
+  if (tapa) m.classList.add('em-cima');
 }
 function fecharAviso() {
   const m = document.getElementById('mensagem');

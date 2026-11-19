@@ -40,6 +40,19 @@ function retorno(tipo, icone, titulo, extra) {
  * perguntas: [{ etiqueta?, enunciado: string|Node, centrado?, opcoes: string[], certa: string, explicacao?, ler?, manterOrdem? }]
  * Errar à primeira dá direito a nova tentativa — a ideia é aprender, não castigar.
  */
+// Ecrãs pequenos: aperta a pergunta, por passos, até as respostas caberem no ecrã. Num ecrã deitado e largo
+// (tablet), a pergunta fica à esquerda e as respostas à direita.
+const APERTOS = ['aperto-1', 'aperto-2', 'aperto-3'];
+function ajustarAoEcra(ronda, cartao, caixa) {
+  if (!ronda || !ronda.isConnected) return;
+  ronda.classList.remove('lado-a-lado', ...APERTOS);
+  const H = window.innerHeight;
+  const cabe = () => Math.max(cartao.getBoundingClientRect().bottom, caixa.getBoundingClientRect().bottom) + window.pageYOffset <= H - 6;
+  if (cabe()) return;
+  if (window.innerWidth >= 700 && window.innerWidth > H * 1.25) ronda.classList.add('lado-a-lado');
+  for (let k = 0; k < APERTOS.length && !cabe(); k++) ronda.classList.add(APERTOS[k]);
+}
+
 export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }) {
   let i = 0;
   let pontos = 0;
@@ -48,13 +61,17 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
   let melhorSeguidas = 0;
   const t0 = Date.now();
   let vivo = true;
+  let atual = null;
+  let tAjuste = null;
+  const aoMudarEcra = () => { clearTimeout(tAjuste); tAjuste = setTimeout(() => { if (atual) ajustarAoEcra(...atual); }, 150); };
+  window.addEventListener('resize', aoMudarEcra);
 
   function mostrar() {
     if (!vivo) return;
     const q = perguntas[i];
     let tentativas = 0;
     limpar(alvo);
-    const ronda = el('div', { class: 'ronda' });
+    const ronda = el('div', { class: 'ronda escolha' });
     const textoLer = q.ler || textoDe(q.enunciado);
     const cartao = el('div', { class: 'cartao-pergunta' },
       q.etiqueta ? el('div', { class: 'etiqueta' }, q.etiqueta) : null,
@@ -62,13 +79,19 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
       botaoOuvir(`${textoLer}. ${q.opcoes.join('; ')}`),
     );
     const opcoes = q.manterOrdem ? q.opcoes.slice() : baralhar(q.opcoes);
-    const caixa = el('div', { class: `opcoes${duasColunas ? ' duas' : ''}` });
-    const zonaRetorno = el('div');
+    // Respostas curtas podem ir em duas colunas mesmo num telemóvel, se for preciso apertar.
+    const curtas = duasColunas && opcoes.every(o => String(o).length <= 16);
+    const caixa = el('div', { class: `opcoes${duasColunas ? ' duas' : ''}${curtas ? ' curtas' : ''}` });
+    const zonaRetorno = el('div', { class: 'zona-retorno' });
     const botoes = opcoes.map(o => el('button', { class: 'opcao', type: 'button', onclick: () => responder(o, botao(o)) }, o));
     function botao(o) { return botoes[opcoes.indexOf(o)]; }
     caixa.append(...botoes);
     ronda.append(barraProgresso(i, perguntas.length), cartao, caixa, zonaRetorno);
     alvo.append(ronda);
+    atual = [ronda, cartao, caixa];
+    ajustarAoEcra(ronda, cartao, caixa);
+    // As imagens (fotografias) podem mudar de tamanho ao carregar.
+    [].forEach.call(cartao.querySelectorAll('img'), im => { if (!im.complete) im.addEventListener('load', aoMudarEcra); });
     if (dados.def.voz) falar(textoLer);
 
     function terminarPergunta(bloco) {
@@ -114,6 +137,7 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
     i++;
     if (i < perguntas.length) { mostrar(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     const total = perguntas.length;
+    window.removeEventListener('resize', aoMudarEcra);
     aoTerminar({
       estrelas: estrelasPorPercentagem(pontos / total),
       numeros: [
@@ -125,7 +149,7 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
   }
 
   mostrar();
-  return () => { vivo = false; calar(); };
+  return () => { vivo = false; calar(); clearTimeout(tAjuste); window.removeEventListener('resize', aoMudarEcra); };
 }
 
 /**

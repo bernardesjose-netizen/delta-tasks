@@ -309,6 +309,31 @@ const GRUPOS_TREINO = [
 
 /* ---------- Infraestrutura de ecrãs ---------- */
 const app = document.getElementById('app');
+
+// Sinal «Há mais em baixo»: aparece quando parte do ecrã fica abaixo do fundo e desaparece ao chegar ao fim.
+const maisAbaixo = el('button', {
+  class: 'mais-abaixo', type: 'button', hidden: true, 'aria-label': 'Há mais em baixo. Toque para descer.',
+  onclick: () => window.scrollBy({ top: Math.round(window.innerHeight * 0.6), behavior: 'smooth' }),
+}, el('span', { class: 'seta', 'aria-hidden': 'true' }, '⬇'), ' Há mais em baixo');
+document.body.append(maisAbaixo);
+let pedidoMais = 0;
+function verMaisAbaixo() {
+  if (pedidoMais) return;
+  pedidoMais = requestAnimationFrame(() => {
+    pedidoMais = 0;
+    const H = window.innerHeight;
+    const fundo = app.getBoundingClientRect().bottom - (parseFloat(getComputedStyle(app).paddingBottom) || 0);
+    // Painéis presos em baixo (ex.: pista e teclado das palavras cruzadas): o sinal fica por cima deles.
+    const painel = app.querySelector('.cruz-painel');
+    const q = painel ? painel.getBoundingClientRect() : null;
+    const base = q && q.height && q.bottom >= H - 2 ? H - q.top : 0;
+    maisAbaixo.style.bottom = base ? `${Math.round(base + 10)}px` : '';
+    maisAbaixo.hidden = !(fundo > H + 16);
+  });
+}
+window.addEventListener('scroll', verMaisAbaixo, { passive: true });
+window.addEventListener('resize', verMaisAbaixo);
+if (window.MutationObserver) new MutationObserver(verMaisAbaixo).observe(app, { childList: true, subtree: true });
 const topoTitulo = document.getElementById('topo-titulo');
 const btnVoltar = document.getElementById('btn-voltar');
 const topoEstrelas = document.getElementById('topo-estrelas');

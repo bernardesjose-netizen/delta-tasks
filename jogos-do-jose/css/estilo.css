@@ -308,6 +308,8 @@ h1, h2, h3, p { margin: 0; }
 .etiqueta { display: inline-block; max-width: 100%; overflow-wrap: anywhere; background: var(--fundo-2); color: var(--marca-escura); font-weight: 800; font-size: .8rem; padding: 4px 12px; border-radius: 999px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
 .enunciado { font-size: 1.35rem; font-weight: 700; line-height: 1.35; padding-right: 54px; }
 .enunciado.centrado { text-align: center; padding-right: 0; }
+/* Pergunta centrada por cima de um desenho: não pode ficar por baixo do botão «Ouvir». */
+.enunciado.centrado > div > .centrado:first-child { padding: 0 50px; }
 .btn-ouvir {
   position: absolute;
   top: 14px;
@@ -1653,3 +1655,70 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 }
 .leve .cruz-cel { transition: none; }
 .leve .cruz-painel { box-shadow: none; border-top: 2px solid var(--linha); }
+
+/* ================= Ecrãs pequenos (tablets pequenos e telemóveis) ================= */
+/* O aviso passa para cima quando, em baixo, tapava respostas ou botões. */
+.mensagem.em-cima, .app.ecra-cheio ~ .mensagem.em-cima { top: max(6px, env(safe-area-inset-top)); bottom: auto; padding: 9px 16px; font-size: .95rem; border-radius: 14px; max-width: min(560px, calc(100% - 24px)); }
+
+/* Sinal «Há mais em baixo». */
+.mais-abaixo {
+  position: fixed; left: 50%; bottom: max(12px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 4000;
+  display: flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 14px; border: 0; border-radius: 999px;
+  background: var(--marca); color: #fff; font: inherit; font-weight: 800; font-size: .85rem; white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .28); opacity: .92; cursor: pointer;
+}
+.mais-abaixo[hidden] { display: none; }
+.mais-abaixo .seta { display: inline-block; animation: mais-abaixo 1.6s ease-in-out infinite; }
+@keyframes mais-abaixo { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+.leve .mais-abaixo .seta { animation: none; }
+@media (prefers-reduced-motion: reduce) { .mais-abaixo .seta { animation: none; } }
+
+/* Perguntas: apertar por passos até as respostas caberem no ecrã. */
+.ronda.escolha.aperto-1 .progresso { margin-bottom: 8px; }
+.ronda.escolha.aperto-1 .cartao-pergunta { padding: 12px 16px 14px; margin-bottom: 10px; border-radius: 20px; }
+.ronda.escolha.aperto-1 .etiqueta { margin-bottom: 6px; font-size: .72rem; }
+.ronda.escolha.aperto-1 .enunciado { font-size: 1.2rem; }
+.ronda.escolha.aperto-1 .opcoes { gap: 10px; }
+.ronda.escolha.aperto-1 .opcao { min-height: 60px; padding: 10px 14px; font-size: 1.1rem; }
+.ronda.escolha.aperto-1 .emoji-grande { font-size: 5rem; margin-top: 0; }
+.ronda.escolha.aperto-1 .foto-quiz { width: min(320px, 80vw, 38vh); margin-top: 8px; }
+.ronda.escolha.aperto-1 .relogio { width: min(260px, 70vw, 36vh); }
+.ronda.escolha.aperto-1 .figuras { margin: 8px 0; gap: 8px; }
+.ronda.escolha.aperto-1 .campo-contar { margin-top: 8px; padding: 8px; gap: 4px; }
+.ronda.escolha.aperto-1 .campo-contar span { font-size: min(2.1rem, 7.4vw, 5.6vh); width: min(2.6rem, 9.6vw, 7vh); height: min(2.6rem, 9.6vw, 7vh); }
+
+.ronda.escolha.aperto-2 .etiqueta { display: none; }
+.ronda.escolha.aperto-2 .enunciado { font-size: 1.08rem; }
+.ronda.escolha.aperto-2 .opcao { min-height: 52px; padding: 8px 12px; font-size: 1.02rem; box-shadow: 0 4px 0 var(--linha); }
+.ronda.escolha.aperto-2 .opcoes.curtas { grid-template-columns: 1fr 1fr; }
+.ronda.escolha.aperto-2 .emoji-grande { font-size: 4rem; }
+.ronda.escolha.aperto-2 .foto-quiz { width: min(320px, 80vw, 30vh); }
+.ronda.escolha.aperto-2 .relogio { width: min(260px, 70vw, 28vh); }
+.ronda.escolha.aperto-2 .campo-contar span { font-size: min(2.1rem, 7.4vw, 4.6vh); width: min(2.6rem, 9.6vw, 5.8vh); height: min(2.6rem, 9.6vw, 5.8vh); }
+
+.ronda.escolha.aperto-3 .progresso { margin-bottom: 4px; }
+.ronda.escolha.aperto-3 .cartao-pergunta { padding: 8px 12px 10px; margin-bottom: 8px; }
+.ronda.escolha.aperto-3 .btn-ouvir { width: 44px; height: 44px; top: 8px; right: 8px; font-size: 1.2rem; }
+.ronda.escolha.aperto-3 .enunciado { font-size: 1rem; padding-right: 48px; }
+.ronda.escolha.aperto-3 .enunciado.centrado { padding-right: 0; }
+.ronda.escolha.aperto-3 .opcoes { gap: 8px; }
+.ronda.escolha.aperto-3 .opcao { min-height: 48px; padding: 6px 10px; font-size: .98rem; }
+.ronda.escolha.aperto-3 .emoji-grande { font-size: 3.2rem; }
+.ronda.escolha.aperto-3 .foto-quiz { width: min(320px, 80vw, 24vh); }
+.ronda.escolha.aperto-3 .relogio { width: min(260px, 70vw, 22vh); }
+.ronda.escolha.aperto-3 .figuras { margin: 4px 0; gap: 6px; }
+.ronda.escolha.aperto-3 .campo-contar { margin-top: 4px; padding: 6px; gap: 2px; }
+.ronda.escolha.aperto-3 .campo-contar span { font-size: min(2.1rem, 7.4vw, 4vh); width: min(2.6rem, 9.6vw, 5vh); height: min(2.6rem, 9.6vw, 5vh); }
+.ronda.escolha.aperto-3 .enunciado.centrado > div > .centrado:first-child { padding: 0 44px; }
+
+/* Ecrã deitado e largo (tablet): pergunta à esquerda, respostas à direita. */
+.ronda.escolha.lado-a-lado {
+  max-width: 1100px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 18px; align-items: start;
+  grid-template-areas: "prog prog" "cartao opcoes" "retorno opcoes"; grid-template-rows: auto auto 1fr;
+}
+.ronda.escolha.lado-a-lado > .progresso { grid-area: prog; }
+.ronda.escolha.lado-a-lado > .cartao-pergunta { grid-area: cartao; margin-bottom: 10px; }
+.ronda.escolha.lado-a-lado > .opcoes { grid-area: opcoes; grid-template-columns: 1fr; }
+.ronda.escolha.lado-a-lado.aperto-2 > .opcoes.curtas { grid-template-columns: 1fr 1fr; }
+.ronda.escolha.lado-a-lado > .zona-retorno { grid-area: retorno; }
+.ronda.escolha.lado-a-lado .retorno { margin-top: 0; }
