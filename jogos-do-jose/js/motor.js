@@ -174,7 +174,7 @@ export function rondaTeclado(alvo, { perguntas, aoTerminar }) {
         visor.style.borderColor = 'var(--verde)';
         visor.style.background = 'var(--verde-claro)';
         limpar(zonaRetorno).append(retorno('bom', '😃', elogio()));
-        setTimeout(avancar, 1100);
+        setTimeout(avancar, 2400); // tempo para ler o elogio com calma
         return;
       }
       tentativas++;

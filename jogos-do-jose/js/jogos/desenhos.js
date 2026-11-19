@@ -88,7 +88,7 @@ export async function diferente(alvo, { nivel, curto, aoTerminar }) {
         pontos += erros === 0 ? 1 : 0.5;
         if (erros === 0) aPrimeira++;
         limpar(zona).append(el('div', { class: 'retorno bom' }, el('div', { class: 'icone' }, '😃'), el('div', {}, el('b', {}, elogio()))));
-        tProx = setTimeout(avancar, 1100);
+        tProx = setTimeout(avancar, 2400); // tempo para ler o elogio com calma
         return;
       }
       erros++;

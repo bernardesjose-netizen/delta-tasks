@@ -357,12 +357,22 @@ export const som = {
 };
 
 /* ---------- Voz ---------- */
+// Sempre português de Portugal: escolhe-se uma voz pt-PT e nunca uma do Brasil.
+// (Se o aparelho não tiver nenhuma, pede-se pt-PT ao sistema e as Definições explicam como a instalar.)
 let vozPT = null;
+let haVozes = false;
+const vozDoBrasil = v => /pt[-_]BR/i.test(v.lang) || /bra[sz]il/i.test(v.name);
+const vozDePortugal = v => !vozDoBrasil(v) && (/pt[-_]PT/i.test(v.lang) || (/^pt$/i.test(v.lang) && /portugal|joana|catarina|helia|raquel|duarte/i.test(v.name)) || /portugu[eê]s \(portugal\)|european portuguese/i.test(v.name));
 function escolherVoz() {
   if (!('speechSynthesis' in window)) return;
   const vozes = speechSynthesis.getVoices();
-  vozPT = vozes.find(v => /pt[-_]PT/i.test(v.lang)) || vozes.find(v => /^pt/i.test(v.lang)) || null;
+  haVozes = vozes.length > 0;
+  const pt = vozes.filter(vozDePortugal);
+  // preferir a voz local (funciona sem internet) e a que o sistema marca como predefinida
+  vozPT = pt.find(v => v.localService && v.default) || pt.find(v => v.localService) || pt[0] || null;
 }
+// true se o aparelho tem uma voz de Portugal; null se ainda não se sabe (lista de vozes vazia)
+export const temVozDePortugal = () => (vozPT ? true : haVozes ? false : null);
 if ('speechSynthesis' in window) {
   escolherVoz();
   if (speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', escolherVoz);
@@ -414,6 +424,11 @@ const ELOGIOS = [
   'Está em grande forma!', 'Nem o Eusébio marcava melhor!', 'Nem o Yazalde marcava melhor!',
   'Nem o Fernando Gomes marcava melhor!', 'Golo à Cristiano Ronaldo!', 'Mais certo do que um relógio!',
   'Está a voar!', 'Que pontaria!', 'Parabéns!', 'Uma maravilha!',
+  // personalidades portuguesas de hoje: desporto, música, ciência, cozinha e cultura
+  'Mais rápido do que o Iúri Leitão na pista!', 'Com a força do Fernando Pimenta!', 'Um golpe de mestre, à Jorge Fonseca!',
+  'Com a garra da Telma Monteiro!', 'A subir como o João Almeida!', 'Afinado como a voz da Mariza!',
+  'Com a alma da Carminho!', 'Ganhava a Eurovisão, como o Salvador Sobral!', 'Um cérebro digno do António Damásio!',
+  'Receita de chef, à José Avillez!', 'Digno de um Prémio Camões!', 'Uma interpretação de Óscar!',
 ];
 const ELOGIOS_NOME = ['Muito bem, {n}!', 'Boa, {n}!', 'Isso mesmo, {n}!', 'Grande {n}!', '{n}, está imparável!'];
 const OUTRA_VEZ = [
@@ -445,11 +460,15 @@ export function fraseFinal(estrelas) {
   const nome = dados.nome ? `, ${dados.nome}` : '';
   if (estrelas >= 3) return escolher([`Uma ronda de mestre${nome}! 🏆`, `Perfeito${nome}! Que cabeça! 🏆`, `Brilhante${nome}! Está imparável! 🏆`]);
   if (estrelas === 2) return escolher([`Muito bom trabalho${nome}! 👏`, `Grande ronda${nome}! 👏`, `Está cada vez melhor${nome}! 👏`]);
-  return escolher([`Bom treino${nome}! Cada jogo deixa a cabeça mais ágil. 🌱`, `Bem jogado${nome}! O importante é treinar. 🌱`, `Boa${nome}! Amanhã ainda vai correr melhor. 🌱`]);
+  return escolher([`Bom treino${nome}! Cada jogo deixa o cérebro mais ágil. 🌱`, `Bem jogado${nome}! O importante é treinar. 🌱`, `Boa${nome}! Amanhã ainda vai correr melhor. 🌱`]);
 }
 
 /* ---------- Mensagem rápida e festa ---------- */
 let tMsg = null;
+// Pistas e parabéns: ficam no ecrã tempo suficiente para se lerem com calma (pelo menos 5,5 s,
+// mais nos textos compridos) e fecham-se com um toque em qualquer sítio — esse toque continua a
+// valer para o jogo, porque a mensagem nunca tapa nada.
+let msgDesde = 0;
 export function aviso(texto, ms = 2600) {
   const m = document.getElementById('mensagem');
   if (!m) return;
@@ -459,8 +478,18 @@ export function aviso(texto, ms = 2600) {
   void m.offsetWidth;
   m.style.animation = '';
   clearTimeout(tMsg);
-  tMsg = setTimeout(() => { m.hidden = true; }, ms);
+  msgDesde = Date.now();
+  const tempo = Math.min(15000, Math.max(ms + 2500, 5500, 2000 + String(texto).length * 75));
+  tMsg = setTimeout(() => { m.hidden = true; }, tempo);
 }
+function fecharAviso() {
+  const m = document.getElementById('mensagem');
+  if (!m || m.hidden || Date.now() - msgDesde < 700) return;
+  clearTimeout(tMsg);
+  m.hidden = true;
+}
+document.addEventListener('touchstart', fecharAviso, { capture: true, passive: true });
+document.addEventListener('mousedown', fecharAviso, true);
 
 export function festa(simbolos = ['🎉', '⭐', '🎊', '✨', '🌟']) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;

@@ -6,11 +6,44 @@
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="112" fill="url(#g)"/>
-  <g transform="rotate(-9 256 256)">
-    <rect x="140" y="92" width="236" height="328" rx="30" fill="#1d2633" opacity=".18" transform="translate(8 10)"/>
-    <rect x="140" y="92" width="236" height="328" rx="30" fill="#fff"/>
-    <path transform="translate(160 112) scale(2.6)" fill="#d32f2f" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-    <path transform="translate(356 400) rotate(180) scale(2.6)" fill="#d32f2f" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-    <path transform="translate(186 186) scale(5.8)" fill="#d32f2f" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+  <!-- sombra suave -->
+  <g transform="translate(8 12)" fill="#0b3d24" opacity=".22">
+    <circle cx="198" cy="196" r="72"/><circle cx="314" cy="196" r="72"/>
+    <circle cx="150" cy="268" r="64"/><circle cx="362" cy="268" r="64"/>
+    <circle cx="200" cy="330" r="64"/><circle cx="312" cy="330" r="64"/>
+    <circle cx="256" cy="262" r="80"/>
+  </g>
+  <!-- contorno (os círculos com traço por baixo; o enchimento por cima tapa as linhas interiores) -->
+  <g fill="#c2185b" stroke="#c2185b" stroke-width="22">
+    <circle cx="198" cy="196" r="72"/><circle cx="314" cy="196" r="72"/>
+    <circle cx="150" cy="268" r="64"/><circle cx="362" cy="268" r="64"/>
+    <circle cx="200" cy="330" r="64"/><circle cx="312" cy="330" r="64"/>
+    <circle cx="256" cy="262" r="80"/>
+  </g>
+  <g fill="#ff9ebd">
+    <circle cx="198" cy="196" r="72"/><circle cx="314" cy="196" r="72"/>
+    <circle cx="150" cy="268" r="64"/><circle cx="362" cy="268" r="64"/>
+    <circle cx="200" cy="330" r="64"/><circle cx="312" cy="330" r="64"/>
+    <circle cx="256" cy="262" r="80"/>
+  </g>
+  <!-- brilho -->
+  <ellipse cx="190" cy="170" rx="34" ry="20" fill="#fff" opacity=".45" transform="rotate(-25 190 170)"/>
+  <!-- circunvoluções -->
+  <g fill="none" stroke="#c2185b" stroke-width="12" stroke-linecap="round">
+    <path d="M256 140 C 246 200, 268 262, 252 330 C 248 352, 256 372, 256 384"/>
+    <path d="M140 250 q 36 -26 70 2"/>
+    <path d="M156 318 q 34 12 64 -16"/>
+    <path d="M200 156 q 6 40 -26 58"/>
+    <path d="M216 250 q 14 30 -6 58"/>
+    <path d="M372 250 q -36 -26 -70 2"/>
+    <path d="M356 318 q -34 12 -64 -16"/>
+    <path d="M312 156 q -6 40 26 58"/>
+    <path d="M296 250 q -14 30 6 58"/>
+  </g>
+  <!-- estrelinhas de «inteligente» -->
+  <g fill="#ffd84d" stroke="#e0a800" stroke-width="3" stroke-linejoin="round">
+    <path d="M410 70 L 421 104 L 455 115 L 421 126 L 410 160 L 399 126 L 365 115 L 399 104 Z"/>
+    <path d="M444 172 L 450 190 L 468 196 L 450 202 L 444 220 L 438 202 L 420 196 L 438 190 Z"/>
+    <path d="M96 92 L 102 110 L 120 116 L 102 122 L 96 140 L 90 122 L 72 116 L 90 110 Z"/>
   </g>
 </svg>

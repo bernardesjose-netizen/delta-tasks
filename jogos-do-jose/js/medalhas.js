@@ -19,7 +19,7 @@ const soma = o => Object.values(o || {}).reduce((s, v) => s + (v || 0), 0);
 
 export const MEDALHAS = [
   { id: 'primeiro', icone: '🌱', nome: 'Primeiro passo', desc: 'Jogar o primeiro jogo.', ok: d => Object.keys(d.jogos).length > 0 },
-  { id: 'treino1', icone: '☀️', nome: 'Bom dia, cabeça!', desc: 'Fazer o primeiro Treino do Dia.', ok: d => d.treinos.length >= 1 },
+  { id: 'treino1', icone: '☀️', nome: 'Bom dia, cérebro!', desc: 'Fazer o primeiro Treino do Dia.', ok: d => d.treinos.length >= 1 },
   { id: 'treino10', icone: '🌞', nome: 'Dez treinos', desc: 'Fazer 10 Treinos do Dia.', ok: d => d.treinos.length >= 10 },
   { id: 'seguidos3', icone: '🔥', nome: 'Três dias seguidos', desc: 'Jogar 3 dias seguidos.', ok: d => melhorSequencia(d.dias) >= 3 },
   { id: 'seguidos7', icone: '📅', nome: 'Uma semana inteira', desc: 'Jogar 7 dias seguidos.', ok: d => melhorSequencia(d.dias) >= 7 },
@@ -40,8 +40,8 @@ export const MEDALHAS = [
   { id: 'leitor', icone: '📖', nome: 'Bom leitor', desc: 'Ler 5 textos em voz alta.', ok: d => (feitos(d).leituras || 0) >= 5 },
   { id: 'puzzle16', icone: '🖼️', nome: 'Puzzle grande', desc: 'Acabar um puzzle de 16 peças.', ok: d => ((d.jogos.puzzle && d.jogos.puzzle.melhor && d.jogos.puzzle.melhor[3]) || 0) >= 1 },
   { id: 'viajante', icone: '📷', nome: 'Viajante', desc: 'Jogar com fotografias de 10 temas diferentes.', ok: d => (d.temasVistos || []).length >= 10 },
-  { id: 'teste', icone: '🎯', nome: 'Cabeça em forma', desc: 'Fazer o Teste da Cabeça.', ok: d => (d.testes || []).length >= 1 },
-  { id: 'teste5', icone: '📈', nome: 'Sempre a melhorar', desc: 'Fazer o Teste da Cabeça em 5 dias diferentes.', ok: d => (d.testes || []).length >= 5 },
+  { id: 'teste', icone: '🎯', nome: 'Cérebro em forma', desc: 'Fazer o Teste do Cérebro.', ok: d => (d.testes || []).length >= 1 },
+  { id: 'teste5', icone: '📈', nome: 'Sempre a melhorar', desc: 'Fazer o Teste do Cérebro em 5 dias diferentes.', ok: d => (d.testes || []).length >= 5 },
 ];
 
 /** Verifica as medalhas e devolve as que foram ganhas agora. */

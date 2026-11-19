@@ -203,7 +203,7 @@ export function domino(alvo, { nivel, aoTerminar }) {
     if (mao.length === 0) { desenhar(pos); fim(quem); return; }
     vez = quem === 'eu' ? 'ele' : 'eu';
     desenhar(pos);
-    if (quem === 'eu') { dizer(`${elogio()} O computador está a pensar…`); setTimeout(vezDele, 1100); } else {
+    if (quem === 'eu') { dizer(`${elogio()} O computador está a pensar…`); setTimeout(vezDele, 1900); } else {
       dizer(`O computador jogou o ${nomePedra(p)}. É a sua vez!`, true);
     }
   }

@@ -1,4 +1,4 @@
-// Treino da cabeça: jogos de perguntas (contas, sequências, relógio, mercado, contar, cultura geral, provérbios, adivinhas, intruso).
+// Treino do cérebro: jogos de perguntas (contas, sequências, relógio, mercado, contar, cultura geral, provérbios, adivinhas, intruso).
 import { el, inteiro, escolher, baralhar, amostra, euros, escolherNaoVistos } from '../util.js';
 import { rondaEscolha, rondaTeclado } from '../motor.js';
 

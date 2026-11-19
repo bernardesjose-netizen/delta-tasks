@@ -333,7 +333,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
     mesa.querySelectorAll('.realce').forEach(tirar);
     nos.forEach((n, i) => { if (n) { n.classList.add('realce'); n.dataset.realce = i === 0 ? 'origem' : 'destino'; } });
     clearTimeout(tRealce);
-    tRealce = setTimeout(() => nos.forEach(n => n && tirar(n)), 2200);
+    tRealce = setTimeout(() => nos.forEach(n => n && tirar(n)), 6500);
   }
   function ajuda() {
     if (autoAtivo) return;

@@ -2,7 +2,7 @@
 import {
   el, limpar, dados, guardar, registarJogo, diasSeguidos, hojeISO, dataPorExtenso, fraseFinal, festa, som, calar,
   geradorSemente, vozDisponivel, aviso, marcar, modoLeve, aparelhoFraco, falarLongo, baralhar,
-  pessoas, mudarNome, trocarPessoa, novaPessoa, apagarPessoa, CLUBES,
+  pessoas, mudarNome, trocarPessoa, novaPessoa, apagarPessoa, CLUBES, temVozDePortugal,
 } from './util.js';
 import { novasMedalhas, MEDALHAS } from './medalhas.js';
 import { graficoLinha } from './grafico.js';
@@ -129,112 +129,112 @@ const JOGOS = {
     carregar: treinoJ('leitura'),
   },
   contas: {
-    seccao: 'cabeca', nome: 'Contas de Cabeça', icone: '➕', cor: '#e8590c',
+    seccao: 'cabeca', grupo: 'numeros', nome: 'Contas de Cabeça', icone: '➕', cor: '#e8590c',
     desc: 'Somas, subtrações e tabuadas com o teclado grande.',
     ajuda: 'Faça a conta de cabeça e escreva o resultado no teclado. Depois carregue em OK.',
     niveis: ['Somas e subtrações até 20.', 'Contas até 100 e tabuadas fáceis.', 'Tabuadas e divisões.'],
     carregar: cerebro('contas'),
   },
   quiz: {
-    seccao: 'cabeca', nome: 'Cultura Geral', icone: '🌍', cor: '#1d5fd1',
+    seccao: 'cabeca', grupo: 'saber', nome: 'Cultura Geral', icone: '🌍', cor: '#1d5fd1',
     desc: 'De tudo um pouco ou por tema: Leiria, Espanha, Europa, clubes, ciclismo e muito mais.',
     ajuda: 'Escolha a resposta certa. Se errar, pode tentar outra vez. No fim de cada pergunta há uma curiosidade.',
     niveis: ['Perguntas fáceis, com 3 opções.', 'Perguntas do dia a dia, com 4 opções.', 'Perguntas para quem sabe muito!'],
     carregar: cerebro('quiz'),
   },
   sopa: {
-    seccao: 'cabeca', nome: 'Sopa de Letras', icone: '🔤', cor: '#6d3fd0',
+    seccao: 'cabeca', grupo: 'palavras', nome: 'Sopa de Letras', icone: '🔤', cor: '#6d3fd0',
     desc: 'Encontre as palavras escondidas na grelha.',
     ajuda: 'Toque na primeira letra da palavra e depois na última. Também pode arrastar o dedo por cima das letras.',
     niveis: ['Grelha pequena, palavras na horizontal e na vertical.', 'Grelha média, também na diagonal.', 'Grelha grande, nas duas diagonais.'],
     carregar: palavras('sopa'),
   },
   proverbios: {
-    seccao: 'cabeca', nome: 'Provérbios', icone: '💬', cor: '#b45309',
+    seccao: 'cabeca', grupo: 'saber', nome: 'Provérbios', icone: '💬', cor: '#b45309',
     desc: 'Complete os ditados populares portugueses.',
     ajuda: 'Leia o início do provérbio e escolha como acaba. Algumas opções são para rir!',
     niveis: ['Os provérbios mais conhecidos.', 'Provérbios do dia a dia.', 'Provérbios de quem sabe muito.'],
     carregar: cerebro('proverbios'),
   },
   adivinhas: {
-    seccao: 'cabeca', nome: 'Adivinhas', icone: '🤔', cor: '#0e7490',
+    seccao: 'cabeca', grupo: 'saber', nome: 'Adivinhas', icone: '🤔', cor: '#0e7490',
     desc: 'O que é, o que é? Adivinhas para puxar pela cabeça.',
     ajuda: 'Leia a adivinha com calma e escolha a resposta.',
     niveis: ['Adivinhas fáceis.', 'Adivinhas médias.', 'Adivinhas com rasteira!'],
     carregar: cerebro('adivinhas'),
   },
   intruso: {
-    seccao: 'cabeca', nome: 'Qual é o Intruso?', icone: '🕵️', cor: '#be123c',
+    seccao: 'cabeca', grupo: 'palavras', nome: 'Qual é o Intruso?', icone: '🕵️', cor: '#be123c',
     desc: 'Descubra o que não pertence ao grupo.',
     ajuda: 'Há quatro coisas e uma delas não tem nada a ver com as outras. Qual é?',
     niveis: ['Intrusos fáceis de ver.', 'É preciso pensar um bocadinho.', 'Intrusos bem escondidos.'],
     carregar: cerebro('intruso'),
   },
   sequencias: {
-    seccao: 'cabeca', nome: 'Sequências', icone: '🔢', cor: '#4d7c0f',
+    seccao: 'cabeca', grupo: 'numeros', nome: 'Sequências', icone: '🔢', cor: '#4d7c0f',
     desc: 'Que número vem a seguir?',
     ajuda: 'Descubra a regra da sequência e escolha o número que vem a seguir.',
     niveis: ['Saltos pequenos (de 1, 2, 5, 10…).', 'Saltos maiores e números a dobrar.', 'Sequências com truque.'],
     carregar: cerebro('sequencias'),
   },
   ordem: {
-    seccao: 'cabeca', nome: 'Pôr por Ordem', icone: '🔢', cor: '#00796b',
+    seccao: 'cabeca', grupo: 'memoria', nome: 'Pôr por Ordem', icone: '🔢', cor: '#00796b',
     desc: 'Números, meses, tamanhos, preços e datas da História: arrume tudo.',
     ajuda: 'Toque nos cartões pela ordem certa: primeiro o 1.º, depois o 2.º, e assim por diante. Se se enganar, tente outra vez — não há pressa.',
     niveis: ['4 cartões: números, tamanhos, dias e dinheiro.', '4 ou 5 cartões: meses, horas, contas e História.', '5 ou 6 cartões, um pouco mais parecidos.'],
     carregar: desafios('ordem'),
   },
   anagramas: {
-    seccao: 'cabeca', nome: 'Palavra Baralhada', icone: '🔀', cor: '#7c2d12',
+    seccao: 'cabeca', grupo: 'palavras', nome: 'Palavra Baralhada', icone: '🔀', cor: '#7c2d12',
     desc: 'Ponha as letras pela ordem certa.',
     ajuda: 'Toque nas letras pela ordem certa para formar a palavra. Há uma pista para ajudar.',
     niveis: ['Palavras de 4 e 5 letras.', 'Palavras de 6 e 7 letras.', 'Palavras de 8 e 9 letras.'],
     carregar: palavras('anagramas'),
   },
   relogio: {
-    seccao: 'cabeca', nome: 'Que Horas São?', icone: '🕒', cor: '#334155',
+    seccao: 'cabeca', grupo: 'numeros', nome: 'Que Horas São?', icone: '🕒', cor: '#334155',
     desc: 'Leia as horas no relógio de ponteiros.',
     ajuda: 'O ponteiro pequeno (preto) marca as horas e o grande (laranja) marca os minutos.',
     niveis: ['Horas certas e meias horas.', 'Também os quartos de hora.', 'De 5 em 5 minutos.'],
     carregar: cerebro('relogio'),
   },
   mercado: {
-    seccao: 'cabeca', nome: 'Contas do Mercado', icone: '🛒', cor: '#15803d',
+    seccao: 'cabeca', grupo: 'numeros', nome: 'Contas do Mercado', icone: '🛒', cor: '#15803d',
     desc: 'Trocos e compras em euros.',
     ajuda: 'Faça as contas das compras e escolha o valor certo.',
     niveis: ['Trocos com euros redondos.', 'Cêntimos e várias unidades.', 'Duas compras de uma vez.'],
     carregar: cerebro('mercado'),
   },
   lembrar: {
-    seccao: 'cabeca', nome: 'Lembra-se?', icone: '👀', cor: '#1d5fd1',
+    seccao: 'cabeca', grupo: 'memoria', nome: 'Lembra-se?', icone: '👀', cor: '#1d5fd1',
     desc: 'Decore as figuras e depois encontre-as.',
     ajuda: 'Olhe para as figuras durante alguns segundos. Depois escolha as que viu.',
     niveis: ['3 figuras para decorar.', '4 figuras para decorar.', '5 figuras para decorar.'],
     carregar: palavras('lembrar'),
   },
   siga: {
-    seccao: 'cabeca', nome: 'Siga a Sequência', icone: '🚦', cor: '#6d3fd0',
+    seccao: 'cabeca', grupo: 'memoria', nome: 'Siga a Sequência', icone: '🚦', cor: '#6d3fd0',
     desc: 'Luzes e música: repita a sequência, que vai crescendo.',
     ajuda: 'Os botões acendem-se um a um, com música. Depois toque neles pela mesma ordem. Sempre que acerta, a sequência ganha mais uma luz. Tem 3 tentativas e pode pedir para ver outra vez.',
     niveis: ['4 botões, devagar, até 6 luzes.', '4 botões, até 8 luzes.', '6 botões, até 9 luzes.'],
     carregar: desafios('siga'),
   },
   oquee: {
-    seccao: 'cabeca', nome: 'O Que É Isto?', icone: '🎨', cor: '#2e7d32',
+    seccao: 'cabeca', grupo: 'memoria', nome: 'O Que É Isto?', icone: '🎨', cor: '#2e7d32',
     desc: 'Centenas de desenhos divertidos para adivinhar.',
     ajuda: 'Olhe para o desenho e escolha o nome certo.',
     niveis: ['3 opções bem diferentes.', '3 opções parecidas.', '4 opções parecidas.'],
     carregar: desenhos('oQueE'),
   },
   diferente: {
-    seccao: 'cabeca', nome: 'Encontre o Diferente', icone: '🔍', cor: '#00796b',
+    seccao: 'cabeca', grupo: 'memoria', nome: 'Encontre o Diferente', icone: '🔍', cor: '#00796b',
     desc: 'Há uma figura diferente das outras. Qual é?',
     ajuda: 'Todas as figuras são iguais menos uma. Toque na diferente.',
     niveis: ['9 figuras.', '16 figuras.', '25 figuras muito parecidas.'],
     carregar: desenhos('diferente'),
   },
   contar: {
-    seccao: 'cabeca', nome: 'Quantos São?', icone: '🍎', cor: '#c2337a',
+    seccao: 'cabeca', grupo: 'numeros', nome: 'Quantos São?', icone: '🍎', cor: '#c2337a',
     desc: 'Conte as figuras com atenção.',
     ajuda: 'Conte só as figuras que a pergunta pede. Com calma, sem pressa!',
     niveis: ['Poucas figuras.', 'Mais figuras e mais misturadas.', 'Muitas figuras!'],
@@ -245,7 +245,7 @@ const JOGOS = {
 const SECCOES = {
   fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Benfica, FC Porto, ciclismo, cidades, monumentos, natureza, viagens e muito mais.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
-  cabeca: { titulo: 'Treino da Cabeça', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
+  cabeca: { titulo: 'Treino do Cérebro', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
 };
 
 // Grupos do Treino do Dia: um exercício de cada grupo.
@@ -369,7 +369,7 @@ function inicio() {
   a.append(
     el('div', { class: 'saudacao' },
       el('h2', {}, `${saudacao()}${dados.nome ? `, ${dados.nome}` : ''}! 👋`),
-      el('p', {}, `${dataPorExtenso()}. Vamos treinar a cabeça a brincar?`),
+      el('p', {}, `${dataPorExtenso()}. Vamos treinar o cérebro a brincar?`),
       quemJoga()),
     cartaoBoasVindas() || '',
     el('div', { class: 'resumo' },
@@ -378,10 +378,10 @@ function inicio() {
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, feito ? '✅' : '☀️'), el('div', {}, el('b', {}, feito ? 'Feito!' : 'Por fazer'), el('span', {}, 'treino de hoje')))),
     el('div', { class: 'menu-principal' },
       botaoMenu('laranja destaque', '☀️', 'Treino do Dia', feito ? 'Já está feito! Pode repetir se quiser.' : '4 exercícios rápidos, diferentes todos os dias.', '#/treino', feito ? '✅' : null),
-      botaoMenu('azul', '🎯', 'Teste da Cabeça', ultimoTeste() ? `Da última vez: ${ultimoTeste().idade} anos. Consegue melhorar?` : 'Que idade tem a sua cabeça? 3 exercícios rápidos.', '#/teste'),
+      botaoMenu('azul', '🎯', 'Teste do Cérebro', ultimoTeste() ? `Da última vez: ${ultimoTeste().idade} anos. Consegue melhorar?` : 'Que idade tem o seu cérebro? 3 exercícios rápidos.', '#/teste'),
       botaoMenu('verde', '🃏', 'Cartas e Dominó', 'Paciência, dominó, memória e maior ou menor.', '#/cartas'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
-      botaoMenu('azul', '💡', 'Treino da Cabeça', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
+      botaoMenu('azul', '💡', 'Treino do Cérebro', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
       botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, lendas e poemas populares.', '#/ler'),
       botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Calendário, medalhas, recordes e gráficos.', '#/progresso'),
       botaoMenu('claro', '⚙️', 'Definições', 'Nome, tamanho da letra, sons, voz e quem joga.', '#/definicoes')),
@@ -413,7 +413,9 @@ function seccao(id) {
   const s = SECCOES[id];
   const a = ecra(s.titulo, '#/');
   a.append(el('h2', { class: 'titulo-seccao' }, `${s.icone} ${s.titulo}`), el('p', { class: 'sub' }, s.sub));
-  const grupos = id === 'cabeca' ? [['rapido', '⏱️ Treino rápido, com recorde'], [undefined, '💬 Perguntas, palavras e memória']] : [[undefined, null]];
+  // Cada jogo aparece num só grupo (sem repetições), por ordem: rápidos, saber, palavras, números, memória.
+  const grupos = id === 'cabeca' ? [['rapido', '⏱️ Treino rápido, com recorde'], ['saber', '💬 Perguntas e saber'], ['palavras', '🔤 Palavras'],
+    ['numeros', '🔢 Números e contas'], ['memoria', '👀 Memória e atenção']] : [[undefined, null]];
   for (const [grupo, tituloGrupo] of grupos) {
   if (tituloGrupo) a.append(el('h3', { class: 'titulo-grupo' }, tituloGrupo));
   const grelha = el('div', { class: 'grelha-jogos' });
@@ -684,29 +686,29 @@ function correrSequencia(passos, { titulo, pai, registarCada, aoFim }) {
   intervalo(0);
 }
 
-/* ---------- Teste da Cabeça ---------- */
+/* ---------- Teste do Cérebro ---------- */
 const pontosTeste = () => (dados.testes || []).map(t => ({ d: t.d, v: t.idade }));
 const ultimoTeste = () => (dados.testes && dados.testes.length ? dados.testes[dados.testes.length - 1] : null);
 
 function frasePorIdade(idade) {
-  if (idade <= 35) return 'Uma cabeça jovem e ágil! 💡✨';
+  if (idade <= 35) return 'Um cérebro jovem e ágil! 💡✨';
   if (idade <= 50) return 'Está em grande forma! 💪';
   if (idade <= 65) return 'Boa forma — e treinar um bocadinho todos os dias ajuda sempre! 🌿';
   return 'Cada treino conta. Volte amanhã e veja a diferença! 🌱';
 }
 
 function teste() {
-  const a = ecra('Teste da Cabeça', '#/');
+  const a = ecra('Teste do Cérebro', '#/');
   const ultimo = ultimoTeste();
   a.append(
     el('div', { class: 'cabeca-jogo' },
       el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, '🎯'),
-      el('h2', {}, 'Que idade tem a sua cabeça?'),
+      el('h2', {}, 'Que idade tem o seu cérebro?'),
       el('p', {}, 'São três exercícios rápidos: Cores Trocadas, Contas Relâmpago e Memória de Palavras. Demora uns 3 minutos. Faça com calma, mas sem distrações.')),
     ultimo ? el('div', { class: 'painel centrado' }, el('h3', {}, 'Da última vez'), el('p', { class: 'idade-pequena' }, `${ultimo.idade} anos`), el('p', { class: 'nota' }, `em ${ultimo.d.split('-').reverse().join('/')}`)) : '',
     el('div', { class: 'fila-botoes' }, el('button', { class: 'btn verde grande', type: 'button', onclick: correrTeste }, '▶ Começar o teste')),
     el('div', { class: 'painel' }, graficoLinha(pontosTeste(), { titulo: '📈 A sua evolução', formatar: v => `${v} anos`, menorMelhor: true })),
-    el('p', { class: 'nota' }, 'É só um jogo para treinar a cabeça a brincar — não é um teste médico.'),
+    el('p', { class: 'nota' }, 'É só um jogo para treinar o cérebro a brincar — não é um teste médico.'),
   );
 }
 
@@ -716,7 +718,7 @@ function correrTeste() {
     { jid: 'relampago', nivel: 2, opcoes: { rondas: 10, modoTeste: true } },
     { jid: 'palavras', nivel: 1, opcoes: { modoTeste: true } },
   ], {
-    titulo: 'Teste da Cabeça', pai: '#/teste',
+    titulo: 'Teste do Cérebro', pai: '#/teste',
     aoFim: async resultados => {
       const { idadeDaCabeca } = await import('./jogos/treino.js');
       const m = {};
@@ -730,22 +732,22 @@ function correrTeste() {
       if (lista.length > 200) lista.splice(0, lista.length - 200);
       registarJogo('teste', 1, idade <= 50 ? 3 : idade <= 65 ? 2 : 1);
       guardar();
-      const a = ecra('Teste da Cabeça', '#/');
+      const a = ecra('Teste do Cérebro', '#/');
       som.vitoria();
       festa(['💡', '⭐', '✨', '🎯']);
       const melhorou = anterior && idade < anterior.idade;
       a.append(el('div', { class: 'resultado' },
-        el('p', { class: 'frase' }, 'A sua cabeça está em forma de quem tem'),
+        el('p', { class: 'frase' }, 'O seu cérebro está em forma de quem tem'),
         el('div', { class: 'idade-cabeca' }, String(idade), el('small', {}, 'anos')),
         el('h2', {}, frasePorIdade(idade)),
-        anterior ? el('p', { class: 'frase' }, melhorou ? `🎉 Da última vez foram ${anterior.idade} anos: a sua cabeça ficou ${anterior.idade - idade} ${anterior.idade - idade === 1 ? 'ano' : 'anos'} mais nova!` : `Da última vez foram ${anterior.idade} anos. Amanhã há mais!`) : null,
+        anterior ? el('p', { class: 'frase' }, melhorou ? `🎉 Da última vez foram ${anterior.idade} anos: o seu cérebro ficou ${anterior.idade - idade} ${anterior.idade - idade === 1 ? 'ano' : 'anos'} mais novo!` : `Da última vez foram ${anterior.idade} anos. Amanhã há mais!`) : null,
         el('div', { class: 'numeros' },
           el('div', {}, el('b', {}, `${(m.cores.ms / 1000).toFixed(1).replace('.', ',')} s`), el('span', {}, 'cores trocadas')),
           el('div', {}, el('b', {}, `${(m.relampago.ms / 1000).toFixed(1).replace('.', ',')} s`), el('span', {}, 'contas relâmpago')),
           el('div', {}, el('b', {}, `${m.palavras.acertos} de ${m.palavras.total}`), el('span', {}, 'palavras lembradas'))),
         el('div', { class: 'painel', style: { marginTop: '18px' } }, graficoLinha(pontosTeste(), { titulo: '📈 A sua evolução', formatar: v => `${v} anos`, menorMelhor: true })),
         blocoMedalhas(1800),
-        el('p', { class: 'nota' }, 'É só um jogo para treinar a cabeça a brincar — não é um teste médico.'),
+        el('p', { class: 'nota' }, 'É só um jogo para treinar o cérebro a brincar — não é um teste médico.'),
         el('div', { class: 'fila-botoes' },
           el('button', { class: 'btn laranja grande', type: 'button', onclick: () => ir('#/') }, '🏠 Voltar ao início'),
           el('button', { class: 'btn claro grande', type: 'button', onclick: () => ir('#/cabeca') }, '💡 Treinar mais'))));
@@ -807,7 +809,7 @@ function progresso() {
     if (hist[k]) graficos.push(graficoLinha(hist[k], { titulo: `🎨 Cores Trocadas · ${NIVEIS[n].nome} (tempo)`, formatar: v => `${Math.round(v / 1000)} s`, menorMelhor: true }));
   }
   if (hist['leitura-ppm']) graficos.push(graficoLinha(hist['leitura-ppm'], { titulo: '📖 Leitura em Voz Alta (palavras por minuto)', formatar: v => `${v}` }));
-  if (dados.testes && dados.testes.length) graficos.unshift(graficoLinha(pontosTeste(), { titulo: '🎯 Teste da Cabeça (idade)', formatar: v => `${v} anos`, menorMelhor: true }));
+  if (dados.testes && dados.testes.length) graficos.unshift(graficoLinha(pontosTeste(), { titulo: '🎯 Teste do Cérebro (idade)', formatar: v => `${v} anos`, menorMelhor: true }));
   const hoje = new Date();
   a.append(
     el('h2', { class: 'titulo-seccao' }, '🏅 O Meu Progresso'),
@@ -917,6 +919,9 @@ function definicoes() {
         segmentos([[true, '🔊 Ligados'], [false, '🔇 Desligados']], dados.def.som, v => { dados.def.som = v; if (v) som.certo(); })),
       vozDisponivel() ? el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Ler as perguntas em voz alta'),
         segmentos([[true, 'Sim'], [false, 'Não']], dados.def.voz, v => { dados.def.voz = v; })) : null,
+      // A leitura é sempre em português de Portugal; se o telemóvel não tiver essa voz, explica-se como a instalar.
+      vozDisponivel() && temVozDePortugal() === false ? el('p', { class: 'nota-voz' },
+        '🗣️ Este aparelho ainda não tem a voz «Português (Portugal)». Para a instalar: abra as Definições do telemóvel, procure «Texto para voz» (ou «Saída de texto para voz») e, nos dados de voz, escolha e instale «Português (Portugal)».') : null,
       'vibrate' in navigator ? el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, 'Vibrar ao acertar e ao errar'),
         segmentos([[true, 'Sim'], [false, 'Não']], dados.def.vibrar !== false, v => { dados.def.vibrar = v; if (v) navigator.vibrate(30); })) : null,
       el('div', { class: 'opcao-def' }, el('span', { class: 'rotulo' }, `Animações${aparelhoFraco() ? ' (este aparelho é mais lento: «Automático» poupa-o)' : ''}`),

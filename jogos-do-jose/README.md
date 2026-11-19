@@ -1,6 +1,6 @@
 # Jogos e Passatempos
 
-Jogos simples e encorajadores para treinar a cabeça, pensados para seniores (e para toda a gente): letra grande,
+Jogos simples e encorajadores para treinar o cérebro, pensados para seniores (e para toda a gente): letra grande,
 botões largos, sem pressas e sempre com uma palavra de incentivo. (A pasta chama-se `jogos-do-jose` por razões históricas.)
 
 - **Fotografias de Portugal:** Memória de Fotografias (escolhe-se o tema e o número de pares), Que Fotografia É?
@@ -12,7 +12,7 @@ botões largos, sem pressas e sempre com uma palavra de incentivo. (A pasta cham
   Fotografias do Wikimedia Commons com licenças livres (créditos dentro da app, em Definições).
 - **Cartas e Dominó:** Dominó tradicional contra o computador (3 níveis); cartas com desenho tradicional:
   Paciência (3 níveis, todos os jogos verificados para terem solução), Jogo da Memória, Maior ou Menor.
-- **Treino da Cabeça:** Cultura Geral (832 perguntas, por nível ou por tema: Futebol, Sporting, Benfica, FC Porto, Ciclismo, Leiria,
+- **Treino do Cérebro:** Cultura Geral (832 perguntas, por nível ou por tema: Futebol, Sporting, Benfica, FC Porto, Ciclismo, Leiria,
   Zona Centro, Norte de Portugal, Espanha, União Europeia, Artesanato português e mais 11), Contas de Cabeça, Sopa de Letras (68 temas, mais de 2000 palavras),
   Provérbios (345), Adivinhas (103), Qual é o Intruso? (134), Sequências, Pôr por Ordem, Palavra Baralhada (242),
   Que Horas São?, Contas do Mercado, Lembra-se?, Siga a Sequência (luzes e música), Quantos São?,
@@ -22,7 +22,7 @@ botões largos, sem pressas e sempre com uma palavra de incentivo. (A pasta cham
   Júlio Dinis, cantigas e trava-línguas, tudo em domínio público). Relógio com pausa, recordes pessoais e gráficos de evolução.
 - **Para Ler e Rir** (só para entretenimento, sem pontos nem relógio): 100 anedotas, fábulas, contos e lendas,
   histórias divertidas e poemas populares, com letra grande e botão para ouvir em voz alta.
-- **Teste da Cabeça:** 3 exercícios rápidos que dão uma «idade da cabeça» (só um jogo, não é um teste médico),
+- **Teste do Cérebro:** 3 exercícios rápidos que dão uma «idade do cérebro» (só um jogo, não é um teste médico),
   com gráfico da evolução.
 - **Treino do Dia:** 4 exercícios curtos, diferentes todos os dias, com carimbo no calendário e contagem de
   dias seguidos.

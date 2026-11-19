@@ -197,7 +197,7 @@ export async function sopa(alvo, { nivel, curto, aoTerminar }) {
     d.classList.remove('pista');
     void d.offsetWidth;
     d.classList.add('pista');
-    setTimeout(() => d.classList.remove('pista'), 1600);
+    setTimeout(() => d.classList.remove('pista'), 6000);
     aviso(`A palavra «${p.texto}» começa na letra que está a piscar.`, 3000);
   }
 

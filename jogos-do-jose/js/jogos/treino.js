@@ -149,7 +149,7 @@ export function relampago(alvo, { nivel, curto, rondas, aoTerminar, modoTeste })
     if (errosAqui >= 2) {
       bloqueado = true;
       msg.textContent = `Era ${certa}. Vamos à próxima!`;
-      setTimeout(() => { msg.textContent = ''; seguinte(); }, 1300);
+      setTimeout(() => { msg.textContent = ''; seguinte(); }, 2000);
     } else msg.textContent = 'Quase! Tente outra vez.';
   }
   function seguinte() {
@@ -435,7 +435,7 @@ export async function leitura(alvo, { nivel, aoTerminar }) {
   return () => { clearInterval(intervalo); calar(); };
 }
 
-/* ================= Idade da cabeça (só um jogo, não é um teste médico) ================= */
+/* ================= Idade do cérebro (só um jogo, não é um teste médico) ================= */
 export function idadeDaCabeca({ cores: c, relampago: r, palavras: p }) {
   const lim = v => Math.max(0, Math.min(1, v));
   const sc = c ? lim(1 - ((c.ms / c.total / 1000) - 0.9) / 2.6) - 0.06 * c.erros : 0.5;
