@@ -27,6 +27,7 @@ const TEMAS_QUIZ = [
   { id: 'eua', nome: 'Estados Unidos', cat: 'Estados Unidos', icone: '🗽' },
   { id: 'carros', nome: 'Carros', cat: 'Carros', icone: '🚗' },
   { id: 'artesanato', nome: 'Artesanato português', cat: 'Artesanato português', icone: '🏺' },
+  { id: 'marcas', nome: 'Marcas portuguesas', cat: 'Marcas portuguesas', icone: '🏷️' },
   { id: 'futebol', nome: 'Futebol', cat: 'Futebol', icone: '⚽' },
   { id: 'sporting', nome: 'Sporting', icone: '🦁' },
   { id: 'benfica', nome: 'Benfica', icone: '🦅' },
