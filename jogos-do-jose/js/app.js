@@ -55,6 +55,8 @@ const fotos = nome => () => import('./jogos/fotos.js').then(m => m[nome]);
 const desenhos = nome => () => import('./jogos/desenhos.js').then(m => m[nome]);
 const treinoJ = nome => () => import('./jogos/treino.js').then(m => m[nome]);
 const desafios = nome => () => import('./jogos/desafios.js').then(m => m[nome]);
+const tabuleiro = nome => () => import('./jogos/tabuleiro.js').then(m => m[nome]);
+const logica = nome => () => import('./jogos/logica.js').then(m => m[nome]);
 
 const JOGOS = {
   memfotos: {
@@ -79,14 +81,14 @@ const JOGOS = {
     carregar: fotos('puzzle'),
   },
   paciencia: {
-    seccao: 'cartas', nome: 'Paciência', icone: '🃏', cor: '#1a7f45',
+    seccao: 'cartas', grupo: 'cartas', nome: 'Paciência', icone: '🃏', cor: '#1a7f45',
     desc: 'O clássico das cartas. Todos os jogos têm solução!',
     ajuda: 'Toque numa carta e ela vai sozinha para o melhor sítio. Também pode arrastá-la. Pode desfazer sempre que quiser.',
     niveis: ['Todas as cartas à vista. Tira-se 1 carta de cada vez.', 'A paciência de sempre. Tira-se 1 carta de cada vez.', 'Tiram-se 3 cartas de cada vez, como antigamente.', 'Tiram-se 3 cartas e não há ajudas nem «Desfazer».'],
     carregar: () => import('./jogos/paciencia.js').then(m => m.paciencia),
   },
   domino: {
-    seccao: 'cartas', nome: 'Dominó', icone: '🎲', cor: '#5d4037',
+    seccao: 'cartas', grupo: 'cartas', nome: 'Dominó', icone: '🎲', cor: '#5d4037',
     desenho: () => import('./jogos/domino.js').then(m => m.pedraSVG([6, 6], false)),
     desc: 'O dominó de sempre, contra o computador.',
     ajuda: 'Toque numa pedra que brilha para a jogar. Se não tiver pedra, compre ao monte. Ganha quem ficar primeiro sem pedras!',
@@ -94,14 +96,14 @@ const JOGOS = {
     carregar: () => import('./jogos/domino.js').then(m => m.domino),
   },
   memoria: {
-    seccao: 'cartas', nome: 'Jogo da Memória', icone: '🎴', cor: '#1d5fd1',
+    seccao: 'cartas', grupo: 'cartas', nome: 'Jogo da Memória', icone: '🎴', cor: '#1d5fd1',
     desc: 'Vire as cartas e encontre os pares iguais.',
     ajuda: 'Vire duas cartas de cada vez. Se forem iguais, ficam viradas. Se não, voltam a esconder-se — tente lembrar-se de onde estavam!',
     niveis: ['6 pares de cartas.', '8 pares de cartas.', '10 pares de cartas.', '12 pares de cartas.'],
     carregar: cartas('memoria'),
   },
   maiormenor: {
-    seccao: 'cartas', nome: 'Maior ou Menor', icone: '🔼', cor: '#c2337a',
+    seccao: 'cartas', grupo: 'cartas', nome: 'Maior ou Menor', icone: '🔼', cor: '#c2337a',
     desc: 'Adivinhe se a próxima carta é maior ou menor.',
     ajuda: 'Veja a carta e diga se a próxima vai ser maior ou menor. Se sair igual, ganha na mesma.',
     niveis: ['8 cartas.', '10 cartas.', '12 cartas.', '15 cartas.'],
@@ -247,11 +249,53 @@ const JOGOS = {
     niveis: ['Poucas figuras.', 'Mais figuras e mais misturadas.', 'Muitas figuras!', 'Muitíssimas figuras e mais distrações!'],
     carregar: cerebro('contar'),
   },
+  galo: {
+    seccao: 'cartas', grupo: 'tabuleiro', nome: 'Jogo do Galo', icone: '⭕', cor: '#00796b',
+    desc: 'O clássico dos ✖ e ⭕, contra o computador, à melhor de 3.',
+    ajuda: 'Toque numa casa vazia para pôr um ✖ e faça três seguidos antes do computador.',
+    niveis: ['O computador joga ao acaso.', 'O computador ganha ou bloqueia quando pode.', 'O computador quase não erra.', 'O computador não erra: o melhor que se consegue é empatar!'],
+    carregar: tabuleiro('galo'),
+  },
+  quatro: {
+    seccao: 'cartas', grupo: 'tabuleiro', nome: '4 em Linha', icone: '🔴', cor: '#1d5fd1',
+    desc: 'Deixe cair as peças e junte 4 seguidas antes do computador.',
+    ajuda: 'Toque numa coluna para deixar cair a sua peça vermelha. Ganha quem juntar primeiro 4 seguidas, em qualquer direção.',
+    niveis: ['O computador joga ao acaso, mas às vezes trava-o.', 'O computador ganha ou bloqueia sempre que pode.', 'O computador pensa 3 jogadas à frente.', 'O computador pensa 5 jogadas à frente.'],
+    carregar: tabuleiro('quatroEmLinha'),
+  },
+  damas: {
+    seccao: 'cartas', grupo: 'tabuleiro', nome: 'Damas', icone: '👑', cor: '#5d4037',
+    desc: 'As damas de sempre, contra o computador, com regras simples.',
+    ajuda: 'Toque numa peça branca e depois na casa de destino. Comer é obrigatório, e quem chega ao fundo do tabuleiro ganha uma dama.',
+    niveis: ['O computador faz jogadas ao acaso.', 'O computador come sempre que pode e protege as peças.', 'O computador pensa 3 jogadas à frente.', 'O computador pensa 5 jogadas à frente.'],
+    carregar: tabuleiro('damas'),
+  },
+  forca: {
+    seccao: 'cabeca', grupo: 'palavras', nome: 'Jogo da Forca', icone: '🌼', cor: '#c2337a',
+    desc: 'Descubra a palavra escondida, letra a letra, antes de a flor ficar sem pétalas.',
+    ajuda: 'Toque nas letras: as certas aparecem na palavra e cada letra errada faz cair uma pétala da flor.',
+    niveis: ['Palavras de 4 ou 5 letras, com a primeira letra à vista.', 'Palavras de 6 ou 7 letras.', 'Palavras de 8 ou 9 letras.', 'Palavras de 10 letras ou mais, menos pétalas e sem pista.'],
+    carregar: logica('forca'),
+  },
+  cruzadas: {
+    seccao: 'cabeca', grupo: 'palavras', nome: 'Palavras Cruzadas', icone: '✏️', cor: '#1a7f45',
+    desc: 'Descubra as palavras pelas pistas. Cada grelha é nova!',
+    ajuda: 'Toque numa casa ou numa pista e escreva a palavra com as letras do ecrã. Cada palavra certa fica verde.',
+    niveis: ['5 palavras curtas, pistas muito fáceis e a primeira letra já escrita.', '6 palavras até 7 letras, pistas fáceis.', '8 palavras até 9 letras, pistas médias.', '10 a 12 palavras até 11 letras, pistas difíceis e sem ajuda.'],
+    carregar: () => import('./jogos/cruzadas.js').then(m => m.cruzadas),
+  },
+  sudoku: {
+    seccao: 'cabeca', grupo: 'numeros', nome: 'Sudoku', icone: '🔢', cor: '#6d3fd0',
+    desc: 'O clássico dos números, do 4×4 ao 9×9. Cada grelha é nova e tem uma só solução.',
+    ajuda: 'Toque numa casa vazia e depois num número. Em cada linha, coluna e bloco, nenhum número se repete.',
+    niveis: ['Grelha 4×4, com os números de 1 a 4.', 'Grelha 6×6, com blocos de 2×3.', 'Grelha 9×9 com muitos números dados.', 'Grelha 9×9 com poucos números dados.'],
+    carregar: logica('sudoku'),
+  },
 };
 
 const SECCOES = {
   fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Benfica, FC Porto, ciclismo, cidades, monumentos, natureza, viagens e muito mais.' },
-  cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
+  cartas: { titulo: 'Cartas e Tabuleiro', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
   cabeca: { titulo: 'Treino do Cérebro', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 4 níveis, do Tranquilo ao Mestre.' },
 };
 
@@ -386,9 +430,9 @@ function inicio() {
     el('div', { class: 'menu-principal' },
       botaoMenu('laranja destaque', '☀️', 'Treino do Dia', feito ? 'Já está feito! Pode repetir se quiser.' : '4 exercícios rápidos, diferentes todos os dias.', '#/treino', feito ? '✅' : null),
       botaoMenu('azul', '🎯', 'Teste do Cérebro', ultimoTeste() ? `Da última vez: ${ultimoTeste().idade} anos. Consegue melhorar?` : 'Que idade tem o seu cérebro? 3 exercícios rápidos.', '#/teste'),
-      botaoMenu('verde', '🃏', 'Cartas e Dominó', 'Paciência, dominó, memória e maior ou menor.', '#/cartas'),
+      botaoMenu('verde', '🃏', 'Cartas e Tabuleiro', 'Paciência, dominó, jogo do galo, 4 em linha, damas e mais.', '#/cartas'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
-      botaoMenu('azul', '💡', 'Treino do Cérebro', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
+      botaoMenu('azul', '💡', 'Treino do Cérebro', 'Cultura geral, palavras cruzadas, sudoku, sopa de letras, contas, leitura…', '#/cabeca'),
       botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, poemas e clássicos portugueses.', '#/ler'),
       botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Calendário, medalhas, recordes e gráficos.', '#/progresso'),
       botaoMenu('claro', '⚙️', 'Definições', 'Nome, tamanho da letra, sons, voz e quem joga.', '#/definicoes')),
@@ -422,7 +466,8 @@ function seccao(id) {
   a.append(el('h2', { class: 'titulo-seccao' }, `${s.icone} ${s.titulo}`), el('p', { class: 'sub' }, s.sub));
   // Cada jogo aparece num só grupo (sem repetições), por ordem: rápidos, saber, palavras, números, memória.
   const grupos = id === 'cabeca' ? [['rapido', '⏱️ Treino rápido, com recorde'], ['saber', '💬 Perguntas e saber'], ['palavras', '🔤 Palavras'],
-    ['numeros', '🔢 Números e contas'], ['memoria', '👀 Memória e atenção']] : [[undefined, null]];
+    ['numeros', '🔢 Números e contas'], ['memoria', '👀 Memória e atenção']]
+    : id === 'cartas' ? [['cartas', '🃏 Cartas e dominó'], ['tabuleiro', '⭕ Jogos de tabuleiro']] : [[undefined, null]];
   for (const [grupo, tituloGrupo] of grupos) {
   if (tituloGrupo) a.append(el('h3', { class: 'titulo-grupo' }, tituloGrupo));
   const grelha = el('div', { class: 'grelha-jogos' });
@@ -834,12 +879,16 @@ function progresso() {
         el('span', {}, ganhas[m.id] ? `Ganha a ${ganhas[m.id].split('-').reverse().join('/')}` : m.desc))))),
     graficos.length ? el('div', { class: 'painel' }, el('h3', {}, '📈 A sua evolução'), graficos) : '',
     el('div', { class: 'painel' },
-      el('h3', {}, '🃏 Cartas e Dominó'),
+      el('h3', {}, '🃏 Cartas e Tabuleiro'),
       el('table', { class: 'tabela-prog' }, el('tbody', {},
         [1, 2, 3, 4].filter(n => n < 4 || dados.pac.jogados[4]).map(n => el('tr', {},
           el('td', {}, `Paciência · ${NIVEIS[n].nome}`),
           el('td', {}, `${dados.pac.ganhos[n] || 0} ${dados.pac.ganhos[n] === 1 ? 'vitória' : 'vitórias'} em ${dados.pac.jogados[n] || 0} ${dados.pac.jogados[n] === 1 ? 'jogo' : 'jogos'}`))),
-        el('tr', {}, el('td', {}, 'Dominó'), el('td', {}, dados.domino ? `${dados.domino.ganhos} ${dados.domino.ganhos === 1 ? 'vitória' : 'vitórias'} · ${dados.domino.perdidos} ${dados.domino.perdidos === 1 ? 'derrota' : 'derrotas'}` : 'ainda por jogar'))))),
+        el('tr', {}, el('td', {}, 'Dominó'), el('td', {}, dados.domino ? `${dados.domino.ganhos} ${dados.domino.ganhos === 1 ? 'vitória' : 'vitórias'} · ${dados.domino.perdidos} ${dados.domino.perdidos === 1 ? 'derrota' : 'derrotas'}` : 'ainda por jogar')),
+        [['galo', 'Jogo do Galo'], ['4emlinha', '4 em Linha'], ['damas', 'Damas']].filter(([k]) => dados.tabuleiro && dados.tabuleiro[k]).map(([k, nome]) => {
+          const r = dados.tabuleiro[k];
+          return el('tr', {}, el('td', {}, nome), el('td', {}, `${r.ganhos} ${r.ganhos === 1 ? 'vitória' : 'vitórias'} · ${r.empates} ${r.empates === 1 ? 'empate' : 'empates'} · ${r.perdidos} ${r.perdidos === 1 ? 'derrota' : 'derrotas'}`));
+        })))),
     el('div', { class: 'painel' },
       el('h3', {}, '🎲 Jogos'),
       jogados.length

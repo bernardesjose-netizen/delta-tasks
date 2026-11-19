@@ -1178,3 +1178,478 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .painel-nivel-fotos { max-width: 640px; margin: 0 auto 18px; }
 .painel-nivel-fotos p { margin-bottom: 8px; }
 .painel-nivel-fotos .segmentos { justify-content: center; }
+
+/* ================= Jogos novos: tabuleiro ================= */
+/* ---------- Jogos de tabuleiro: Jogo do Galo, 4 em Linha e Damas (js/jogos/tabuleiro.js) ---------- */
+.tab { width: 100%; padding-bottom: 18px; }
+.tab-dica { margin: 0 0 8px; font-size: .95rem; line-height: 1.3; }
+.tab-info { margin-bottom: 8px; gap: 8px; }
+.tab-info span { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; padding: 4px 12px; white-space: nowrap; }
+.tab-estado {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 2.7em; max-width: 640px; margin: 0 auto 10px; padding: 4px 12px;
+  border-radius: 16px; font-size: 1.15rem; font-weight: 800; line-height: 1.2; text-align: center;
+  color: var(--texto); background: var(--fundo-2);
+}
+.tab-estado.vez { color: var(--marca-escura); background: var(--verde-claro); box-shadow: inset 0 0 0 3px var(--verde); }
+.tab-estado.pensa { color: #183b7a; background: #e8f0fe; }
+.tab-estado.bom { color: #0f4d2b; background: var(--verde-claro); }
+.tab-estado.quase { color: #6b3a05; background: var(--ambar-claro); }
+.tab-estado.info { color: var(--texto); background: var(--fundo-2); }
+.tab-area { display: flex; justify-content: center; }
+.tab-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 14px; }
+.tab-acoes:empty { display: none; }
+.tab-acoes .btn { flex: 1 1 200px; max-width: 360px; }
+.tab-nota { flex: 1 1 100%; margin: 0; text-align: center; font-weight: 700; color: #6b3a05; font-size: .95rem; }
+.tab-mini { display: inline-block; width: 1em; height: 1em; border-radius: 50%; flex: none; }
+.tab-mini.vermelha { background: #d32f2f; border: 2px solid #8e1515; }
+.tab-mini.amarela { background: #f6c400; border: 2px solid #9c7700; }
+.tab-mini.branca { background: #fff; border: 2px solid #5f564a; }
+.tab-mini.preta { background: #222; border: 2px solid #000; }
+@keyframes tab-entrar { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Jogo do Galo */
+.tab-galo-grelha {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px; width: 300px; height: 300px;
+}
+.tab-galo-casa {
+  display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0;
+  margin: 0; padding: 0; border: 3px solid var(--linha); border-radius: 18px;
+  background: var(--cartao); box-shadow: 0 4px 0 var(--linha); cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.tab-galo-casa svg { display: block; width: 76%; height: 76%; }
+.tab-galo-casa.nova svg { animation: tab-entrar .25s ease-out; }
+.tab-galo-casa.vazia:active { background: var(--fundo-2); }
+.tab-galo-casa.ganha { background: var(--verde-claro); border-color: var(--verde); box-shadow: 0 4px 0 var(--verde); }
+.tab-galo-casa.ganha.pc { background: #fde4de; border-color: #d32f2f; box-shadow: 0 4px 0 #d32f2f; }
+.tab-galo-casa.apagada svg { opacity: .35; }
+
+/* 4 em Linha */
+.tab-4l-tabuleiro {
+  --cel: 44px; --folga: 6px;
+  display: flex; gap: var(--folga); padding: var(--folga);
+  background: var(--azul); border-radius: 18px; box-shadow: 0 6px 0 var(--azul-escuro);
+}
+.tab-4l-col {
+  display: flex; flex-direction: column; align-items: center; gap: var(--folga);
+  width: var(--cel); margin: 0; padding: 0 0 2px; border: 0; border-radius: 12px;
+  background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none;
+}
+.tab-4l-col:active { background: rgba(255, 255, 255, .2); }
+.tab-4l-seta {
+  display: flex; align-items: center; justify-content: center; width: 100%; height: calc(var(--cel) * .8);
+  border-radius: 10px; background: #fff; color: #d32f2f; font-size: calc(var(--cel) * .5); font-weight: 900; line-height: 1;
+}
+.tab-4l-tabuleiro.espera .tab-4l-seta { background: rgba(255, 255, 255, .35); color: rgba(255, 255, 255, .8); }
+.tab-4l-col.cheia .tab-4l-seta { visibility: hidden; }
+.tab-4l-buraco {
+  position: relative; display: block; width: var(--cel); height: var(--cel); border-radius: 50%;
+  background: var(--fundo); box-shadow: inset 0 3px 0 rgba(0, 0, 0, .2);
+}
+.tab-4l-ficha { position: absolute; top: 5%; left: 5%; right: 5%; bottom: 5%; border-radius: 50%; z-index: 1; }
+.tab-4l-ficha.v { background: radial-gradient(circle at 35% 30%, #ff7a6e, #d32f2f 55%, #a61b1b); border: 3px solid #8e1515; }
+.tab-4l-ficha.a { background: radial-gradient(circle at 35% 30%, #fff3a0, #f6c400 55%, #c99a00); border: 3px solid #9c7700; }
+.tab-4l-tabuleiro.fim .tab-4l-ficha { opacity: .4; }
+.tab-4l-tabuleiro.fim .tab-4l-buraco.ganha .tab-4l-ficha { opacity: 1; box-shadow: 0 0 0 4px #fff, 0 0 0 7px var(--texto); }
+
+/* Damas */
+.tab-d-tabuleiro {
+  --casa: 40px;
+  display: grid; grid-template-columns: repeat(8, var(--casa)); grid-template-rows: repeat(8, var(--casa));
+  border: 6px solid #6b4423; border-radius: 8px; box-shadow: 0 6px 16px rgba(0, 0, 0, .18);
+}
+.tab-d-casa { position: relative; display: block; width: var(--casa); height: var(--casa); margin: 0; padding: 0; border: 0; border-radius: 0; }
+.tab-d-casa.clara { background: #f0d9b5; }
+.tab-d-casa.escura { background: #a9774b; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.tab-d-casa.ultima { background: #c9a03f; }
+.tab-d-casa.comeu { background: #b4533b; }
+.tab-d-casa.movel { box-shadow: inset 0 0 0 4px #3fd17c; }
+.tab-d-casa.obrigatoria { box-shadow: inset 0 0 0 5px #ff8a1f; }
+.tab-d-casa.escolhida { background: #e9c046; box-shadow: inset 0 0 0 5px #1d5fd1; }
+.tab-d-casa.alvo { box-shadow: inset 0 0 0 4px #c62828; }
+.tab-d-casa.destino::after {
+  content: ""; position: absolute; top: 30%; left: 30%; width: 40%; height: 40%; border-radius: 50%;
+  background: var(--verde); box-shadow: 0 0 0 3px #fff; z-index: 2;
+}
+.tab-d-casa.destino.come::after { background: var(--laranja); }
+.tab-d-peca {
+  position: absolute; top: 11%; left: 11%; right: 11%; bottom: 11%; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.tab-d-peca.branca { background: radial-gradient(circle at 38% 32%, #fff, #f3eee2 55%, #d5ccb8); border: 2px solid #5f564a; box-shadow: 0 3px 0 rgba(0, 0, 0, .35); }
+.tab-d-peca.preta { background: radial-gradient(circle at 38% 32%, #6a6a6a, #2a2a2a 55%, #111); border: 2px solid #000; box-shadow: 0 3px 0 rgba(0, 0, 0, .45); }
+.tab-d-peca.comida { opacity: .35; }
+.tab-d-coroa { display: block; width: 68%; height: 68%; }
+.tab-desistir.confirmar { --cor: var(--ambar-claro); --cor-escura: var(--ambar); color: #6b3a05; border-color: var(--ambar); }
+
+/* Ecrãs pequenos e modo leve */
+@media (max-width: 400px) {
+  .tab-galo-grelha { gap: 8px; }
+  .tab-info span { font-size: .8rem; padding: 4px 10px; }
+  .tab-estado { font-size: 1.05rem; padding: 4px 8px; }
+  .tab-d-tabuleiro { border-width: 5px; }
+}
+@media (max-width: 340px) {
+  .tab-info span { font-size: .75rem; padding: 3px 8px; gap: 5px; }
+}
+@media (max-height: 600px) {
+  .tab-dica { font-size: .8rem; line-height: 1.25; }
+  .tab-estado { font-size: 1rem; }
+}
+@media (max-height: 700px) {
+  .tab-dica { font-size: .85rem; margin-bottom: 6px; }
+  .tab-info { margin-bottom: 6px; }
+  .tab-estado { min-height: 2.5em; margin-bottom: 8px; }
+  .tab-acoes { margin-top: 10px; }
+}
+.leve .tab-galo-casa.nova svg { animation: none; }
+.leve .tab-4l-ficha { transition: none !important; }
+.leve .tab-d-tabuleiro { box-shadow: 0 1px 3px rgba(0, 0, 0, .15); }
+
+/* ================= Jogos novos: logica ================= */
+/* ---------- Jogo da Forca (a flor que perde pétalas) ---------- */
+.forca-progresso { margin-bottom: 8px; }
+.forca-cartao { padding: 12px 14px 10px; margin-bottom: 12px; }
+.forca-topo { display: flex; align-items: center; gap: 12px; }
+.forca-flor { flex: none; width: 88px; height: 96px; display: block; }
+.forca-lado { flex: 1; min-width: 0; }
+.forca-pista { font-size: .95rem; line-height: 1.3; }
+.forca-pista b { color: var(--marca-escura); }
+.forca-pista.forca-sem { font-size: .92rem; color: var(--texto-suave); }
+.forca-restam { margin-top: 6px; font-weight: 800; font-size: .92rem; color: var(--rosa); }
+.forca-petala { transition: opacity .8s ease, transform .9s ease-in; }
+.forca-petala.forca-caida { opacity: 0; transform: translateY(40px); }
+.forca-chao { opacity: 0; transition: opacity .6s ease .5s; }
+.forca-chao.forca-no-chao { opacity: .95; }
+.forca-palavra { --n: 6; display: flex; justify-content: center; gap: 5px; margin: 10px -6px 2px; }
+.forca-palavra.forca-longa { gap: 2px; }
+.forca-casa {
+  flex: 0 1 46px;
+  min-width: 0;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fffdf8;
+  border-bottom: 5px solid var(--texto-suave);
+  border-radius: 8px 8px 3px 3px;
+  font-weight: 800;
+  font-size: 1.8rem;
+  font-size: min(1.8rem, calc((100vw - 48px) / var(--n) * .85));
+  line-height: 1;
+}
+.forca-palavra.forca-ganha .forca-casa { background: var(--verde-claro); border-color: var(--verde); color: var(--verde-escuro); }
+.forca-casa.forca-revelada { color: var(--roxo); background: #f1ecfb; }
+.forca-instrucao { text-align: center; font-size: .85rem; line-height: 1.3; color: var(--texto-suave); margin-top: 4px; }
+.forca-teclado { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; max-width: 520px; margin: 0 auto; }
+.forca-teclado .forca-tecla:nth-child(25) { grid-column: 3; }
+.forca-tecla {
+  min-height: 50px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #fff3cd;
+  box-shadow: 0 4px 0 #e2c46d;
+  font-size: 1.5rem;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.forca-tecla:active { transform: translateY(3px); box-shadow: 0 1px 0 #e2c46d; }
+.forca-tecla:disabled { cursor: default; transform: none; }
+.forca-tecla.forca-certa { background: var(--verde); color: #fff; box-shadow: 0 4px 0 var(--verde-escuro); }
+.forca-tecla.forca-errada { background: #ece8e1; color: #9a938a; box-shadow: none; text-decoration: line-through; }
+.forca-retorno .retorno { margin-top: 0; }
+.forca-retorno .fila-botoes { margin-top: 14px; }
+@media (max-width: 359px) {
+  /* iPhone SE: o teclado aproveita um pouco da margem para as teclas terem 48 px de largura */
+  .forca-teclado { margin: 0 -8px; gap: 4px; }
+  .forca-cartao { padding: 10px 10px 8px; }
+  .forca-flor { width: 76px; height: 84px; }
+  .forca-pista { font-size: .92rem; }
+}
+@media (max-height: 600px) {
+  .forca-tecla { min-height: 48px; }
+  .forca-casa { height: 46px; }
+  .forca-progresso { margin-bottom: 4px; }
+  .forca-cartao { padding-top: 8px; padding-bottom: 6px; margin-bottom: 8px; }
+  .forca-palavra { margin-top: 6px; }
+  .forca-teclado { row-gap: 3px; }
+}
+@media (min-width: 600px) {
+  .forca-teclado { grid-template-columns: repeat(9, minmax(0, 1fr)); max-width: 660px; }
+  .forca-teclado .forca-tecla:nth-child(25) { grid-column: auto; }
+  .forca-flor { width: 120px; height: 130px; }
+}
+.leve .forca-petala, .leve .forca-chao { transition: none; }
+
+/* ---------- Sudoku ---------- */
+.sudoku-info { margin-bottom: 8px; }
+.sudoku-grelha {
+  display: grid;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  border: 3px solid #26352c;
+  border-radius: 10px;
+  overflow: hidden;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  font-weight: 800;
+}
+.sudoku-cel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #b5c6bb;
+  border-bottom: 1px solid #b5c6bb;
+  border-radius: 0;
+  background: #fff;
+  color: var(--azul);
+  font-size: inherit;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+.sudoku-cel.sudoku-borda-dir { border-right: 3px solid #26352c; }
+.sudoku-cel.sudoku-borda-baixo { border-bottom: 3px solid #26352c; }
+.sudoku-cel.sudoku-ult-col { border-right: 0; }
+.sudoku-cel.sudoku-ult-lin { border-bottom: 0; }
+.sudoku-cel.sudoku-dada { color: var(--texto); background: #f1efe8; }
+.sudoku-cel.sudoku-realce { background: #e2eefc; }
+.sudoku-cel.sudoku-dada.sudoku-realce { background: #d3e2f4; }
+.sudoku-cel.sudoku-ajudada { color: var(--verde); }
+.sudoku-cel.sudoku-solucao { color: var(--roxo); }
+.sudoku-cel.sudoku-repetido { background: #fde1df; color: #b42318; }
+.sudoku-cel.sudoku-sel { background: #ffd66b; box-shadow: inset 0 0 0 3px #e0a100; }
+.sudoku-cel.sudoku-sel.sudoku-repetido { background: #ffc4b8; }
+.sudoku-grelha.sudoku-certa .sudoku-cel { background: var(--verde-claro); }
+.sudoku-teclado { display: grid; gap: 8px; max-width: 420px; margin: 12px auto 0; }
+.sudoku-teclado-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.sudoku-teclado-4 .sudoku-apagar { grid-column: 1 / -1; flex-direction: row; gap: 10px; }
+.sudoku-teclado-6 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.sudoku-teclado-6 .sudoku-apagar { grid-column: span 2; flex-direction: row; gap: 10px; }
+.sudoku-teclado-9 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.sudoku-tecla {
+  min-height: 54px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: var(--cartao);
+  box-shadow: 0 4px 0 var(--linha), 0 0 0 2px var(--linha) inset;
+  font-size: 1.6rem;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.sudoku-tecla:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--linha), 0 0 0 2px var(--linha) inset; }
+.sudoku-apagar { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--fundo-2); line-height: 1; }
+.sudoku-apagar span { font-size: 1.3rem; }
+.sudoku-apagar small { font-size: .62rem; font-weight: 800; margin-top: 2px; }
+.sudoku-teclado-4 .sudoku-apagar small, .sudoku-teclado-6 .sudoku-apagar small { font-size: .9rem; margin-top: 0; }
+.sudoku-acoes { display: flex; gap: 10px; max-width: 420px; margin: 14px auto 0; }
+.sudoku-acoes .sudoku-btn { flex: 1 1 0; min-width: 0; min-height: 52px; padding: 6px 10px; font-size: .95rem; line-height: 1.15; }
+.sudoku-retorno .retorno { margin-top: 14px; }
+.sudoku-dica { font-size: .9rem; margin-top: 12px; }
+@media (max-width: 359px) {
+  .sudoku-teclado { gap: 6px; }
+  .sudoku-tecla { font-size: 1.45rem; }
+}
+
+/* ================= Jogos novos: cruzadas ================= */
+/* ---------- Palavras Cruzadas ---------- */
+.cruz-progresso { margin-bottom: 8px; }
+.cruz-grelha-zona { display: flex; justify-content: center; margin: 0 0 12px; }
+.cruz-grelha {
+  display: grid;
+  grid-gap: 2px;
+  gap: 2px;
+  font-weight: 800;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  --cruz-num: 10px;
+}
+.cruz-vazio { pointer-events: none; }
+.cruz-cel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 2px solid #8aa596;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--texto);
+  font-size: inherit;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 0 rgba(16, 38, 26, .1);
+  transition: background-color .25s, border-color .25s;
+  touch-action: manipulation;
+}
+.cruz-num {
+  position: absolute;
+  top: 1px;
+  left: 3px;
+  font-size: 10px;
+  font-size: var(--cruz-num);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--texto-suave);
+}
+.cruz-letra { display: block; margin-top: 16%; line-height: 1; }
+/* palavra escolhida e casa onde se vai escrever */
+.cruz-cel.cruz-sel { background: #fff3cd; border-color: #e0a100; }
+.cruz-cel.cruz-cursor { background: #ffd66b; border-color: #b45309; box-shadow: inset 0 0 0 2px #b45309; }
+/* letras dadas (nível 1), mostradas pela ajuda e trocadas (depois de «Verificar») */
+.cruz-cel.cruz-dada .cruz-letra { color: var(--azul); }
+.cruz-cel.cruz-ajudada .cruz-letra { color: var(--roxo); }
+.cruz-cel.cruz-errada { background: #fde7ee; border-color: #e99ab4; border-style: dashed; }
+.cruz-cel.cruz-errada .cruz-letra { color: #a61b4f; }
+.cruz-cel.cruz-errada.cruz-cursor { background: #fcd3e0; border-color: #b45309; border-style: solid; }
+/* palavra certa: verde (fica verde mesmo quando está escolhida) */
+.cruz-cel.cruz-certa { background: var(--verde-claro); border-color: var(--verde); color: var(--verde-escuro); }
+.cruz-cel.cruz-certa .cruz-letra { color: var(--verde-escuro); }
+.cruz-cel.cruz-certa.cruz-sel { background: #c3ecd3; }
+.cruz-cel.cruz-certa.cruz-cursor { box-shadow: inset 0 0 0 2px var(--verde); }
+.cruz-cel.cruz-solucao { background: #f1ecfb; border-color: #b9a3ea; }
+.cruz-cel.cruz-solucao .cruz-letra { color: var(--roxo); }
+.cruz-grelha.cruz-feita .cruz-cel { cursor: default; }
+
+/* Pista e teclado: em ecrãs baixos ficam presos em baixo, e a grelha desliza por trás. */
+.cruz-painel {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin: 0 -8px;
+  padding: 8px 8px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  background: var(--fundo);
+  box-shadow: 0 -8px 12px -10px rgba(16, 38, 26, .35);
+}
+.cruz-pista {
+  display: flex;
+  align-items: stretch;
+  min-height: 60px;
+  margin-bottom: 8px;
+  background: var(--cartao);
+  border-left: 6px solid #e0a100;
+  border-radius: 14px;
+  box-shadow: var(--sombra);
+}
+.cruz-pista.cruz-pista-certa { border-left-color: var(--verde); }
+.cruz-pista-corpo { flex: 1; min-width: 0; padding: 5px 10px; display: flex; flex-direction: column; justify-content: center; }
+.cruz-pista-num { display: block; font-size: .68rem; font-weight: 800; letter-spacing: .02em; color: var(--ambar); }
+.cruz-pista-certa .cruz-pista-num { color: var(--verde); }
+.cruz-pista-texto { display: block; font-size: .88rem; font-weight: 700; line-height: 1.22; overflow-wrap: break-word; word-wrap: break-word; }
+.cruz-pista-nota { display: block; font-size: .78rem; font-weight: 700; line-height: 1.2; color: var(--ambar); }
+.cruz-pista-nota:empty { display: none; }
+.cruz-pista-certa .cruz-pista-nota { color: var(--verde); }
+.cruz-seguinte {
+  flex: none;
+  width: 52px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 2px solid var(--linha);
+  border-radius: 0 14px 14px 0;
+  background: var(--fundo-2);
+  color: var(--marca-escura);
+  font-size: 1.2rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.cruz-seguinte:active { background: var(--linha); }
+
+.cruz-teclado { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-gap: 4px; gap: 4px; }
+.cruz-tecla {
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #fff3cd;
+  box-shadow: 0 4px 0 #e2c46d;
+  color: var(--texto);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.cruz-tecla:active { transform: translateY(3px); box-shadow: 0 1px 0 #e2c46d; }
+.cruz-apagar { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e3ece6; box-shadow: 0 4px 0 #b7c8bd; }
+.cruz-apagar:active { box-shadow: 0 1px 0 #b7c8bd; }
+.cruz-apagar span { font-size: 1.25rem; line-height: 1; }
+.cruz-apagar small { display: block; margin-top: 2px; font-size: .58rem; font-weight: 800; }
+
+.cruz-retorno .retorno { margin-top: 12px; }
+.cruz-retorno .fila-botoes { margin-top: 14px; }
+.cruz-acoes { display: grid; grid-template-columns: 1fr 1fr; grid-gap: 10px; gap: 10px; margin-top: 14px; }
+.cruz-acoes .cruz-btn { width: 100%; min-width: 0; min-height: 52px; padding: 6px 10px; font-size: .88rem; line-height: 1.15; }
+.cruz-acoes .cruz-desistir { grid-column: 1 / -1; min-height: 48px; font-size: .82rem; color: var(--texto-suave); }
+.cruz-acoes.cruz-sem-ajuda .cruz-btn-verificar { grid-column: 1 / -1; }
+
+.cruz-listas { display: grid; grid-gap: 14px; gap: 14px; margin-top: 18px; }
+.cruz-lista h3 { margin: 0 0 6px; font-size: 1rem; font-weight: 800; }
+.cruz-lista ol { list-style: none; margin: 0; padding: 0; }
+.cruz-item {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 0 0 6px;
+  padding: 8px 12px;
+  border: 2px solid var(--linha);
+  border-radius: 12px;
+  background: var(--cartao);
+  color: var(--texto);
+  font-size: .9rem;
+  line-height: 1.3;
+  text-align: left;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  cursor: pointer;
+}
+.cruz-item b { margin-right: 2px; color: var(--marca-escura); }
+.cruz-item-letras { color: var(--texto-suave); white-space: nowrap; }
+.cruz-item.cruz-item-atual { border-color: #e0a100; background: #fff8e1; }
+.cruz-item.cruz-item-certa { border-color: var(--verde); background: var(--verde-claro); color: var(--verde-escuro); }
+.cruz-item.cruz-item-certa::after { content: ' ✔'; font-weight: 800; }
+.cruz-dica { font-size: .9rem; margin-top: 14px; }
+
+@media (max-width: 420px) {
+  /* telemóveis estreitos: a grelha e o teclado aproveitam um pouco da margem (teclas com 48 px ou mais) */
+  .cruz-grelha-zona { margin-left: -8px; margin-right: -8px; }
+  .cruz-painel { padding-left: 0; padding-right: 0; }
+  .cruz-pista { margin-left: 4px; margin-right: 4px; }
+}
+@media (min-width: 600px) {
+  .cruz-teclado { grid-template-columns: repeat(12, minmax(0, 1fr)); max-width: 760px; margin: 0 auto; }
+  .cruz-pista { max-width: 760px; margin-left: auto; margin-right: auto; }
+  .cruz-acoes { max-width: 560px; margin-left: auto; margin-right: auto; }
+}
+@media (min-width: 760px) {
+  .cruz-listas { grid-template-columns: 1fr 1fr; }
+}
+.leve .cruz-cel { transition: none; }
+.leve .cruz-painel { box-shadow: none; border-top: 2px solid var(--linha); }
