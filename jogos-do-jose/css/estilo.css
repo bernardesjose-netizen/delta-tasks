@@ -1113,6 +1113,7 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .leitura.anedota .leitura-texto p { font-size: 1.2rem; }
 .leitura .moral { margin-top: 16px; padding: 12px 14px; border-radius: 14px; background: #fff7e0; border: 2px solid #f3d68a; font-size: 1.05rem; line-height: 1.45; }
 .leitura .fonte { margin-top: 12px; font-size: .8rem; color: var(--texto-suave); }
+.leitura-obra { margin: -4px 0 12px; font-style: italic; color: var(--texto-suave); }
 .leitura-ouvir { margin: -2px 0 14px; }
 .leitura-topo { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
 .leitura-topo .etiqueta { margin-bottom: 0; }

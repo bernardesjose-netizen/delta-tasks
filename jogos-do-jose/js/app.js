@@ -383,7 +383,7 @@ function inicio() {
       botaoMenu('verde', '🃏', 'Cartas e Dominó', 'Paciência, dominó, memória e maior ou menor.', '#/cartas'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
       botaoMenu('azul', '💡', 'Treino do Cérebro', 'Contas relâmpago, cores, leitura, cultura geral, sopa de letras…', '#/cabeca'),
-      botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, lendas e poemas populares.', '#/ler'),
+      botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, poemas e clássicos portugueses.', '#/ler'),
       botaoMenu('roxo', '🏅', 'O Meu Progresso', 'Calendário, medalhas, recordes e gráficos.', '#/progresso'),
       botaoMenu('claro', '⚙️', 'Definições', 'Nome, tamanho da letra, sons, voz e quem joga.', '#/definicoes')),
     el('div', { class: 'frase-dia' }, el('small', {}, 'Provérbio do dia'), frase),
@@ -953,6 +953,7 @@ const LER = {
   contos: { nome: 'Contos e lendas', icone: '🏰', desc: 'Histórias e lendas da tradição portuguesa.', chave: 'CONTOS', cor: 'azul', tipo: 'Conto' },
   divertidas: { nome: 'Histórias divertidas', icone: '😂', desc: 'Casos da aldeia para sorrir.', chave: 'DIVERTIDAS', cor: 'roxo', tipo: 'História divertida' },
   poemas: { nome: 'Poemas e quadras', icone: '🎶', desc: 'Quadras, cantigas e poemas de sempre.', chave: 'POEMAS', cor: 'foto', tipo: 'Poema' },
+  classicos: { nome: 'Clássicos portugueses', icone: '✒️', desc: 'Páginas de Camões, Gil Vicente, Garrett, Camilo, Eça, Júlio Dinis, Pessoa e outros.', chave: 'CLASSICOS', cor: 'verde', tipo: 'Clássico' },
 };
 const lidos = cat => (dados.lidos || (dados.lidos = {}))[cat] || (dados.lidos[cat] = []);
 
@@ -1029,7 +1030,7 @@ async function lerTexto(cat, id) {
   const t = lista[i];
   const feitos = lidos(cat);
   if (!feitos.includes(t.id)) { feitos.push(t.id); guardar(); }
-  const poema = cat === 'poemas';
+  const poema = cat === 'poemas' || t.verso;
   // Nos poemas, cada verso é uma linha; se não couber, continua com recuo (como nos livros).
   const corpo = el('div', { class: `leitura-texto${poema ? ' poema' : ''}` }, t.texto.split(/\n{2,}/).map(p =>
     el('p', {}, poema ? p.split('\n').map(v => el('span', { class: 'verso' }, v)) : p)));
@@ -1039,6 +1040,7 @@ async function lerTexto(cat, id) {
   a.append(el('article', { class: 'leitura' },
     el('div', { class: 'etiqueta' }, cat === 'fabulas' ? `Fábula · ${t.autor}` : (t.autor || t.origem || c.tipo)),
     el('h2', {}, t.titulo),
+    t.obra ? el('p', { class: 'leitura-obra' }, t.obra) : null,
     vozDisponivel() ? el('div', { class: 'leitura-ouvir' }, botaoOuvir(falado)) : null,
     corpo,
     t.moral ? el('div', { class: 'moral' }, el('b', {}, '💡 Moral da história: '), t.moral) : null,

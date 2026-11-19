@@ -1,5 +1,5 @@
 // Textos para ler em voz alta. Todos em domínio público (autores falecidos há mais de 70 anos)
-// ou da tradição popular. Ortografia atual. n = nível (1 curto, 2 médio, 3 mais longo).
+// ou da tradição popular. Ortografia atual. n = nível (1 curto, 2 médio, 3 mais longo, 4 Mestre: o mais longo).
 export const TEXTOS = [
   {
     id: 'liberdade', n: 1, titulo: 'Liberdade (início)', autor: 'Fernando Pessoa',
@@ -134,5 +134,45 @@ export const TEXTOS = [
   {
     id: 'pupilas', n: 3, titulo: 'As Pupilas do Senhor Reitor (início)', autor: 'Júlio Dinis',
     texto: 'José das Dornas era um lavrador abastado, sadio e de uma tão feliz disposição de génio, que tudo levava a rir; mas desse rir natural, sincero e despreocupado, que lhe fazia bem, e não do rir dos Demócritos de todos os tempos — rir cético, forçado, desconsolador, que é mil vezes pior do que o chorar.\n\nEm negócio de lavoura, dava, como se costuma dizer, sota e ás ao mais pintado. Até o Sr. Morais Soares teria que aprender com ele. Apesar dos seus sessenta anos, desafiava em robustez e atividade qualquer rapaz de vinte. Era-lhe familiar o canto matinal do galo, e o amanhecer já não tinha para ele segredos não revelados. O sol encontrava-o sempre de pé, e em pé o deixava ao esconder-se.',
+  },
+  {
+    id: 'inscricao', n: 1, titulo: 'Inscrição', autor: 'Camilo Pessanha',
+    texto: 'Eu vi a luz em um país perdido.\nA minha alma é lânguida e inerme.\nOh! Quem pudesse deslizar sem ruído!\nNo chão sumir-se, como faz um verme...',
+  },
+  {
+    id: 'bartolomeu-dias', n: 1, titulo: 'Epitáfio de Bartolomeu Dias (Mensagem)', autor: 'Fernando Pessoa',
+    texto: 'Jaz aqui, na pequena praia extrema,\nO Capitão do Fim. Dobrado o Assombro,\nO mar é o mesmo: já ninguém o tema!\nAtlas, mostra alto o mundo no seu ombro.',
+  },
+  {
+    id: 'cantiga-partindo', n: 2, titulo: 'Cantiga sua, partindo-se', autor: 'João Roiz de Castelo Branco',
+    texto: 'Senhora, partem tão tristes\nmeus olhos por vós, meu bem,\nque nunca tão tristes vistes\noutros nenhuns por ninguém.\n\nTão tristes, tão saudosos,\ntão doentes da partida,\ntão cansados, tão chorosos,\nda morte mais desejosos\ncem mil vezes que da vida.\nPartem tão tristes os tristes,\ntão fora d\'esperar bem,\nque nunca tão tristes vistes\noutros nenhuns por ninguém.',
+  },
+  {
+    id: 'palacio-ventura', n: 2, titulo: 'O Palácio da Ventura', autor: 'Antero de Quental',
+    texto: 'Sonho que sou um cavaleiro andante.\nPor desertos, por sóis, por noite escura,\nPaladino do amor, busco anelante\nO palácio encantado da Ventura!\n\nMas já desmaio, exausto e vacilante,\nQuebrada a espada já, rota a armadura...\nE eis que súbito o avisto, fulgurante\nNa sua pompa e aérea formosura!\n\nCom grandes golpes bato à porta e brado:\nEu sou o Vagabundo, o Deserdado...\nAbri-vos, portas de ouro, ante meus ais!\n\nAbrem-se as portas d\'ouro com fragor...\nMas dentro encontro só, cheio de dor,\nSilêncio e escuridão — e nada mais!',
+  },
+  {
+    id: 'mudam-se-os-tempos', n: 2, titulo: 'Mudam-se os tempos, mudam-se as vontades', autor: 'Luís de Camões',
+    texto: 'Mudam-se os tempos, mudam-se as vontades,\nMuda-se o ser, muda-se a confiança:\nTodo o mundo é composto de mudança,\nTomando sempre novas qualidades.\n\nContinuamente vemos novidades,\nDiferentes em tudo da esperança:\nDo mal ficam as mágoas na lembrança,\nE do bem (se algum houve) as saudades.\n\nO tempo cobre o chão de verde manto,\nQue já coberto foi de neve fria,\nE em mim converte em choro o doce canto.\n\nE afora este mudar-se cada dia,\nOutra mudança faz de mor espanto,\nQue não se muda já como soía.',
+  },
+  {
+    id: 'guardador-ix', n: 3, titulo: 'O Guardador de Rebanhos, IX', autor: 'Fernando Pessoa (Alberto Caeiro)',
+    texto: 'Sou um guardador de rebanhos.\nO rebanho é os meus pensamentos\nE os meus pensamentos são todos sensações.\nPenso com os olhos e com os ouvidos\nE com as mãos e os pés\nE com o nariz e a boca.\nPensar uma flor é vê-la e cheirá-la\nE comer um fruto é saber-lhe o sentido.\n\nPor isso quando num dia de calor\nMe sinto triste de gozá-lo tanto,\nE me deito ao comprido na erva,\nE fecho os olhos quentes,\nSinto todo o meu corpo deitado na realidade,\nSei a verdade e sou feliz.',
+  },
+  {
+    id: 'amar', n: 3, titulo: 'Amar!', autor: 'Florbela Espanca',
+    texto: 'Eu quero amar, amar perdidamente!\nAmar só por amar: Aqui... além...\nMais Este e Aquele, o Outro e toda a gente...\nAmar! Amar! E não amar ninguém!\n\nRecordar? Esquecer? Indiferente!...\nPrender ou desprender? É mal? É bem?\nQuem disser que se pode amar alguém\nDurante a vida inteira é porque mente!\n\nHá uma primavera em cada vida:\nÉ preciso cantá-la assim florida,\nPois se Deus nos deu voz, foi p\'ra cantar!\n\nE se um dia hei de ser pó, cinza e nada\nQue seja a minha noite uma alvorada,\nQue me saiba perder... p\'ra me encontrar.',
+  },
+  {
+    id: 'pescadores-abertura', n: 3, titulo: 'Os Pescadores (abertura)', autor: 'Raul Brandão',
+    texto: 'Quando regresso do mar venho sempre estonteado e cheio de luz que me trespassa. Tomo então apontamentos rápidos — seis linhas — um tipo — uma paisagem. Foi assim que coligi este livro, juntando-lhe algumas páginas de memórias. Meia dúzia de esboços afinal, que, como certos quadrinhos do ar livre, são melhores quando ficam por acabar.\n\nEstas linhas de saudade aquecem-me e reanimam-me nos dias de inverno friorento. Torno a ver o azul, e chega mais alto até mim o imenso eco prolongado... Basta pegar num velho búzio para se perceber distintamente a grande voz do mar. Criou-se com ele e guardou-a para sempre. — Eu também nunca mais a esqueci...',
+  },
+  {
+    id: 'mandarim-campainha', n: 4, titulo: 'O Mandarim (a campainha)', autor: 'Eça de Queirós',
+    texto: 'Uma noite, há anos, eu começara a ler, num desses in-fólios vetustos, um capítulo intitulado Brecha das Almas; e ia caindo numa sonolência grata, quando este período singular se me destacou do tom neutro e apagado da página, com o relevo duma medalha de ouro nova brilhando sobre um tapete escuro: copio textualmente:\n\n«No fundo da China existe um Mandarim mais rico que todos os reis de que a Fábula ou a História contam. Dele nada conheces, nem o nome, nem o semblante, nem a seda de que se veste. Para que tu herdes os seus cabedais infindáveis, basta que toques essa campainha, posta a teu lado, sobre um livro. Ele soltará apenas um suspiro, nesses confins da Mongólia. Será então um cadáver: e tu verás a teus pés mais ouro do que pode sonhar a ambição dum avaro. Tu, que me lês e és um homem mortal, tocarás tu a campainha?»\n\nEstaquei, assombrado, diante da página aberta: aquela interrogação «homem mortal, tocarás tu a campainha?» parecia-me faceta, picaresca, e todavia perturbava-me prodigiosamente.',
+  },
+  {
+    id: 'ines-de-castro', n: 4, titulo: 'Os Lusíadas, Canto III (Inês de Castro, estâncias 119–121)', autor: 'Luís de Camões',
+    texto: 'Tu só, tu, puro Amor, com força crua,\nQue os corações humanos tanto obriga,\nDeste causa à molesta morte sua,\nComo se fora pérfida inimiga.\nSe dizem, fero Amor, que a sede tua\nNem com lágrimas tristes se mitiga,\nÉ porque queres, áspero e tirano,\nTuas aras banhar em sangue humano.\n\nEstavas, linda Inês, posta em sossego,\nDe teus anos colhendo doce fruto,\nNaquele engano da alma, ledo e cego,\nQue a Fortuna não deixa durar muito,\nNos saudosos campos do Mondego,\nDe teus fermosos olhos nunca enxuto,\nAos montes ensinando e às ervinhas\nO nome que no peito escrito tinhas.\n\nDo teu Príncipe ali te respondiam\nAs lembranças que na alma lhe moravam,\nQue sempre ante seus olhos te traziam,\nQuando dos teus fermosos se apartavam;\nDe noite, em doces sonhos que mentiam,\nDe dia, em pensamentos que voavam;\nE quanto, enfim, cuidava e quanto via\nEram tudo memórias de alegria.',
   },
 ];

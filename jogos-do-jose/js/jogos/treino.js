@@ -360,7 +360,8 @@ export async function palavras(alvo, { nivel, aoTerminar, modoTeste, nPalavras }
 export async function leitura(alvo, { nivel, aoTerminar }) {
   const { TEXTOS } = await import('../dados/textos.js');
   let lista = TEXTOS.filter(t => t.n === nivel);
-  if (nivel === 4 && !lista.length) lista = TEXTOS.filter(t => t.n === 3);
+  // No Mestre entram também os textos mais longos do nível 3, para haver mais variedade.
+  if (nivel === 4) lista = lista.concat(TEXTOS.filter(t => t.n === 3 && t.texto.split(/\s+/).length > 110));
   if (nivel === 1) {
     const { PROVERBIOS } = await import('../dados/conteudos.js');
     const cinco = amostra(PROVERBIOS.filter(p => p.n === 1), 5);
