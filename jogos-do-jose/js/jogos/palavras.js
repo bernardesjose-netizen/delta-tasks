@@ -8,6 +8,8 @@ const CONFIG = {
   1: { lado: 8, palavras: 6, dirs: [[0, 1], [1, 0]] },
   2: { lado: 10, palavras: 8, dirs: [[0, 1], [1, 0], [1, 1]] },
   3: { lado: 11, palavras: 10, dirs: [[0, 1], [1, 0], [1, 1], [-1, 1]] },
+  // Mestre: grelha maior e palavras também de trás para a frente (←, ↑)
+  4: { lado: 12, palavras: 12, dirs: [[0, 1], [1, 0], [1, 1], [-1, 1], [0, -1], [-1, 0]] },
 };
 // Letras de enchimento com frequência parecida à do português.
 const ENCHER = 'AAAAAEEEEEOOOOSSSRRRIIINNNDDMMUUTTCCLLPPVGHQBFZJX';
@@ -89,7 +91,8 @@ export async function sopa(alvo, { nivel, curto, aoTerminar }) {
   const contador = el('div', { class: 'info-jogo' }, el('span', {}, `Encontradas: 0 de ${colocadas.length}`));
   const direcoes = nivel === 1 ? 'As palavras estão na horizontal (→) ou na vertical (↓).'
     : nivel === 2 ? 'As palavras estão na horizontal, na vertical ou na diagonal (↘).'
-      : 'Na horizontal, na vertical e nas duas diagonais (↘ ↗). Nunca de trás para a frente.';
+      : nivel === 4 ? 'Em todas as direções: horizontal, vertical, diagonais e também de trás para a frente (← ↑).'
+        : 'Na horizontal, na vertical e nas duas diagonais (↘ ↗). Nunca de trás para a frente.';
   const btnAjuda = el('button', { class: 'btn claro', type: 'button', onclick: ajuda }, '💡 Ajuda');
   alvo.append(el('div', { class: 'sopa-wrap' },
     tabuleiro,
@@ -220,7 +223,8 @@ export async function sopa(alvo, { nivel, curto, aoTerminar }) {
 export async function anagramas(alvo, { nivel, curto, aoTerminar }) {
   const { ANAGRAMAS } = await import('../dados/conteudos.js');
   const total = curto ? 3 : 6;
-  const lista = escolherNaoVistos(`anag${nivel}`, ANAGRAMAS.filter(a => a.n === nivel), total, a => a.palavra);
+  const doNivel = ANAGRAMAS.filter(a => a.n === nivel);
+  const lista = escolherNaoVistos(`anag${nivel}`, nivel === 4 && doNivel.length < 2 * total ? doNivel.concat(ANAGRAMAS.filter(a => a.n === 3)) : doNivel, total, a => a.palavra);
   let i = 0;
   let pontos = 0;
   let aPrimeira = 0;
@@ -350,7 +354,7 @@ export async function anagramas(alvo, { nivel, curto, aoTerminar }) {
 const FIGURAS = ['🍎', '🐟', '⭐', '🌻', '🐱', '🚗', '🎈', '🍌', '🐔', '⚽', '🌳', '🐶', '🦋', '🎁', '🍓', '🐑', '☂️', '🔑', '🎩', '📚', '⏰', '🚲', '🍇', '🐢', '🍋', '🎺', '🏠', '⚓', '🌙', '🧀'];
 
 export function lembrar(alvo, { nivel, curto, aoTerminar }) {
-  const [quantas, opcoesN, segundos] = nivel === 1 ? [3, 6, 5] : nivel === 2 ? [4, 8, 6] : [5, 10, 7];
+  const [quantas, opcoesN, segundos] = nivel === 1 ? [3, 6, 5] : nivel === 2 ? [4, 8, 6] : nivel === 4 ? [6, 12, 7] : [5, 10, 7];
   const rondas = curto ? 3 : 5;
   let ronda = 0;
   let pontos = 0;

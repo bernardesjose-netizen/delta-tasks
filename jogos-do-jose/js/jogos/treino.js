@@ -68,6 +68,9 @@ function gerarConta(nivel) {
     if (r < 0.55) { op = '+'; a = inteiro(1, 9); b = inteiro(1, 10 - a); } else { op = '−'; a = inteiro(2, 10); b = inteiro(1, a - 1); }
   } else if (nivel === 2) {
     if (r < 0.4) { op = '+'; a = inteiro(2, 15); b = inteiro(2, 20 - a); } else if (r < 0.7) { op = '−'; a = inteiro(8, 20); b = inteiro(2, a - 1); } else { op = '×'; a = escolher([2, 3, 4, 5]); b = inteiro(2, 9); }
+  } else if (nivel === 4) {
+    // Mestre: até 100, tabuadas até ao 12 e divisões
+    if (r < 0.3) { op = '+'; a = inteiro(25, 79); b = inteiro(11, 100 - a); } else if (r < 0.55) { op = '−'; a = inteiro(50, 100); b = inteiro(11, a - 5); } else if (r < 0.85) { op = '×'; a = inteiro(6, 12); b = inteiro(6, 12); } else { op = '÷'; b = inteiro(3, 12); a = b * inteiro(3, 12); }
   } else if (r < 0.3) { op = '+'; a = inteiro(11, 39); b = inteiro(3, 50 - a); } else if (r < 0.55) { op = '−'; a = inteiro(20, 50); b = inteiro(3, a - 2); } else if (r < 0.85) { op = '×'; a = inteiro(2, 9); b = inteiro(2, 9); } else { op = '÷'; b = inteiro(2, 9); a = b * inteiro(2, 9); }
   const resp = op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : a / b;
   const ler = { '+': 'mais', '−': 'menos', '×': 'vezes', '÷': 'a dividir por' }[op];
@@ -182,8 +185,8 @@ const CORES = [
 ];
 
 export function cores(alvo, { nivel, curto, rondas, aoTerminar, modoTeste }) {
-  const paleta = CORES.slice(0, nivel === 3 ? 6 : 4);
-  const pIgual = nivel === 1 ? 0.5 : nivel === 2 ? 0.25 : 0.1;
+  const paleta = CORES.slice(0, nivel >= 3 ? 6 : 4);
+  const pIgual = nivel === 1 ? 0.5 : nivel === 2 ? 0.25 : nivel === 4 ? 0 : 0.1;
   const total = rondas || (curto ? 8 : 15);
   const lista = [];
   let antes = null;
@@ -258,7 +261,7 @@ export function cores(alvo, { nivel, curto, rondas, aoTerminar, modoTeste }) {
 export async function palavras(alvo, { nivel, aoTerminar, modoTeste, nPalavras }) {
   const { EMOJIS } = await import('../dados/emojis.js');
   const pool = EMOJIS.filter(x => !/\s/.test(x.nome) && x.nome.length <= 11);
-  const n = nPalavras || (nivel === 1 ? 6 : nivel === 2 ? 9 : 12);
+  const n = nPalavras || (nivel === 1 ? 6 : nivel === 2 ? 9 : nivel === 4 ? 15 : 12);
   const segs = nivel === 1 ? 40 : nivel === 2 ? 50 : 60;
   const comDesenho = nivel === 1;
   const vistas = amostra(pool, n);
@@ -356,7 +359,8 @@ export async function palavras(alvo, { nivel, aoTerminar, modoTeste, nPalavras }
 /* ================= Leitura em Voz Alta ================= */
 export async function leitura(alvo, { nivel, aoTerminar }) {
   const { TEXTOS } = await import('../dados/textos.js');
-  const lista = TEXTOS.filter(t => t.n === nivel);
+  let lista = TEXTOS.filter(t => t.n === nivel);
+  if (nivel === 4 && !lista.length) lista = TEXTOS.filter(t => t.n === 3);
   if (nivel === 1) {
     const { PROVERBIOS } = await import('../dados/conteudos.js');
     const cinco = amostra(PROVERBIOS.filter(p => p.n === 1), 5);

@@ -43,6 +43,12 @@ function gerarConta(nivel) {
     if (r < 0.35) { op = '+'; a = inteiro(10, 50); b = inteiro(3, 30); }
     else if (r < 0.65) { op = '-'; a = inteiro(20, 60); b = inteiro(3, a - 5); }
     else { op = 'x'; a = escolher([2, 3, 4, 5, 10]); b = inteiro(2, 10); }
+  } else if (nivel === 4) {
+    // Mestre: centenas, multiplicações por números de dois algarismos e divisões maiores
+    if (r < 0.25) { op = '+'; a = inteiro(120, 499); b = inteiro(45, 399); }
+    else if (r < 0.5) { op = '-'; a = inteiro(150, 600); b = inteiro(45, a - 30); }
+    else if (r < 0.8) { op = 'x'; a = inteiro(11, 25); b = inteiro(3, 9); }
+    else { op = ':'; b = inteiro(3, 12); a = b * inteiro(6, 15); }
   } else if (r < 0.25) { op = '+'; a = inteiro(25, 99); b = inteiro(12, 99); }
   else if (r < 0.5) { op = '-'; a = inteiro(40, 120); b = inteiro(12, a - 10); }
   else if (r < 0.8) { op = 'x'; a = inteiro(3, 9); b = inteiro(3, 9); }
@@ -93,6 +99,23 @@ function gerarSequencia(nivel) {
       termos = [0, 1, 2, 3, 4].map(k => ini * 2 ** k);
       passoErro = termos[3];
     }
+  } else if (nivel === 4) {
+    // Mestre: quadrados, «cada número é a soma dos dois anteriores», ×2 e +3 alternados, saltos que dobram
+    if (tipo < 0.25) {
+      const ini = inteiro(1, 6);
+      termos = [0, 1, 2, 3, 4].map(k => (ini + k) * (ini + k));
+    } else if (tipo < 0.5) {
+      termos = [inteiro(1, 5), inteiro(2, 7)];
+      while (termos.length < 5) termos.push(termos[termos.length - 1] + termos[termos.length - 2]);
+    } else if (tipo < 0.75) {
+      termos = [inteiro(1, 6)];
+      for (let k = 1; k <= 4; k++) termos.push(k % 2 ? termos[k - 1] * 2 : termos[k - 1] + 3);
+    } else {
+      const d = escolher([1, 2, 3]);
+      termos = [inteiro(1, 20)];
+      for (let k = 1; k <= 4; k++) termos.push(termos[k - 1] + d * Math.pow(2, k));
+    }
+    passoErro = termos[4] - termos[3];
   } else if (tipo < 0.35) {
     // diferenças crescentes: +1, +2, +3, +4
     const ini = inteiro(1, 10);
@@ -187,7 +210,7 @@ function horaFalada(h, m) {
 
 function gerarHora(nivel) {
   const h = inteiro(1, 12);
-  const m = nivel === 1 ? escolher([0, 30]) : nivel === 2 ? escolher([0, 15, 30, 45]) : escolher([5, 10, 20, 25, 35, 40, 50, 55, 15, 45]);
+  const m = nivel === 1 ? escolher([0, 30]) : nivel === 2 ? escolher([0, 15, 30, 45]) : nivel === 4 ? escolher([5, 10, 20, 25, 35, 40, 50, 55]) : escolher([5, 10, 20, 25, 35, 40, 50, 55, 15, 45]);
   const certa = hora(h, m);
   const cand = new Set();
   const troca = m / 5;
@@ -197,6 +220,8 @@ function gerarHora(nivel) {
   cand.add(hora(h, (m + 30) % 60));
   if (nivel > 1) { cand.add(hora(h, (m + 15) % 60)); cand.add(hora(h, (m + 45) % 60)); }
   if (nivel > 2) { cand.add(hora(h, (m + 5) % 60)); cand.add(hora(h, (m + 55) % 60)); }
+  // Mestre: só opções muito parecidas (5 minutos ao lado, ou uma hora ao lado)
+  if (nivel === 4) { cand.clear(); cand.add(hora(h, (m + 5) % 60)); cand.add(hora(h, (m + 55) % 60)); cand.add(hora(h + 1, m)); cand.add(hora(h === 1 ? 12 : h - 1, m)); cand.add(hora(h, (m + 10) % 60)); }
   cand.delete(certa);
   const opcoes = [certa, ...amostra([...cand], 3)];
   return {
@@ -270,6 +295,19 @@ function gerarMercado(nivel) {
       texto = `Cada ${nome.replace(/^(um|uma|o) /, '')} ${emoji} custa ${e(preco)}. Quanto custam ${qt}?`;
       explicacao = `${qt} × ${e(preco)} = ${e(certa)}`;
     }
+  } else if (nivel === 4) {
+    // Mestre: várias unidades de um produto e mais outro, cêntimos de 5 em 5 e notas maiores
+    let [e2, n2, f2] = escolher(PRODUTOS);
+    while (n2 === nome) [e2, n2, f2] = escolher(PRODUTOS);
+    const p1 = precoAleatorio([faixa[0], Math.min(faixa[1], 900)], 5);
+    const p2 = precoAleatorio(f2, 5);
+    const qt = inteiro(2, 3);
+    const soma = p1 * qt + p2;
+    const nota = [1000, 2000, 5000, 10000].filter(v => v > soma)[0];
+    certa = nota - soma;
+    texto = `Comprou ${qt} × ${emoji} ${nome.replace(/^(um|uma|o) /, '')} a ${e(p1)} cada e ${e2} ${n2} (${e(p2)}). Pagou com ${nota / 100} €. Quanto recebe de troco?`;
+    explicacao = `${qt} × ${e(p1)} + ${e(p2)} = ${e(soma)}. Depois, ${e(nota)} − ${e(soma)} = ${e(certa)}`;
+    desvios.splice(0, desvios.length, 5, -5, 10, -10, 50, -50, 100, -100);
   } else {
     let [e2, n2, f2] = escolher(PRODUTOS);
     while (n2 === nome) [e2, n2, f2] = escolher(PRODUTOS);
@@ -310,7 +348,7 @@ const COISAS = [
 
 function gerarContar(nivel) {
   const [lado, alvoMin, alvoMax, tiposDistr, distrMin, distrMax] = nivel === 1
-    ? [4, 3, 7, 1, 2, 4] : nivel === 2 ? [5, 6, 11, 2, 3, 7] : [6, 9, 15, 3, 6, 12];
+    ? [4, 3, 7, 1, 2, 4] : nivel === 2 ? [5, 6, 11, 2, 3, 7] : nivel === 4 ? [6, 12, 18, 4, 10, 16] : [6, 9, 15, 3, 6, 12];
   const [alvoE, nome, quantos] = escolher(COISAS);
   const outros = amostra(COISAS.filter(c => c[0] !== alvoE), tiposDistr).map(c => c[0]);
   const n = inteiro(alvoMin, alvoMax);
@@ -341,6 +379,12 @@ export function contar(alvo, { nivel, curto, aoTerminar }) {
 }
 
 /* ---------- Jogos com banco de conteúdos ---------- */
+// Itens do nível pedido. No Mestre (4), se ainda houver poucos itens de nível 4, juntam-se os de nível 3.
+export function doNivel(lista, nivel, n) {
+  const deste = lista.filter(q => q.n === nivel);
+  if (nivel === 4 && deste.length < 2 * n) return deste.concat(lista.filter(q => q.n === 3));
+  return deste;
+}
 export async function quiz(alvo, { nivel, curto, temaQuiz, aoTerminar }) {
   const { PERGUNTAS } = await import('../dados/perguntas.js');
   let escolhidas;
@@ -350,7 +394,7 @@ export async function quiz(alvo, { nivel, curto, temaQuiz, aoTerminar }) {
     escolhidas = escolherNaoVistos(`quiz-${temaQuiz.id}`, lista, Math.min(N(curto), lista.length), q => `${q.p}|${q.certa}`)
       .sort((x, y) => x.n - y.n);
   } else {
-    const lista = PERGUNTAS.filter(q => q.n === nivel);
+    const lista = doNivel(PERGUNTAS, nivel, N(curto));
     escolhidas = escolherNaoVistos(`quiz${nivel}`, lista, N(curto), q => `${q.p}|${q.certa}`);
   }
   const perguntas = escolhidas.map(q => ({
@@ -365,7 +409,7 @@ export async function quiz(alvo, { nivel, curto, temaQuiz, aoTerminar }) {
 
 export async function proverbios(alvo, { nivel, curto, aoTerminar }) {
   const { PROVERBIOS } = await import('../dados/conteudos.js');
-  const lista = PROVERBIOS.filter(q => q.n === nivel);
+  const lista = doNivel(PROVERBIOS, nivel, N(curto));
   const escolhidas = escolherNaoVistos(`prov${nivel}`, lista, N(curto), q => q.inicio);
   const perguntas = escolhidas.map(q => ({
     etiqueta: 'Complete o provérbio',
@@ -380,7 +424,7 @@ export async function proverbios(alvo, { nivel, curto, aoTerminar }) {
 
 export async function adivinhas(alvo, { nivel, curto, aoTerminar }) {
   const { ADIVINHAS } = await import('../dados/conteudos.js');
-  const lista = ADIVINHAS.filter(q => q.n === nivel);
+  const lista = doNivel(ADIVINHAS, nivel, N(curto));
   const escolhidas = escolherNaoVistos(`adiv${nivel}`, lista, N(curto), q => q.p);
   const perguntas = escolhidas.map(q => ({
     etiqueta: 'Adivinha',
@@ -394,7 +438,7 @@ export async function adivinhas(alvo, { nivel, curto, aoTerminar }) {
 
 export async function intruso(alvo, { nivel, curto, aoTerminar }) {
   const { INTRUSOS } = await import('../dados/conteudos.js');
-  const lista = INTRUSOS.filter(q => q.n === nivel);
+  const lista = doNivel(INTRUSOS, nivel, N(curto));
   const escolhidas = escolherNaoVistos(`intr${nivel}`, lista, N(curto), q => q.itens.join('|'));
   const perguntas = escolhidas.map(q => ({
     etiqueta: 'Qual é o intruso?',

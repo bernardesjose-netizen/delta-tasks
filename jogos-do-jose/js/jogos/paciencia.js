@@ -88,7 +88,7 @@ export function distribuirComSolucao(draw) {
 
 /* ---------- Jogo ---------- */
 export function paciencia(alvo, { nivel, aoTerminar }) {
-  const draw = nivel === 3 ? 3 : 1;
+  const draw = nivel >= 3 ? 3 : 1;
   const CARTAS = Array.from({ length: 52 }, (_, k) => ({ id: k, s: k % 4, r: Math.floor(k / 4) + 1, up: false }));
   let st;
   let historico = [];
@@ -100,7 +100,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
   // ---- estrutura do ecrã
   limpar(alvo);
   alvo.classList.add('ecra-cheio');
-  const infoNivel = el('span', {}, `${['', 'Tranquilo', 'Normal', 'Desafio'][nivel]} · ${draw === 1 ? 'tira-se 1 carta' : 'tiram-se 3 cartas'}`);
+  const infoNivel = el('span', {}, `${['', 'Tranquilo', 'Normal', 'Desafio', 'Mestre'][nivel]} · ${draw === 1 ? 'tira-se 1 carta' : 'tiram-se 3 cartas'}`);
   const infoJogadas = el('span', {}, 'Jogadas: 0');
   const mesa = el('div', { class: 'pac-mesa' });
   const btnDesfazer = el('button', { class: 'btn claro', type: 'button', onclick: desfazer }, '↶ Desfazer');
@@ -110,7 +110,8 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
   alvo.append(el('div', { class: 'pac' },
     el('div', { class: 'pac-info' }, infoNivel, el('span', {}, '✔ Este jogo tem solução'), infoJogadas),
     mesa,
-    el('div', { class: 'pac-barra' }, btnDesfazer, btnAjuda, btnTerminar, btnNovo)));
+    // No Mestre não há ajudas nem «Desfazer»
+    el('div', { class: 'pac-barra' }, nivel === 4 ? null : btnDesfazer, nivel === 4 ? null : btnAjuda, btnTerminar, btnNovo)));
 
   // lugares vazios
   const lugarBaralho = el('div', { class: 'lugar baralho', 'data-tipo': 'stock', 'aria-label': 'Baralho: toque para tirar cartas' }, '↻');
@@ -401,7 +402,7 @@ export function paciencia(alvo, { nivel, aoTerminar }) {
       numeros: [
         { valor: String(st.jogadas), rotulo: 'jogadas' },
         { valor: duracao(Date.now() - t0), rotulo: 'tempo' },
-        { valor: String(dados.pac.ganhos[nivel]), rotulo: `${dados.pac.ganhos[nivel] === 1 ? 'vitória' : 'vitórias'} no nível ${['', 'Tranquilo', 'Normal', 'Desafio'][nivel]}` },
+        { valor: String(dados.pac.ganhos[nivel]), rotulo: `${dados.pac.ganhos[nivel] === 1 ? 'vitória' : 'vitórias'} no nível ${['', 'Tranquilo', 'Normal', 'Desafio', 'Mestre'][nivel]}` },
       ],
     });
   }

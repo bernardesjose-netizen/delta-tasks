@@ -276,6 +276,7 @@ h1, h2, h3, p { margin: 0; }
 .nivel-btn.n1 { border-color: #9bd8b0; box-shadow: 0 5px 0 #9bd8b0; }
 .nivel-btn.n2 { border-color: #a9c4f5; box-shadow: 0 5px 0 #a9c4f5; }
 .nivel-btn.n3 { border-color: #c9b5f3; box-shadow: 0 5px 0 #c9b5f3; }
+.nivel-btn.n4 { border-color: #f2c94c; box-shadow: 0 5px 0 #f2c94c; }
 .nivel-btn .ultimo { margin-left: auto; font-size: .75rem; font-weight: 800; color: var(--verde); background: var(--verde-claro); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
 .cabeca-jogo { text-align: center; margin: 4px 0 16px; }
 .cabeca-jogo .icone-grande { font-size: 3.5rem; line-height: 1.1; }
@@ -1173,3 +1174,6 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
   html.letra-2 .tema-quiz.tudo small { font-size: .6rem; white-space: normal; }
 }
 .nota-voz { font-size: .95rem; color: var(--texto-suave); background: var(--fundo-2); border-radius: 14px; padding: 10px 14px; margin: -4px 0 12px; line-height: 1.45; }
+.painel-nivel-fotos { max-width: 640px; margin: 0 auto 18px; }
+.painel-nivel-fotos p { margin-bottom: 8px; }
+.painel-nivel-fotos .segmentos { justify-content: center; }

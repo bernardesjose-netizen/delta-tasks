@@ -66,9 +66,10 @@ function escolherJogada(nivel, mao, pontas, faltaJogador) {
     const resto = mao.filter((_, k) => k !== j.i);
     const ponta = pontas ? novaPonta(mao[j.i], j.lado === 'esq' ? pontas[0] : pontas[1]) : b;
     const outra = pontas ? (j.lado === 'esq' ? pontas[1] : pontas[0]) : a;
-    n += resto.filter(([x, y]) => x === ponta || y === ponta || x === outra || y === outra).length * 3; // guardar opções
-    if (faltaJogador.has(ponta)) n += 8; // fechar o número que o jogador não tem
-    if (faltaJogador.has(outra)) n += 4;
+    const k = nivel === 4 ? 1.6 : 1; // no Mestre o computador pensa mais à frente
+    n += resto.filter(([x, y]) => x === ponta || y === ponta || x === outra || y === outra).length * 3 * k; // guardar opções
+    if (faltaJogador.has(ponta)) n += 8 * k; // fechar o número que o jogador não tem
+    if (faltaJogador.has(outra)) n += 4 * k;
     return n;
   };
   return op.reduce((m, j) => (nota(j) > nota(m) ? j : m), op[0]);
@@ -145,7 +146,8 @@ export function domino(alvo, { nivel, aoTerminar }) {
     const op = vez === 'eu' && !acabou ? jogadasPossiveis(minha, pontas()) : [];
     const jogaveis = new Set(op.map(j => j.i));
     limpar(maoEl).append(...minha.map((p, i) => el('button', {
-      class: `dom-peca${jogaveis.has(i) ? ' jogavel' : ''}${vez === 'eu' && !jogaveis.has(i) ? ' apagada' : ''}${escolhaPendente === i ? ' escolhida' : ''}`,
+      // no Mestre não se realçam as pedras que se podem jogar
+      class: `dom-peca${nivel < 4 && jogaveis.has(i) ? ' jogavel' : ''}${nivel < 4 && vez === 'eu' && !jogaveis.has(i) ? ' apagada' : ''}${escolhaPendente === i ? ' escolhida' : ''}`,
       type: 'button',
       'aria-label': `Pedra ${nomePedra(p)}${jogaveis.has(i) ? ', pode jogar' : ''}`,
       onclick: () => tocar(i),

@@ -21,7 +21,7 @@ export async function oQueE(alvo, { nivel, curto, aoTerminar }) {
   const perguntas = escolhidos.map(x => {
     const mesma = EMOJIS.filter(y => y.cat === x.cat && y.nome !== x.nome && !confundivel(x.nome, y.nome));
     const outras = EMOJIS.filter(y => y.cat !== x.cat);
-    const nErradas = nivel === 3 ? 3 : 2;
+    const nErradas = nivel === 4 ? 4 : nivel === 3 ? 3 : 2;
     const erradas = amostra(nivel === 1 ? outras : mesma.length >= nErradas ? mesma : outras, nErradas).map(y => y.nome);
     return {
       etiqueta: x.cat,
@@ -38,7 +38,7 @@ export async function oQueE(alvo, { nivel, curto, aoTerminar }) {
 /* ---------- Encontre o diferente ---------- */
 export async function diferente(alvo, { nivel, curto, aoTerminar }) {
   const { EMOJIS, PARECIDOS } = await import('../dados/emojis.js');
-  const lado = nivel === 1 ? 3 : nivel === 2 ? 4 : 5;
+  const lado = nivel === 1 ? 3 : nivel === 2 ? 4 : nivel === 4 ? 6 : 5;
   const rondas = curto ? 5 : 10;
   let ronda = 0;
   let pontos = 0;
@@ -48,7 +48,7 @@ export async function diferente(alvo, { nivel, curto, aoTerminar }) {
   let tProx = null;
 
   function par() {
-    if (nivel === 3 && PARECIDOS && PARECIDOS.length) return baralhar(escolher(PARECIDOS));
+    if (nivel >= 3 && PARECIDOS && PARECIDOS.length) return baralhar(escolher(PARECIDOS));
     const a = escolher(EMOJIS);
     const candidatos = EMOJIS.filter(y => y.e !== a.e && (nivel === 1 ? y.cat !== a.cat : y.cat === a.cat));
     return [a.e, escolher(candidatos.length ? candidatos : EMOJIS.filter(y => y.e !== a.e)).e];

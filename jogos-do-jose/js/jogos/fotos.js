@@ -48,7 +48,7 @@ export async function quizFotos(alvo, { tema, nivel = 1, curto, aoTerminar }) {
   const todas = fotosDoTema(temas, tema);
   const n = curto ? 5 : 10;
   const escolhidas = escolherNaoVistos(`qf-${tema || 'todos'}`, todas, Math.min(n, todas.length), f => f.f);
-  const nOpcoes = nivel === 1 ? 3 : 4;
+  const nOpcoes = nivel === 1 ? 3 : nivel === 4 ? 5 : 4;
   const perguntas = escolhidas.map(f => {
     const mesmoTema = todas.filter(x => x.temaId === f.temaId && x.nome !== f.nome);
     const outras = amostra(mesmoTema.length >= nOpcoes - 1 ? mesmoTema : todas.filter(x => x.nome !== f.nome), nOpcoes - 1).map(x => x.nome);
@@ -74,7 +74,7 @@ export async function puzzle(alvo, { nivel, tema, aoTerminar }) {
     'lisboa', 'porto', 'alentejo', 'norte', 'beiras', 'palacios', 'igrejas', 'farois', 'praias', 'rios', 'jardins', 'mar', 'aves-rapina', 'racas', 'pintura', 'descobrimentos', 'comboios', 'artesanato', 'leiria', 'espanha', 'ue', 'estadios', 'ciclismo'];
   const temas = (await carregarTemas()).filter(t => tema ? t.id === tema : BONS.includes(t.id));
   const [foto] = escolherNaoVistos('puzzle', fotosDoTema(temas.length ? temas : await carregarTemas(), 'todos'), 1, f => f.f);
-  const n = nivel === 1 ? 2 : nivel === 2 ? 3 : 4;
+  const n = nivel === 1 ? 2 : nivel === 2 ? 3 : nivel === 4 ? 5 : 4;
   const total = n * n;
   let ordem;
   do { ordem = baralhar([...Array(total).keys()]); } while (ordem.filter((v, i) => v === i).length > (n === 2 ? 1 : n));

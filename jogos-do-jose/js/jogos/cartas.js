@@ -44,7 +44,7 @@ function melhorGrelha(n, largura, altura, proporcao, folga = 12) {
  * pares (opcional): quantos pares; por omissão depende do nível.
  */
 export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, costas, coresCostas, marca }) {
-  const pares = paresPedidos || (nivel === 1 ? 6 : nivel === 2 ? 8 : 10);
+  const pares = paresPedidos || (nivel === 1 ? 6 : nivel === 2 ? 8 : nivel === 4 ? 12 : 10);
   const comFotos = Array.isArray(itens);
   const escolhidos = comFotos
     ? amostra(itens, Math.min(pares, itens.length))
@@ -152,7 +152,7 @@ export function memoria(alvo, { nivel, aoTerminar, itens, pares: paresPedidos, c
 
 /* ================= Maior ou Menor ================= */
 export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
-  const total = curto ? 6 : nivel === 1 ? 8 : nivel === 2 ? 10 : 12;
+  const total = curto ? 6 : nivel === 1 ? 8 : nivel === 2 ? 10 : nivel === 4 ? 15 : 12;
   const baralho = baralhar(Array.from({ length: 52 }, (_, k) => ({ s: k % 4, r: Math.floor(k / 4) + 1 })));
   let atual = baralho.pop();
   let jogada = 0;

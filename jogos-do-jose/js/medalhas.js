@@ -41,6 +41,7 @@ export const MEDALHAS = [
   { id: 'puzzle16', icone: '🖼️', nome: 'Puzzle grande', desc: 'Acabar um puzzle de 16 peças.', ok: d => ((d.jogos.puzzle && d.jogos.puzzle.melhor && d.jogos.puzzle.melhor[3]) || 0) >= 1 },
   { id: 'viajante', icone: '📷', nome: 'Viajante', desc: 'Jogar com fotografias de 10 temas diferentes.', ok: d => (d.temasVistos || []).length >= 10 },
   { id: 'teste', icone: '🎯', nome: 'Cérebro em forma', desc: 'Fazer o Teste do Cérebro.', ok: d => (d.testes || []).length >= 1 },
+  { id: 'mestre', icone: '🏆', nome: 'Mestre', desc: 'Ganhar 3 estrelas num jogo no nível Mestre.', ok: d => Object.keys(d.jogos || {}).some(k => ((d.jogos[k].melhor || {})[4] || 0) >= 3) },
   { id: 'teste5', icone: '📈', nome: 'Sempre a melhorar', desc: 'Fazer o Teste do Cérebro em 5 dias diferentes.', ok: d => (d.testes || []).length >= 5 },
 ];
 

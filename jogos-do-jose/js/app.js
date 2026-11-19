@@ -13,6 +13,7 @@ const NIVEIS = [
   { nome: 'Tranquilo', icone: '🌱' },
   { nome: 'Normal', icone: '🌿' },
   { nome: 'Desafio', icone: '🌳' },
+  { nome: 'Mestre', icone: '🏆' },
 ];
 
 // Temas da Cultura Geral: entram as perguntas dessa categoria (cat) e as que têm o tema em «t».
@@ -54,28 +55,28 @@ const JOGOS = {
     seccao: 'fotos', nome: 'Memória de Fotografias', icone: '📸', cor: '#2e7d32', tema: true,
     desc: 'Pares de fotografias: Sporting, Benfica, FC Porto, cidades, monumentos e muito mais.',
     ajuda: 'Escolha um tema e quantas fotografias quer. Depois vire duas cartas de cada vez e encontre os pares.',
-    niveis: ['4 pares.', '6 pares.', '8 pares.'],
+    niveis: ['4 pares.', '6 pares.', '8 pares.', '15 pares.'],
     carregar: fotos('memoriaFotos'),
   },
   quizfotos: {
     seccao: 'fotos', nome: 'Que Fotografia É?', icone: '📷', cor: '#00796b', tema: true,
     desc: 'Veja a fotografia e diga o que é.',
     ajuda: 'Aparece uma fotografia: escolha o nome certo.',
-    niveis: ['3 opções.', '4 opções.', '4 opções.'],
+    niveis: ['3 opções.', '4 opções.', '4 opções.', '5 opções do mesmo tema.'],
     carregar: fotos('quizFotos'),
   },
   puzzle: {
     seccao: 'fotos', nome: 'Puzzle de Fotografias', icone: '🖼️', cor: '#558b2f',
     desc: 'Troque as peças e descubra a fotografia.',
     ajuda: 'Toque numa peça e depois noutra para as trocar de lugar. As peças no sítio certo ficam com um contorno verde.',
-    niveis: ['4 peças grandes.', '9 peças.', '16 peças.'],
+    niveis: ['4 peças grandes.', '9 peças.', '16 peças.', '25 peças.'],
     carregar: fotos('puzzle'),
   },
   paciencia: {
     seccao: 'cartas', nome: 'Paciência', icone: '🃏', cor: '#1a7f45',
     desc: 'O clássico das cartas. Todos os jogos têm solução!',
     ajuda: 'Toque numa carta e ela vai sozinha para o melhor sítio. Também pode arrastá-la. Pode desfazer sempre que quiser.',
-    niveis: ['Todas as cartas à vista. Tira-se 1 carta de cada vez.', 'A paciência de sempre. Tira-se 1 carta de cada vez.', 'Tiram-se 3 cartas de cada vez, como antigamente.'],
+    niveis: ['Todas as cartas à vista. Tira-se 1 carta de cada vez.', 'A paciência de sempre. Tira-se 1 carta de cada vez.', 'Tiram-se 3 cartas de cada vez, como antigamente.', 'Tiram-se 3 cartas e não há ajudas nem «Desfazer».'],
     carregar: () => import('./jogos/paciencia.js').then(m => m.paciencia),
   },
   domino: {
@@ -83,161 +84,161 @@ const JOGOS = {
     desenho: () => import('./jogos/domino.js').then(m => m.pedraSVG([6, 6], false)),
     desc: 'O dominó de sempre, contra o computador.',
     ajuda: 'Toque numa pedra que brilha para a jogar. Se não tiver pedra, compre ao monte. Ganha quem ficar primeiro sem pedras!',
-    niveis: ['O computador joga ao acaso e há sugestões.', 'O computador joga as pedras mais pesadas.', 'O computador pensa e tenta fechar o jogo.'],
+    niveis: ['O computador joga ao acaso e há sugestões.', 'O computador joga as pedras mais pesadas.', 'O computador pensa e tenta fechar o jogo.', 'O computador pensa mais e não há sugestões.'],
     carregar: () => import('./jogos/domino.js').then(m => m.domino),
   },
   memoria: {
     seccao: 'cartas', nome: 'Jogo da Memória', icone: '🎴', cor: '#1d5fd1',
     desc: 'Vire as cartas e encontre os pares iguais.',
     ajuda: 'Vire duas cartas de cada vez. Se forem iguais, ficam viradas. Se não, voltam a esconder-se — tente lembrar-se de onde estavam!',
-    niveis: ['6 pares de cartas.', '8 pares de cartas.', '10 pares de cartas.'],
+    niveis: ['6 pares de cartas.', '8 pares de cartas.', '10 pares de cartas.', '12 pares de cartas.'],
     carregar: cartas('memoria'),
   },
   maiormenor: {
     seccao: 'cartas', nome: 'Maior ou Menor', icone: '🔼', cor: '#c2337a',
     desc: 'Adivinhe se a próxima carta é maior ou menor.',
     ajuda: 'Veja a carta e diga se a próxima vai ser maior ou menor. Se sair igual, ganha na mesma.',
-    niveis: ['8 cartas.', '10 cartas.', '12 cartas.'],
+    niveis: ['8 cartas.', '10 cartas.', '12 cartas.', '15 cartas.'],
     carregar: cartas('maiorMenor'),
   },
   relampago: {
     seccao: 'cabeca', grupo: 'rapido', nome: 'Contas Relâmpago', icone: '⚡', cor: '#e8590c',
     desc: '20 contas seguidas contra o relógio. Bata o seu recorde!',
     ajuda: 'Escreva o resultado no teclado: quando estiver certo, passa sozinho para a conta seguinte. O relógio pode parar com «Pausa».',
-    niveis: ['Somas e subtrações até 10.', 'Até 20 e tabuadas do 2 ao 5.', 'Até 50, tabuadas e divisões.'],
+    niveis: ['Somas e subtrações até 10.', 'Até 20 e tabuadas do 2 ao 5.', 'Até 50, tabuadas e divisões.', 'Até 100, tabuadas até 12 e divisões.'],
     carregar: treinoJ('relampago'),
   },
   cores: {
     seccao: 'cabeca', grupo: 'rapido', nome: 'Cores Trocadas', icone: '🎨', cor: '#c2337a',
     desc: 'Diga a cor da tinta, não a palavra. Mais difícil do que parece!',
     ajuda: 'Aparece o nome de uma cor pintado com outra cor. Toque na cor da TINTA, sem ler a palavra.',
-    niveis: ['4 cores, muitas vezes iguais à palavra.', '4 cores, quase sempre trocadas.', '6 cores, quase nunca iguais à palavra.'],
+    niveis: ['4 cores, muitas vezes iguais à palavra.', '4 cores, quase sempre trocadas.', '6 cores, quase nunca iguais à palavra.', '6 cores, sempre trocadas.'],
     carregar: treinoJ('cores'),
   },
   palavras: {
     seccao: 'cabeca', grupo: 'rapido', nome: 'Memória de Palavras', icone: '📝', cor: '#1d5fd1',
     desc: 'Decore uma lista de palavras e depois encontre-as.',
     ajuda: 'Tem alguns segundos para decorar as palavras. Depois toque nas que viu, no meio de outras.',
-    niveis: ['6 palavras, com desenhos.', '9 palavras.', '12 palavras.'],
+    niveis: ['6 palavras, com desenhos.', '9 palavras.', '12 palavras.', '15 palavras.'],
     carregar: treinoJ('palavras'),
   },
   leitura: {
     seccao: 'cabeca', grupo: 'rapido', nome: 'Leitura em Voz Alta', icone: '📖', cor: '#7c2d12',
     desc: 'Camões, Pessoa, Florbela, Eça, cantigas e trava-línguas para ler em voz alta.',
     ajuda: 'Leia o texto em voz alta, com calma. O relógio mede o tempo e mostra quantas palavras leu por minuto.',
-    niveis: ['Textos curtos e provérbios.', 'Poemas de tamanho médio.', 'Poemas e prosa mais longos.'],
+    niveis: ['Textos curtos e provérbios.', 'Poemas de tamanho médio.', 'Poemas e prosa mais longos.', 'Os textos mais longos e difíceis.'],
     carregar: treinoJ('leitura'),
   },
   contas: {
     seccao: 'cabeca', grupo: 'numeros', nome: 'Contas de Cabeça', icone: '➕', cor: '#e8590c',
     desc: 'Somas, subtrações e tabuadas com o teclado grande.',
     ajuda: 'Faça a conta de cabeça e escreva o resultado no teclado. Depois carregue em OK.',
-    niveis: ['Somas e subtrações até 20.', 'Contas até 100 e tabuadas fáceis.', 'Tabuadas e divisões.'],
+    niveis: ['Somas e subtrações até 20.', 'Contas até 100 e tabuadas fáceis.', 'Tabuadas e divisões.', 'Centenas, multiplicações e divisões maiores.'],
     carregar: cerebro('contas'),
   },
   quiz: {
     seccao: 'cabeca', grupo: 'saber', nome: 'Cultura Geral', icone: '🌍', cor: '#1d5fd1',
     desc: 'De tudo um pouco ou por tema: Leiria, Espanha, Europa, clubes, ciclismo e muito mais.',
     ajuda: 'Escolha a resposta certa. Se errar, pode tentar outra vez. No fim de cada pergunta há uma curiosidade.',
-    niveis: ['Perguntas fáceis, com 3 opções.', 'Perguntas do dia a dia, com 4 opções.', 'Perguntas para quem sabe muito!'],
+    niveis: ['Perguntas fáceis, com 3 opções.', 'Perguntas do dia a dia, com 4 opções.', 'Perguntas para quem sabe muito!', 'Perguntas de mestre!'],
     carregar: cerebro('quiz'),
   },
   sopa: {
     seccao: 'cabeca', grupo: 'palavras', nome: 'Sopa de Letras', icone: '🔤', cor: '#6d3fd0',
     desc: 'Encontre as palavras escondidas na grelha.',
     ajuda: 'Toque na primeira letra da palavra e depois na última. Também pode arrastar o dedo por cima das letras.',
-    niveis: ['Grelha pequena, palavras na horizontal e na vertical.', 'Grelha média, também na diagonal.', 'Grelha grande, nas duas diagonais.'],
+    niveis: ['Grelha pequena, palavras na horizontal e na vertical.', 'Grelha média, também na diagonal.', 'Grelha grande, nas duas diagonais.', 'Grelha maior e palavras também de trás para a frente.'],
     carregar: palavras('sopa'),
   },
   proverbios: {
     seccao: 'cabeca', grupo: 'saber', nome: 'Provérbios', icone: '💬', cor: '#b45309',
     desc: 'Complete os ditados populares portugueses.',
     ajuda: 'Leia o início do provérbio e escolha como acaba. Algumas opções são para rir!',
-    niveis: ['Os provérbios mais conhecidos.', 'Provérbios do dia a dia.', 'Provérbios de quem sabe muito.'],
+    niveis: ['Os provérbios mais conhecidos.', 'Provérbios do dia a dia.', 'Provérbios de quem sabe muito.', 'Provérbios raros, de mestre.'],
     carregar: cerebro('proverbios'),
   },
   adivinhas: {
     seccao: 'cabeca', grupo: 'saber', nome: 'Adivinhas', icone: '🤔', cor: '#0e7490',
     desc: 'O que é, o que é? Adivinhas para puxar pela cabeça.',
     ajuda: 'Leia a adivinha com calma e escolha a resposta.',
-    niveis: ['Adivinhas fáceis.', 'Adivinhas médias.', 'Adivinhas com rasteira!'],
+    niveis: ['Adivinhas fáceis.', 'Adivinhas médias.', 'Adivinhas com rasteira!', 'Adivinhas de mestre.'],
     carregar: cerebro('adivinhas'),
   },
   intruso: {
     seccao: 'cabeca', grupo: 'palavras', nome: 'Qual é o Intruso?', icone: '🕵️', cor: '#be123c',
     desc: 'Descubra o que não pertence ao grupo.',
     ajuda: 'Há quatro coisas e uma delas não tem nada a ver com as outras. Qual é?',
-    niveis: ['Intrusos fáceis de ver.', 'É preciso pensar um bocadinho.', 'Intrusos bem escondidos.'],
+    niveis: ['Intrusos fáceis de ver.', 'É preciso pensar um bocadinho.', 'Intrusos bem escondidos.', 'Intrusos muito bem escondidos.'],
     carregar: cerebro('intruso'),
   },
   sequencias: {
     seccao: 'cabeca', grupo: 'numeros', nome: 'Sequências', icone: '🔢', cor: '#4d7c0f',
     desc: 'Que número vem a seguir?',
     ajuda: 'Descubra a regra da sequência e escolha o número que vem a seguir.',
-    niveis: ['Saltos pequenos (de 1, 2, 5, 10…).', 'Saltos maiores e números a dobrar.', 'Sequências com truque.'],
+    niveis: ['Saltos pequenos (de 1, 2, 5, 10…).', 'Saltos maiores e números a dobrar.', 'Sequências com truque.', 'Quadrados, somas e saltos que dobram.'],
     carregar: cerebro('sequencias'),
   },
   ordem: {
     seccao: 'cabeca', grupo: 'memoria', nome: 'Pôr por Ordem', icone: '🔢', cor: '#00796b',
     desc: 'Números, meses, tamanhos, preços e datas da História: arrume tudo.',
     ajuda: 'Toque nos cartões pela ordem certa: primeiro o 1.º, depois o 2.º, e assim por diante. Se se enganar, tente outra vez — não há pressa.',
-    niveis: ['4 cartões: números, tamanhos, dias e dinheiro.', '4 ou 5 cartões: meses, horas, contas e História.', '5 ou 6 cartões, um pouco mais parecidos.'],
+    niveis: ['4 cartões: números, tamanhos, dias e dinheiro.', '4 ou 5 cartões: meses, horas, contas e História.', '5 ou 6 cartões, um pouco mais parecidos.', '8 rondas das mais difíceis.'],
     carregar: desafios('ordem'),
   },
   anagramas: {
     seccao: 'cabeca', grupo: 'palavras', nome: 'Palavra Baralhada', icone: '🔀', cor: '#7c2d12',
     desc: 'Ponha as letras pela ordem certa.',
     ajuda: 'Toque nas letras pela ordem certa para formar a palavra. Há uma pista para ajudar.',
-    niveis: ['Palavras de 4 e 5 letras.', 'Palavras de 6 e 7 letras.', 'Palavras de 8 e 9 letras.'],
+    niveis: ['Palavras de 4 e 5 letras.', 'Palavras de 6 e 7 letras.', 'Palavras de 8 e 9 letras.', 'Palavras de 10 letras ou mais.'],
     carregar: palavras('anagramas'),
   },
   relogio: {
     seccao: 'cabeca', grupo: 'numeros', nome: 'Que Horas São?', icone: '🕒', cor: '#334155',
     desc: 'Leia as horas no relógio de ponteiros.',
     ajuda: 'O ponteiro pequeno (preto) marca as horas e o grande (laranja) marca os minutos.',
-    niveis: ['Horas certas e meias horas.', 'Também os quartos de hora.', 'De 5 em 5 minutos.'],
+    niveis: ['Horas certas e meias horas.', 'Também os quartos de hora.', 'De 5 em 5 minutos.', 'Minutos de 5 em 5, com opções muito parecidas.'],
     carregar: cerebro('relogio'),
   },
   mercado: {
     seccao: 'cabeca', grupo: 'numeros', nome: 'Contas do Mercado', icone: '🛒', cor: '#15803d',
     desc: 'Trocos e compras em euros.',
     ajuda: 'Faça as contas das compras e escolha o valor certo.',
-    niveis: ['Trocos com euros redondos.', 'Cêntimos e várias unidades.', 'Duas compras de uma vez.'],
+    niveis: ['Trocos com euros redondos.', 'Cêntimos e várias unidades.', 'Duas compras de uma vez.', 'Várias unidades, cêntimos e notas maiores.'],
     carregar: cerebro('mercado'),
   },
   lembrar: {
     seccao: 'cabeca', grupo: 'memoria', nome: 'Lembra-se?', icone: '👀', cor: '#1d5fd1',
     desc: 'Decore as figuras e depois encontre-as.',
     ajuda: 'Olhe para as figuras durante alguns segundos. Depois escolha as que viu.',
-    niveis: ['3 figuras para decorar.', '4 figuras para decorar.', '5 figuras para decorar.'],
+    niveis: ['3 figuras para decorar.', '4 figuras para decorar.', '5 figuras para decorar.', '6 figuras para decorar.'],
     carregar: palavras('lembrar'),
   },
   siga: {
     seccao: 'cabeca', grupo: 'memoria', nome: 'Siga a Sequência', icone: '🚦', cor: '#6d3fd0',
     desc: 'Luzes e música: repita a sequência, que vai crescendo.',
     ajuda: 'Os botões acendem-se um a um, com música. Depois toque neles pela mesma ordem. Sempre que acerta, a sequência ganha mais uma luz. Tem 3 tentativas e pode pedir para ver outra vez.',
-    niveis: ['4 botões, devagar, até 6 luzes.', '4 botões, até 8 luzes.', '6 botões, até 9 luzes.'],
+    niveis: ['4 botões, devagar, até 6 luzes.', '4 botões, até 8 luzes.', '6 botões, até 9 luzes.', '6 botões, mais depressa, até 11 luzes.'],
     carregar: desafios('siga'),
   },
   oquee: {
     seccao: 'cabeca', grupo: 'memoria', nome: 'O Que É Isto?', icone: '🎨', cor: '#2e7d32',
     desc: 'Centenas de desenhos divertidos para adivinhar.',
     ajuda: 'Olhe para o desenho e escolha o nome certo.',
-    niveis: ['3 opções bem diferentes.', '3 opções parecidas.', '4 opções parecidas.'],
+    niveis: ['3 opções bem diferentes.', '3 opções parecidas.', '4 opções parecidas.', '5 opções muito parecidas.'],
     carregar: desenhos('oQueE'),
   },
   diferente: {
     seccao: 'cabeca', grupo: 'memoria', nome: 'Encontre o Diferente', icone: '🔍', cor: '#00796b',
     desc: 'Há uma figura diferente das outras. Qual é?',
     ajuda: 'Todas as figuras são iguais menos uma. Toque na diferente.',
-    niveis: ['9 figuras.', '16 figuras.', '25 figuras muito parecidas.'],
+    niveis: ['9 figuras.', '16 figuras.', '25 figuras muito parecidas.', '36 figuras quase iguais.'],
     carregar: desenhos('diferente'),
   },
   contar: {
     seccao: 'cabeca', grupo: 'numeros', nome: 'Quantos São?', icone: '🍎', cor: '#c2337a',
     desc: 'Conte as figuras com atenção.',
     ajuda: 'Conte só as figuras que a pergunta pede. Com calma, sem pressa!',
-    niveis: ['Poucas figuras.', 'Mais figuras e mais misturadas.', 'Muitas figuras!'],
+    niveis: ['Poucas figuras.', 'Mais figuras e mais misturadas.', 'Muitas figuras!', 'Muitíssimas figuras e mais distrações!'],
     carregar: cerebro('contar'),
   },
 };
@@ -245,7 +246,7 @@ const JOGOS = {
 const SECCOES = {
   fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Benfica, FC Porto, ciclismo, cidades, monumentos, natureza, viagens e muito mais.' },
   cartas: { titulo: 'Cartas e Dominó', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
-  cabeca: { titulo: 'Treino do Cérebro', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 3 níveis.' },
+  cabeca: { titulo: 'Treino do Cérebro', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 4 níveis, do Tranquilo ao Mestre.' },
 };
 
 // Grupos do Treino do Dia: um exercício de cada grupo.
@@ -448,7 +449,7 @@ function escolherNivel(jid, cab = {}) {
       el('h2', {}, cab.titulo || j.nome),
       el('p', {}, cab.ajuda || j.ajuda)),
     el('div', { class: 'niveis' },
-      [1, 2, 3].map(n => {
+      [1, 2, 3, 4].map(n => {
         const estrelas = (reg && reg.melhor && reg.melhor[n]) || 0;
         return el('button', { class: `nivel-btn n${n}`, type: 'button', onclick: () => ir(`#/jogo/${jid}/${n}`) },
           el('div', { class: 'icone', 'aria-hidden': 'true' }, NIVEIS[n].icone),
@@ -487,7 +488,7 @@ function escolherTemaQuiz() {
 /* ---------- Jogar ---------- */
 async function jogar(jid, nivel, extra = {}) {
   const j = JOGOS[jid];
-  if (!j || ![1, 2, 3].includes(nivel)) { ir('#/'); return; }
+  if (!j || ![1, 2, 3, 4].includes(nivel)) { ir('#/'); return; }
   const titulo = j.tema ? j.nome : extra.temaQuiz ? `${j.nome} · ${extra.temaQuiz.nome}` : `${j.nome} · ${NIVEIS[nivel].nome}`;
   const pai = j.tema ? (jid === 'memfotos' && extra.tema ? `#/jogo/${jid}/${extra.tema}` : `#/jogo/${jid}`)
     : jid === 'quiz' && !extra.temaQuiz ? '#/jogo/quiz/tudo' : `#/jogo/${jid}`;
@@ -510,7 +511,7 @@ async function jogar(jid, nivel, extra = {}) {
         repetir: () => router(),
         outro: () => ir(j.tema || jid === 'quiz' ? `#/jogo/${jid}` : `#/${j.seccao}`),
         outroTexto: j.tema || jid === 'quiz' ? '🎲 Escolher outro tema' : '🎲 Escolher outro jogo',
-        nivelAcima: !j.tema && !extra.temaQuiz && nivel < 3 && res.estrelas >= 2 ? () => ir(`#/jogo/${jid}/${nivel + 1}`) : null,
+        nivelAcima: !j.tema && !extra.temaQuiz && nivel < 4 && res.estrelas >= 2 ? () => ir(`#/jogo/${jid}/${nivel + 1}`) : null,
         nivelAbaixo: !j.tema && !extra.temaQuiz && nivel > 1 && res.estrelas === 1 ? () => ir(`#/jogo/${jid}/${nivel - 1}`) : null,
       });
     },
@@ -598,12 +599,12 @@ function treino() {
       el('table', { class: 'tabela-prog' }, el('tbody', {},
         lista.map((jid, k) => el('tr', {}, el('td', {}, `${k + 1}. ${JOGOS[jid].icone} ${JOGOS[jid].nome}`), el('td', {}, JOGOS[jid].desc)))))),
     el('p', { class: 'centrado', style: { fontWeight: 700, marginBottom: '8px' } }, 'Escolha o nível do treino:'),
-    el('div', { class: 'niveis' }, [1, 2, 3].map(n => el('button', {
+    el('div', { class: 'niveis' }, [1, 2, 3, 4].map(n => el('button', {
       class: `nivel-btn n${n}`, type: 'button',
       onclick: () => { dados.def.nivelTreino = n; guardar(); correrTreino(lista, n); },
     },
     el('div', { class: 'icone', 'aria-hidden': 'true' }, NIVEIS[n].icone),
-    el('div', {}, el('b', {}, NIVEIS[n].nome), el('span', {}, ['Para começar o dia com calma.', 'Um bom equilíbrio.', 'Para quem está em grande forma.'][n - 1])),
+    el('div', {}, el('b', {}, NIVEIS[n].nome), el('span', {}, ['Para começar o dia com calma.', 'Um bom equilíbrio.', 'Para quem está em grande forma.', 'Só para mestres!'][n - 1])),
     dados.def.nivelTreino === n ? el('div', { class: 'ultimo' }, 'Último jogado') : null))),
   );
 }
@@ -800,11 +801,11 @@ function progresso() {
   const nGanhas = MEDALHAS.filter(m => ganhas[m.id]).length;
   const hist = dados.historico || {};
   const graficos = [];
-  for (const n of [1, 2, 3]) {
+  for (const n of [1, 2, 3, 4]) {
     const k = `relampago-${n}-20`;
     if (hist[k]) graficos.push(graficoLinha(hist[k], { titulo: `⚡ Contas Relâmpago · ${NIVEIS[n].nome} (tempo)`, formatar: v => `${Math.round(v / 1000)} s`, menorMelhor: true }));
   }
-  for (const n of [1, 2, 3]) {
+  for (const n of [1, 2, 3, 4]) {
     const k = `cores-${n}-15`;
     if (hist[k]) graficos.push(graficoLinha(hist[k], { titulo: `🎨 Cores Trocadas · ${NIVEIS[n].nome} (tempo)`, formatar: v => `${Math.round(v / 1000)} s`, menorMelhor: true }));
   }
@@ -829,7 +830,7 @@ function progresso() {
     el('div', { class: 'painel' },
       el('h3', {}, '🃏 Cartas e Dominó'),
       el('table', { class: 'tabela-prog' }, el('tbody', {},
-        [1, 2, 3].map(n => el('tr', {},
+        [1, 2, 3, 4].filter(n => n < 4 || dados.pac.jogados[4]).map(n => el('tr', {},
           el('td', {}, `Paciência · ${NIVEIS[n].nome}`),
           el('td', {}, `${dados.pac.ganhos[n] || 0} ${dados.pac.ganhos[n] === 1 ? 'vitória' : 'vitórias'} em ${dados.pac.jogados[n] || 0} ${dados.pac.jogados[n] === 1 ? 'jogo' : 'jogos'}`))),
         el('tr', {}, el('td', {}, 'Dominó'), el('td', {}, dados.domino ? `${dados.domino.ganhos} ${dados.domino.ganhos === 1 ? 'vitória' : 'vitórias'} · ${dados.domino.perdidos} ${dados.domino.perdidos === 1 ? 'derrota' : 'derrotas'}` : 'ainda por jogar'))))),
@@ -1093,7 +1094,7 @@ async function lerAnedotas() {
 }
 
 /* ---------- Fotografias: escolha de tema e de pares ---------- */
-const nivelDePares = n => (!n || n <= 4 ? 1 : n <= 8 ? 2 : 3);
+const nivelDePares = n => (!n || n <= 4 ? 1 : n <= 8 ? 2 : n <= 12 ? 3 : 4);
 
 async function escolherTema(jid) {
   const j = JOGOS[jid];
@@ -1130,9 +1131,25 @@ async function escolherTema(jid) {
       el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, j.icone),
       el('h2', {}, j.nome),
       el('p', {}, `Escolha um dos ${temas.length} temas.`)),
+    jid === 'quizfotos' ? escolhaNivelFotos() : null,
     todos,
     ...blocos,
     el('p', { class: 'nota' }, el('a', { href: '#/creditos' }, 'Créditos das fotografias')));
+}
+// «Que Fotografia É?»: o nível escolhe-se aqui, uma vez, e vale para todos os temas.
+function escolhaNivelFotos() {
+  const atual = dados.def.nivelFotos || 1;
+  const caixa = el('div', { class: 'segmentos nivel-fotos', role: 'group', 'aria-label': 'Nível' });
+  [1, 2, 3, 4].forEach(n => caixa.append(el('button', {
+    type: 'button', 'aria-pressed': String(n === atual),
+    onclick: e => {
+      caixa.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      e.currentTarget.setAttribute('aria-pressed', 'true');
+      dados.def.nivelFotos = n;
+      guardar();
+    },
+  }, `${NIVEIS[n].icone} ${NIVEIS[n].nome}`)));
+  return el('div', { class: 'painel-nivel-fotos' }, el('p', { class: 'centrado' }, el('b', {}, 'Escolha o nível e depois o tema:')), caixa);
 }
 const GRUPOS_FOTOS = [
   ['Futebol e desporto', '⚽'],
@@ -1154,7 +1171,7 @@ async function escolherPares(temaId) {
   const t = temas.find(x => x.id === temaId);
   const maximo = t ? t.fotos.length : temas.reduce((n, x) => n + x.fotos.length, 0);
   const titulo = t ? `${t.icone} ${t.tema}` : '🎲 Todos misturados';
-  const opcoes = [3, 4, 5, 6, 8, 10, 12].filter(n => n <= maximo);
+  const opcoes = [3, 4, 5, 6, 8, 10, 12, 15].filter(n => n <= maximo);
   a.append(
     el('div', { class: 'cabeca-jogo' },
       el('h2', {}, titulo),
@@ -1162,7 +1179,7 @@ async function escolherPares(temaId) {
     el('div', { class: 'escolha-pares' }, opcoes.map(n => el('button', {
       class: `btn grande ${n <= 4 ? 'verde' : n <= 8 ? '' : 'laranja'}`, type: 'button',
       onclick: () => ir(`#/jogo/memfotos/${temaId}/${n}`),
-    }, String(n), el('small', {}, `${n * 2} cartas`)))));
+    }, String(n), el('small', {}, n > 12 ? `${n * 2} cartas · 🏆 Mestre` : `${n * 2} cartas`)))));
 }
 
 function creditos() {
@@ -1199,7 +1216,7 @@ function router() {
   if (p0 === 'jogo' && JOGOS[p1] && JOGOS[p1].tema) {
     if (!p2) return escolherTema(p1);
     if (p1 === 'memfotos' && !partes[3]) return escolherPares(p2);
-    return jogar(p1, p1 === 'memfotos' ? nivelDePares(Number(partes[3])) : 1, { tema: p2, pares: Number(partes[3]) || undefined });
+    return jogar(p1, p1 === 'memfotos' ? nivelDePares(Number(partes[3])) : p1 === 'quizfotos' ? (dados.def.nivelFotos || 1) : 1, { tema: p2, pares: Number(partes[3]) || undefined });
   }
   if (p0 === 'treino') return treino();
   if (p0 === 'teste') return teste();

@@ -15,10 +15,10 @@ const BOTOES_SIGA = [
 ];
 
 export function siga(alvo, { nivel, curto, aoTerminar }) {
-  const nBotoes = nivel === 3 ? 6 : 4;
-  const comprimentoInicial = nivel === 1 ? 2 : 3;
-  const meta = curto ? [0, 5, 6, 7][nivel] : [0, 6, 8, 9][nivel];
-  const passo = [0, 800, 640, 560][nivel]; // tempo entre luzes (ms)
+  const nBotoes = nivel >= 3 ? 6 : 4;
+  const comprimentoInicial = nivel === 1 ? 2 : nivel === 4 ? 4 : 3;
+  const meta = curto ? [0, 5, 6, 7, 8][nivel] : [0, 6, 8, 9, 11][nivel];
+  const passo = [0, 800, 640, 560, 480][nivel]; // tempo entre luzes (ms)
   const CHANCES = 3;
   const botoes = BOTOES_SIGA.slice(0, nBotoes);
   const seq = [];
@@ -167,7 +167,7 @@ export function siga(alvo, { nivel, curto, aoTerminar }) {
     const chegou = melhor >= meta;
     const estrelas = chegou ? (enganos <= 1 ? 3 : 2) : melhor >= meta - 2 ? 2 : 1;
     const rec = verRecorde(`siga-${nivel}`, melhor, false);
-    if (chegou && nivel === 3) marcar('sigaDesafio');
+    if (chegou && nivel >= 3) marcar('sigaDesafio');
     aoTerminar({
       estrelas,
       recorde: rec.bateu && !rec.primeiro && melhor > 0,
@@ -376,15 +376,17 @@ const TIPOS = {
   1: ['numeros', 'tamanho', 'dias', 'sequencia', 'sequencia', 'dinheiro', 'alfabeto'],
   2: ['numeros', 'tamanho', 'meses', 'historia', 'alfabeto', 'dinheiro', 'horas', 'contas', 'extenso', 'notas'],
   3: ['numeros', 'tamanho', 'meses', 'historia', 'historia', 'alfabeto', 'dinheiro', 'horas', 'contas', 'extenso'],
+  4: ['historia', 'historia', 'numeros', 'horas', 'contas', 'extenso', 'dinheiro', 'meses'],
 };
 
 export function ordem(alvo, { nivel, curto, aoTerminar }) {
-  const total = curto ? 4 : 6;
+  const total = curto ? 4 : nivel === 4 ? 8 : 6;
   // Tipos variados, sem repetir enquanto houver outros.
+  // (Os geradores conhecem os níveis 1 a 3; o Mestre usa os do nível 3, em mais rondas e só dos tipos mais difíceis.)
   let tipos = [];
   while (tipos.length < total) tipos = tipos.concat(baralhar([...new Set(TIPOS[nivel])]));
   tipos = tipos.slice(0, total);
-  const rondas = tipos.map(t => GERADORES[t](nivel));
+  const rondas = tipos.map(t => GERADORES[t](Math.min(nivel, 3)));
   let r = 0;
   let enganos = 0;
   let perfeitas = 0;
