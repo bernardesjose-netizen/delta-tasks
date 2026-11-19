@@ -408,6 +408,23 @@ function cartaoBoasVindas() {
     el('button', { class: 'btn-texto', type: 'button', onclick: fechar }, 'Agora não'));
 }
 
+// Aviso de atualização: aparece uma só vez a cada pessoa que já jogava (quem começa agora não o vê).
+const AVISO_ATUALIZACAO = '2026-11-20';
+function avisoAtualizacao() {
+  if (dados.avisoVisto === AVISO_ATUALIZACAO) return null;
+  const jaJogava = dados.estrelas > 0 || Object.keys(dados.jogos || {}).length > 0 || (dados.dias || []).length > 0;
+  dados.avisoVisto = AVISO_ATUALIZACAO;
+  guardar();
+  if (!jaJogava) return null;
+  const cartao = el('div', { class: 'painel boas-vindas novidades', role: 'status' },
+    el('h3', {}, '🎉 O jogo tem novidades!'),
+    el('p', {}, 'O José Carlos esteve a trabalhar e melhorou muito o jogo: há jogos novos (Sudoku, Palavras Cruzadas, Jogo do Galo, 4 em Linha, Damas e Forca), mais perguntas, temas novos e o nível 🏆 Mestre.'),
+    el('p', {}, 'Nos próximos tempos ainda se vão apertar os últimos parafusos para ficar tudo pronto e ainda melhor. Se alguma coisa demorar um pouco, tenha só um bocadinho de paciência.'),
+    el('p', {}, 'O seu progresso continua todo guardado. Esperamos que goste!'),
+    el('button', { class: 'btn verde', type: 'button', onclick: () => cartao.remove() }, '👍 Vamos jogar!'));
+  return cartao;
+}
+
 // Quando há mais do que uma pessoa neste aparelho: quem está a jogar e como trocar.
 function quemJoga() {
   if (pessoas.lista.length < 2) return null;
@@ -453,6 +470,7 @@ function inicio() {
       el('h2', {}, `${saudacao()}${dados.nome ? `, ${dados.nome}` : ''}! 👋`),
       el('p', {}, `${dataPorExtenso()}. Vamos treinar o cérebro a brincar?`),
       quemJoga()),
+    avisoAtualizacao() || '',
     cartaoBoasVindas() || '',
     el('div', { class: 'resumo' },
       el('div', { class: 'resumo-item' }, el('div', { class: 'icone' }, '⭐'), el('div', {}, el('b', {}, dados.estrelas), el('span', {}, dados.estrelas === 1 ? 'estrela ganha' : 'estrelas ganhas'))),

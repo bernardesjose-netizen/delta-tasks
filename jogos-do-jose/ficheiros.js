@@ -1,5 +1,5 @@
 // Gerado por ferramentas/gerar-lista.mjs — não editar à mão.
-self.VERSAO = 'jogos-do-jose-f2-766f178fa0';
+self.VERSAO = 'jogos-do-jose-f2-4aaf2460de';
 self.FICHEIROS = [
  "./",
  "./css/estilo.css",
@@ -808,6 +808,18 @@ self.FICHEIROS = [
  "./fotos/mar/peixe-palhaco.jpg",
  "./fotos/mar/tartaruga-marinha.jpg",
  "./fotos/mar/tubarao-azul.jpg",
+ "./fotos/marcas/cafe-delta.jpg",
+ "./fotos/marcas/conservas-portuguesas.jpg",
+ "./fotos/marcas/galo-de-barcelos-lembranca.jpg",
+ "./fotos/marcas/ginjinha-sem-rival.jpg",
+ "./fotos/marcas/lenco-dos-namorados.jpg",
+ "./fotos/marcas/licor-beirao.jpg",
+ "./fotos/marcas/louca-bordallo-pinheiro.jpg",
+ "./fotos/marcas/mateus-rose.jpg",
+ "./fotos/marcas/pasteis-de-belem.jpg",
+ "./fotos/marcas/porcelana-vista-alegre.jpg",
+ "./fotos/marcas/sabonetes-claus-porto.jpg",
+ "./fotos/marcas/sapatilhas-sanjo.jpg",
  "./fotos/monumentos/aqueduto-das-aguas-livres.jpg",
  "./fotos/monumentos/arco-da-rua-augusta.jpg",
  "./fotos/monumentos/bom-jesus-de-braga.jpg",
@@ -1263,6 +1275,7 @@ self.FICHEIROS = [
  "./js/dados/perguntas.js",
  "./js/dados/textos.js",
  "./js/grafico.js",
+ "./js/jogos/acao.js",
  "./js/jogos/cartas.js",
  "./js/jogos/cerebro.js",
  "./js/jogos/cruzadas.js",

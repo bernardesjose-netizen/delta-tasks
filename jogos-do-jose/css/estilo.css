@@ -1132,6 +1132,9 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 /* ---------- Boas-vindas e pessoas ---------- */
 .boas-vindas { border: 3px solid #9bd8b0; }
 .boas-vindas h3 { margin: 0 0 6px; }
+.novidades { border-color: #f2c94c; background: #fffbea; }
+.novidades p { margin-bottom: 8px; }
+.novidades .btn { margin-top: 4px; }
 .linha-nome { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 6px; }
 .linha-nome .campo-nome { flex: 1 1 180px; min-width: 0; }
 .btn-texto { background: none; border: 0; color: var(--texto-suave); font: inherit; font-size: .95rem; text-decoration: underline; cursor: pointer; padding: 8px 4px; }
