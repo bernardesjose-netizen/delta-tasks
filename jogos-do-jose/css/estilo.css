@@ -880,7 +880,7 @@ h1, h2, h3, p { margin: 0; }
 .botao-cor .amostra { width: 40px; height: 40px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 3px rgba(0, 0, 0, .15); }
 .grelha-palavras { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
 @media (max-width: 520px) { .grelha-palavras { grid-template-columns: repeat(2, minmax(0, 1fr)); } .palavra-cartao { font-size: .95rem; } }
-.palavra-cartao { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 8px; overflow-wrap: anywhere; min-height: 64px; padding: 8px 10px; border: 3px solid var(--linha); border-radius: 16px; background: #fffdf8; font-weight: 800; font-size: 1.1rem; text-align: center; }
+.palavra-cartao { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 8px; overflow-wrap: break-word; min-height: 64px; padding: 8px 10px; border: 3px solid var(--linha); border-radius: 16px; background: #fffdf8; font-weight: 800; font-size: 1.1rem; text-align: center; }
 button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .palavra-cartao .desenho { font-size: 1.8rem; line-height: 1; }
 .palavra-cartao.marcada { border-color: var(--azul); background: #e8f0fe; }
@@ -1722,3 +1722,37 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .ronda.escolha.lado-a-lado.aperto-2 > .opcoes.curtas { grid-template-columns: 1fr 1fr; }
 .ronda.escolha.lado-a-lado > .zona-retorno { grid-area: retorno; }
 .ronda.escolha.lado-a-lado .retorno { margin-top: 0; }
+
+/* Outros jogos num ecrã baixo: se não couberem, a app aperta margens e tamanhos (uma vez por ecrã). */
+.app.apertado { padding-top: 6px; }
+.app.apertado .ronda:not(.escolha) .progresso { margin-bottom: 6px; }
+.app.apertado .ronda:not(.escolha) .cartao-pergunta { padding: 10px 14px 12px; margin-bottom: 10px; }
+.app.apertado .ronda:not(.escolha) .etiqueta { display: none; }
+.app.apertado .ronda:not(.escolha) .enunciado { font-size: 1.1rem; }
+.app.apertado .ronda:not(.escolha) .dica { font-size: .9rem; margin-top: 2px; }
+.app.apertado .mm-seta { font-size: 2rem; }
+.app.apertado .ordem-grelha { gap: 8px; }
+.app.apertado .ordem-item { min-height: 54px; padding-top: 6px; padding-bottom: 6px; }
+.app.apertado .fila-botoes .btn.grande { min-height: 56px; padding-top: 8px; padding-bottom: 8px; }
+
+/* Sudoku num tablet deitado: teclado ao lado da grelha. */
+.ronda.sudoku.lado-a-lado {
+  max-width: 1000px; display: grid; grid-template-columns: auto minmax(240px, 360px); column-gap: 24px; justify-content: center; align-items: start;
+  grid-template-areas: "info info" "grelha teclado" "grelha acoes" "grelha retorno" "grelha dica"; grid-template-rows: auto auto auto auto 1fr;
+}
+.ronda.sudoku.lado-a-lado > .sudoku-info { grid-area: info; }
+.ronda.sudoku.lado-a-lado > .sudoku-grelha { grid-area: grelha; margin-top: 0; margin-bottom: 0; }
+.ronda.sudoku.lado-a-lado > .sudoku-teclado { grid-area: teclado; margin-top: 0; width: 100%; }
+.ronda.sudoku.lado-a-lado > .sudoku-acoes { grid-area: acoes; width: 100%; }
+.ronda.sudoku.lado-a-lado > .sudoku-retorno { grid-area: retorno; }
+.ronda.sudoku.lado-a-lado > .sudoku-dica { grid-area: dica; }
+.app.apertado .conta-grande { font-size: 2rem; padding: 2px 0; }
+.app.apertado .visor { min-height: 56px; font-size: 1.9rem; margin-bottom: 8px; }
+.app.apertado .teclado { gap: 8px; }
+.app.apertado .tecla { min-height: 52px; font-size: 1.45rem; }
+.app.apertado .casas { margin: 8px 0 12px; }
+.app.apertado .casa { width: 42px; height: 50px; font-size: 1.6rem; }
+.app.apertado .letra { width: 48px; height: 52px; font-size: 1.6rem; }
+.app.apertado .mm-mesa { min-height: 0; margin: 6px 0 8px; }
+.app.apertado .grelha-palavras { gap: 8px; margin-top: 8px; }
+.app.apertado .palavra-cartao { min-height: 48px; padding: 6px 8px; font-size: 1rem; }

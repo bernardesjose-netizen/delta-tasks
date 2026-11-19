@@ -329,6 +329,11 @@ function verMaisAbaixo() {
     const base = q && q.height && q.bottom >= H - 2 ? H - q.top : 0;
     maisAbaixo.style.bottom = base ? `${Math.round(base + 10)}px` : '';
     maisAbaixo.hidden = !(fundo > H + 16);
+    // Num jogo que não cabe no ecrã (ecrã baixo), aperta margens e tamanhos uma vez, para os botões ficarem à vista.
+    if (fundo > H + 16 && window.pageYOffset < 10 && !app.classList.contains('apertado') && app.querySelector('.ronda')) {
+      app.classList.add('apertado');
+      verMaisAbaixo();
+    }
   });
 }
 window.addEventListener('scroll', verMaisAbaixo, { passive: true });
@@ -358,7 +363,7 @@ function ecra(titulo, pai) {
   limpeza = null;
   calar();
   limparEfeitos();
-  app.classList.remove('ecra-cheio');
+  app.classList.remove('ecra-cheio', 'apertado');
   limpar(app);
   topoTitulo.textContent = titulo;
   document.title = titulo === NOME_JOGO ? titulo : `${titulo} · ${NOME_JOGO}`;

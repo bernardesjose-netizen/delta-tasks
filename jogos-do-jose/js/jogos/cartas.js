@@ -160,7 +160,8 @@ export function maiorMenor(alvo, { nivel, curto, aoTerminar }) {
   let seguidas = 0;
   let melhorSeguidas = 0;
   const t0 = Date.now();
-  const largura = () => Math.min(150, Math.floor((window.innerWidth - 120) / 2));
+  // As cartas encolhem também em ecrãs baixos, para os botões «Maior» e «Menor» ficarem à vista.
+  const largura = () => Math.max(72, Math.min(150, Math.floor((window.innerWidth - 120) / 2), Math.floor((window.innerHeight - 420) / 1.4)));
 
   function mostrar(proxima, texto, tipo) {
     limpar(alvo);

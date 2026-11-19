@@ -480,10 +480,14 @@ export function aviso(texto, ms = 2600) {
   clearTimeout(tMsg);
   msgDesde = Date.now();
   posicionarAviso(m);
+  // O jogo pode ainda estar a desenhar-se: confirma outra vez pouco depois.
+  clearTimeout(tPos);
+  tPos = setTimeout(() => { if (!m.hidden) posicionarAviso(m); }, 200);
   const tempo = Math.min(15000, Math.max(ms + 2500, 5500, 2000 + String(texto).length * 75));
   tMsg = setTimeout(() => { m.hidden = true; }, tempo);
 }
 // O aviso fica em baixo; se aí tapar um botão ou uma resposta, passa para cima (sobre a barra do título).
+let tPos = null;
 function posicionarAviso(m) {
   m.classList.remove('em-cima');
   const app = document.getElementById('app');

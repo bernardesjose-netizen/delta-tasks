@@ -467,9 +467,12 @@ export function sudoku(alvo, { nivel, aoTerminar }) {
 
     // Casas quadradas, o maior possível sem sair do ecrã (no 9×9 de 320 px ficam com cerca de 32 px).
     ajustar = () => {
-      const largura = caixaRonda.clientWidth || (window.innerWidth - 24);
+      // Num ecrã deitado e baixo (tablet), o teclado fica ao lado da grelha em vez de por baixo.
+      const deitado = window.innerWidth >= 700 && window.innerWidth > window.innerHeight * 1.25 && window.innerHeight < 700;
+      caixaRonda.classList.toggle('lado-a-lado', deitado);
+      const largura = deitado ? Math.floor(window.innerWidth * 0.55) : caixaRonda.clientWidth || (window.innerWidth - 24);
       const porLargura = Math.floor((largura - 6) / n);
-      const porAltura = Math.floor((window.innerHeight - 330) / n);
+      const porAltura = Math.floor((window.innerHeight - (deitado ? 170 : 330)) / n);
       const lado = Math.max(28, Math.min(cfg.celMax, porLargura, Math.max(32, porAltura)));
       grelha.style.gridTemplateColumns = `repeat(${n}, ${lado}px)`;
       grelha.style.gridAutoRows = `${lado}px`;
