@@ -12,8 +12,7 @@ botões largos, sem pressas e sempre com uma palavra de incentivo. (A pasta cham
   clássicos e modernos).
   Fotografias do Wikimedia Commons com licenças livres (créditos dentro da app, em Definições).
 - **Cartas e Tabuleiro:** Dominó tradicional contra o computador; cartas com desenho tradicional: Paciência (todos os
-  jogos verificados para terem solução), Jogo da Memória e Maior ou Menor (o Ás é a carta mais alta); jogos de tabuleiro
-  contra o computador: Jogo do Galo, 4 em Linha e Damas.
+  jogos verificados para terem solução) e Jogo da Memória; jogos de tabuleiro contra o computador: Jogo do Galo, 4 em Linha e Damas.
 - **Treino do Cérebro:** Cultura Geral (1020 perguntas, por nível ou num de 28 temas: Futebol, Sporting, Benfica, FC Porto,
   Ciclismo, Leiria, Zona Centro, Norte de Portugal, Espanha, União Europeia, Europa, Estados Unidos, Natal, Comidas do mundo,
   Inglês básico, Carros e mais), Contas de Cabeça, Sopa de Letras (72 temas, quase 3000 palavras), Palavras Cruzadas
