@@ -24,4 +24,10 @@ const GERACAO_FOTOS = 'f2';
 const versao = `jogos-do-jose-${GERACAO_FOTOS}-${hash.digest('hex').slice(0, 10)}`;
 const ficheiros = ['./', ...lista];
 writeFileSync(join(raiz, 'ficheiros.js'), `// Gerado por ferramentas/gerar-lista.mjs — não editar à mão.\nself.VERSAO = '${versao}';\nself.FICHEIROS = ${JSON.stringify(ficheiros, null, 1)};\n`);
+// A versão também fica escrita no sw.js: os navegadores antigos só comparam esse ficheiro para saber se há novidades.
+const swCaminho = join(raiz, 'sw.js');
+const sw = readFileSync(swCaminho, 'utf8');
+const linhaVersao = `// Versão publicada: ${versao}`;
+const swNovo = /^\/\/ Versão publicada: .*$/m.test(sw) ? sw.replace(/^\/\/ Versão publicada: .*$/m, linhaVersao) : `${linhaVersao}\n${sw}`;
+if (swNovo !== sw) writeFileSync(swCaminho, swNovo);
 console.log(`${ficheiros.length} ficheiros, versão ${versao}`);

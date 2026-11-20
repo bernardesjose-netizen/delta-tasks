@@ -979,6 +979,41 @@ function progresso() {
   );
 }
 
+/* ---------- Atualizações ---------- */
+let atualizacaoPronta = false;
+// Recarrega para a versão nova, mas só no ecrã inicial. Devolve true se recarregou.
+function aplicarAtualizacao() {
+  if (!atualizacaoPronta) return false;
+  const h = location.hash.replace(/^#\/?/, '');
+  if (h) return false; // a meio de um jogo ou de outro ecrã: fica para quando voltar ao início
+  let ultima = 0;
+  try { ultima = Number(sessionStorage.getItem('jogos-recarregou')) || 0; } catch { /* nada */ }
+  if (Date.now() - ultima < 15000) return false; // nunca em ciclo
+  try { sessionStorage.setItem('jogos-recarregou', String(Date.now())); } catch { /* nada */ }
+  guardar();
+  location.reload();
+  return true;
+}
+
+function botaoAtualizar() {
+  if (!('serviceWorker' in navigator) || location.protocol !== 'https:') return null;
+  const b = el('button', { class: 'btn claro', type: 'button' }, '🔄 Procurar atualizações');
+  b.addEventListener('click', () => {
+    b.disabled = true;
+    b.textContent = '⏳ A procurar…';
+    navigator.serviceWorker.getRegistration().then(r => (r ? r.update().then(() => r) : null)).then(r => {
+      if (r && (r.installing || r.waiting)) {
+        b.textContent = '⏳ A atualizar… o jogo vai recomeçar daqui a pouco.';
+        navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
+        setTimeout(() => location.reload(), 10000);
+      } else {
+        b.textContent = '✅ Já tem a versão mais recente';
+      }
+    }).catch(() => { b.disabled = false; b.textContent = '🔄 Procurar atualizações'; aviso('Sem internet: tente mais tarde.'); });
+  });
+  return b;
+}
+
 /* ---------- Estado offline ---------- */
 function estadoOffline() {
   const e = el('div', { class: 'estado-offline' }, '⏳ A verificar…');
@@ -1067,7 +1102,8 @@ function definicoes() {
     el('div', { class: 'painel' },
       el('h3', {}, '📶 Jogar sem internet'),
       estadoOffline(),
-      el('p', { style: { marginTop: '10px' } }, 'Depois de abrir os jogos uma vez com internet, ficam guardados neste aparelho e funcionam sem rede.')),
+      el('p', { style: { marginTop: '10px' } }, 'Depois de abrir os jogos uma vez com internet, ficam guardados neste aparelho e funcionam sem rede. Quando há novidades, o jogo atualiza-se sozinho no ecrã inicial.'),
+      el('div', { class: 'fila-botoes', style: { justifyContent: 'flex-start', marginTop: '10px' } }, botaoAtualizar())),
     el('div', { class: 'painel' },
       el('h3', {}, '📱 Pôr no ecrã principal'),
       el('p', {}, 'Para abrir os jogos como uma aplicação: no iPhone ou iPad, toque em «Partilhar» e depois em «Adicionar ao ecrã principal». No Android, abra o menu ⋮ do Chrome e escolha «Adicionar ao ecrã principal» (ou «Instalar aplicação»). Depois de instalado, funciona mesmo sem internet.')),
@@ -1340,6 +1376,7 @@ function creditos() {
 function router() {
   const partes = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   ecraAtual = null;
+  if (!partes.length && aplicarAtualizacao()) return;
   if (!partes.length) return inicio();
   const [p0, p1, p2] = partes;
   if (p0 === 'cartas' || p0 === 'cabeca' || p0 === 'fotos' || p0 === 'simples') return seccao(p0);
@@ -1379,6 +1416,18 @@ router();
 // Modo sem internet: o registo é imediato, mas a descarga das fotografias só começa uns
 // segundos depois de a página abrir, para não atrapalhar telemóveis mais fracos.
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  // Quando chega uma versão nova, a página recarrega sozinha no ecrã inicial (nunca a meio de um jogo).
+  const tinhaControlador = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!tinhaControlador) return; // primeira visita: esta página já é a versão atual
+    atualizacaoPronta = true;
+    aplicarAtualizacao();
+  });
+  // Ao voltar ao jogo (aplicação que ficou aberta em segundo plano), procura novidades.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    navigator.serviceWorker.getRegistration().then(r => { if (r) r.update(); }).catch(() => {});
+  });
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});
     navigator.serviceWorker.ready.then(reg => {
