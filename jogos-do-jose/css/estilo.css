@@ -1693,7 +1693,8 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .ronda.escolha.aperto-2 .etiqueta { display: none; }
 .ronda.escolha.aperto-2 .enunciado { font-size: 1.08rem; }
 .ronda.escolha.aperto-2 .opcao { min-height: 52px; padding: 8px 12px; font-size: 1.02rem; box-shadow: 0 4px 0 var(--linha); }
-.ronda.escolha.aperto-2 .opcoes.curtas { grid-template-columns: 1fr 1fr; }
+.ronda.escolha.aperto-2 .opcoes.curtas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.ronda.escolha .opcoes.curtas .opcao { min-width: 0; overflow-wrap: break-word; }
 .ronda.escolha.aperto-2 .emoji-grande { font-size: 4rem; }
 .ronda.escolha.aperto-2 .foto-quiz { width: min(320px, 80vw, 30vh); }
 .ronda.escolha.aperto-2 .relogio { width: min(260px, 70vw, 28vh); }
@@ -1752,7 +1753,8 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .app.apertado .conta-grande { font-size: 2rem; padding: 2px 0; }
 .app.apertado .visor { min-height: 56px; font-size: 1.9rem; margin-bottom: 8px; }
 .app.apertado .teclado { gap: 8px; }
-.app.apertado .tecla { min-height: 52px; font-size: 1.45rem; }
+.app.apertado .tecla { min-height: 52px; }
+.app.apertado .tecla:not(.ok):not(.apagar) { font-size: 1.45rem; }
 .app.apertado .casas { margin: 8px 0 12px; }
 .app.apertado .casa { width: 42px; height: 50px; font-size: 1.6rem; }
 .app.apertado .letra { width: 48px; height: 52px; font-size: 1.6rem; }

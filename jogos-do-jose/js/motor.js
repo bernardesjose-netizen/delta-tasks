@@ -80,7 +80,7 @@ export function rondaEscolha(alvo, { perguntas, aoTerminar, duasColunas = true }
     );
     const opcoes = q.manterOrdem ? q.opcoes.slice() : baralhar(q.opcoes);
     // Respostas curtas podem ir em duas colunas mesmo num telemóvel, se for preciso apertar.
-    const curtas = duasColunas && opcoes.every(o => String(o).length <= 16);
+    const curtas = duasColunas && opcoes.every(o => String(o).length <= 16 && String(o).split(/\s+/).every(p => p.length <= 10));
     const caixa = el('div', { class: `opcoes${duasColunas ? ' duas' : ''}${curtas ? ' curtas' : ''}` });
     const zonaRetorno = el('div', { class: 'zona-retorno' });
     const botoes = opcoes.map(o => el('button', { class: 'opcao', type: 'button', onclick: () => responder(o, botao(o)) }, o));

@@ -1268,7 +1268,7 @@ async function escolherTema(jid) {
       el('div', { class: 'icone-grande', 'aria-hidden': 'true' }, j.icone),
       el('h2', {}, j.nome),
       el('p', {}, `Escolha um dos ${temas.length} temas.`)),
-    jid === 'quizfotos' ? escolhaNivelFotos() : null,
+    jid === 'quizfotos' ? escolhaNivelFotos() : '',
     todos,
     ...blocos,
     el('p', { class: 'nota' }, el('a', { href: '#/creditos' }, 'Créditos das fotografias')));
