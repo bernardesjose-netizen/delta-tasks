@@ -193,7 +193,6 @@ export const TEMAS_FOTOS = [
     { f: "fotos/desportistas/joao-sousa.jpg", nome: "João Sousa", autor: "si.robi", licenca: "CC BY-SA 2.0", fonte: "https://commons.wikimedia.org/wiki/File:Sousa_J._RG22_%2818%29_%2852144295269%29.jpg" },
     { f: "fotos/desportistas/vanessa-fernandes.jpg", nome: "Vanessa Fernandes", autor: "Xabier Cid (gl.wikipedia)", licenca: "Domínio público", fonte: "https://commons.wikimedia.org/wiki/File:Vanessafernandes.JPG" },
     { f: "fotos/desportistas/patricia-mamona.jpg", nome: "Patrícia Mamona", autor: "Barcex", licenca: "CC BY-SA 3.0", fonte: "https://commons.wikimedia.org/wiki/File:IAAF_World_Challenge_-_Meeting_Madrid_2017_-_170714_212809-2.jpg" },
-    { f: "fotos/desportistas/pedro-pichardo.jpg", nome: "Pedro Pichardo", autor: "Doha Stadium Plus Qatar", licenca: "CC BY 2.0", fonte: "https://commons.wikimedia.org/wiki/File:Pedro_Pablo_Pichardo_%2817249818433%29.jpg" },
     { f: "fotos/desportistas/mario-coluna.jpg", nome: "Mário Coluna", autor: "Nationaal Archief, Haia", licenca: "CC BY-SA 3.0 nl", fonte: "https://commons.wikimedia.org/wiki/File:Mario_Coluna_%281969%29.jpg" },
     { f: "fotos/desportistas/rui-costa-futebolista.jpg", nome: "Rui Costa (futebolista)", autor: "Ser!", licenca: "CC BY-SA 4.0", fonte: "https://commons.wikimedia.org/wiki/File:Rui_Costa_2026.jpg" },
   ] },

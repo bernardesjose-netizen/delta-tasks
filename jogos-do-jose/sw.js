@@ -1,4 +1,4 @@
-// Versão publicada: jogos-do-jose-f2-9dbd2e59fc
+// Versão publicada: jogos-do-jose-f2-1566a77d64
 // Guarda os jogos (e as fotografias) no aparelho para funcionarem mesmo sem internet.
 // Pensado para telemóveis fracos: nunca bloqueia a página, descarrega aos poucos e, nas
 // atualizações, reaproveita as fotografias que já estão guardadas (da mesma geração).

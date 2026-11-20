@@ -1,5 +1,5 @@
 // Gerado por ferramentas/gerar-lista.mjs — não editar à mão.
-self.VERSAO = 'jogos-do-jose-f2-9dbd2e59fc';
+self.VERSAO = 'jogos-do-jose-f2-1566a77d64';
 self.FICHEIROS = [
  "./",
  "./css/estilo.css",
@@ -373,7 +373,6 @@ self.FICHEIROS = [
  "./fotos/desportistas/mario-coluna.jpg",
  "./fotos/desportistas/nelson-evora.jpg",
  "./fotos/desportistas/patricia-mamona.jpg",
- "./fotos/desportistas/pedro-pichardo.jpg",
  "./fotos/desportistas/rosa-mota.jpg",
  "./fotos/desportistas/rui-costa-ciclista.jpg",
  "./fotos/desportistas/rui-costa-futebolista.jpg",
