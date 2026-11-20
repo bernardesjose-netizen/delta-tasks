@@ -1014,6 +1014,16 @@ function botaoAtualizar() {
   return b;
 }
 
+// Versão que está neste aparelho (útil para saber se já chegou a última).
+function versaoInstalada() {
+  const nota = el('p', { class: 'nota', style: { marginTop: '8px' } }, '');
+  fetch('ficheiros.js').then(r => r.text()).then(t => {
+    const m = t.match(/jogos-do-jose-\w+-(\w+)/);
+    if (m) nota.textContent = `Versão neste aparelho: ${m[1].slice(0, 6)}`;
+  }).catch(() => {});
+  return nota;
+}
+
 /* ---------- Estado offline ---------- */
 function estadoOffline() {
   const e = el('div', { class: 'estado-offline' }, '⏳ A verificar…');
@@ -1103,7 +1113,8 @@ function definicoes() {
       el('h3', {}, '📶 Jogar sem internet'),
       estadoOffline(),
       el('p', { style: { marginTop: '10px' } }, 'Depois de abrir os jogos uma vez com internet, ficam guardados neste aparelho e funcionam sem rede. Quando há novidades, o jogo atualiza-se sozinho no ecrã inicial.'),
-      el('div', { class: 'fila-botoes', style: { justifyContent: 'flex-start', marginTop: '10px' } }, botaoAtualizar())),
+      el('div', { class: 'fila-botoes', style: { justifyContent: 'flex-start', marginTop: '10px' } }, botaoAtualizar()),
+      versaoInstalada()),
     el('div', { class: 'painel' },
       el('h3', {}, '📱 Pôr no ecrã principal'),
       el('p', {}, 'Para abrir os jogos como uma aplicação: no iPhone ou iPad, toque em «Partilhar» e depois em «Adicionar ao ecrã principal». No Android, abra o menu ⋮ do Chrome e escolha «Adicionar ao ecrã principal» (ou «Instalar aplicação»). Depois de instalado, funciona mesmo sem internet.')),
