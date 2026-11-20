@@ -1759,3 +1759,90 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .app.apertado .mm-mesa { min-height: 0; margin: 6px 0 8px; }
 .app.apertado .grelha-palavras { gap: 8px; margin-top: 8px; }
 .app.apertado .palavra-cartao { min-height: 48px; padding: 6px 8px; font-size: 1rem; }
+
+/* ================= Jogos simples: frutas, ténis e cobra ================= */
+/* ---------- Jogos de ação (js/jogos/acao.js): Frutas em Linha, Ténis de Mesa e Cobra ---------- */
+
+/* Partes comuns ao ténis e à cobra */
+.acao { max-width: 520px; }
+/* dentro de .app.ecra-cheio (coluna flexível) a ronda ocupa a largura toda, até ao máximo */
+.ronda.acao, .ronda.frutas { width: 100%; }
+.acao-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.acao-chip { flex: 1 1 auto; min-width: 0; background: var(--cartao); box-shadow: var(--sombra); border-radius: 999px; padding: 7px 12px; font-weight: 800; font-size: .8rem; line-height: 1.25; text-align: center; }
+.acao-chip b { font-size: 1rem; color: var(--marca-escura); }
+.acao .btn.pausa.acao-pausa { min-height: 48px; }
+.acao-caixa { text-align: center; line-height: 0; }
+.acao-campo { position: relative; display: inline-block; vertical-align: top; line-height: 1.4; border-radius: 14px; overflow: hidden; box-shadow: var(--sombra); touch-action: none; -ms-touch-action: none; }
+.acao-campo canvas { display: block; touch-action: none; -ms-touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.acao-sobre { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; padding: 8px; text-align: center; pointer-events: none; }
+.acao-sobre[hidden] { display: none; }
+.acao-numero span, .acao-texto span { margin: auto; }
+.acao-numero span { font-size: 4.6rem; font-weight: 900; line-height: 1; color: #fff; text-shadow: 0 3px 0 rgba(0, 0, 0, .35), 0 0 18px rgba(0, 0, 0, .25); }
+.acao-texto span { background: rgba(16, 38, 26, .86); color: #fff; font-weight: 800; font-size: 1.05rem; line-height: 1.3; padding: 12px 18px; border-radius: 16px; max-width: 92%; }
+.acao-painel { pointer-events: auto; background: rgba(16, 38, 26, .5); overflow: auto; -webkit-overflow-scrolling: touch; }
+.acao-cartao { margin: auto; background: var(--cartao); color: var(--texto); border-radius: 16px; padding: 12px 12px 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, .25); font-size: .8rem; line-height: 1.3; width: 100%; max-width: 360px; }
+.acao-cartao h2 { font-size: 1.05rem; font-weight: 800; line-height: 1.2; margin-bottom: 6px; }
+.acao-cartao p { margin-bottom: 8px; }
+.acao-cartao .btn { width: 100%; margin-top: 2px; min-height: 56px; }
+.leve .acao-campo { box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+
+/* Ecrã deitado e baixo (tablet): campo ao meio, controlos dos lados */
+.ronda.acao.acao-deitado { max-width: 980px; display: flex; align-items: stretch; justify-content: center; gap: 14px; }
+.acao-deitado .acao-caixa { flex: none; }
+.acao-lado { flex: 1 1 0; min-width: 0; max-width: 220px; display: flex; flex-direction: column; gap: 10px; }
+.acao-lado .acao-chip { flex: none; border-radius: 16px; padding: 10px 12px; }
+.acao-lado .btn.pausa.acao-pausa { width: 100%; }
+.acao-espaco { flex: 1 1 auto; }
+
+/* Ténis de Mesa */
+.tenis-cpu b { font-size: 1.1rem; color: #1d2633; }
+.tenis-eu { flex: 0 0 auto; min-width: 84px; padding: 6px 8px; border-radius: 16px; }
+.tenis-eu b { font-size: 1.3rem; color: var(--laranja-escuro); }
+.tenis-controlos { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.tenis-controlos .btn { flex: 1 1 0; min-width: 0; min-height: 64px; padding: 6px; font-size: 1.7rem; }
+.tenis-seta { touch-action: none; -ms-touch-action: none; -webkit-touch-callout: none; }
+.acao-lado .btn.tenis-seta { flex: none; min-height: 120px; font-size: 2.2rem; }
+
+/* Cobra */
+.cobra-campo { border: 4px dashed #8fc9a3; border-radius: 12px; }
+.cobra-campo.cobra-paredes { border: 4px solid #8a5a2b; }
+.cobra-setas { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 56px 56px; gap: 6px; max-width: 360px; margin: 10px auto 0; }
+.cobra-setas .btn { min-height: 0; height: 100%; padding: 0; font-size: 1.6rem; touch-action: none; -ms-touch-action: none; -webkit-touch-callout: none; }
+.cobra-esq { grid-column: 1; grid-row: 1 / span 2; }
+.cobra-cima { grid-column: 2; grid-row: 1; }
+.cobra-baixo { grid-column: 2; grid-row: 2; }
+.cobra-dir { grid-column: 3; grid-row: 1 / span 2; }
+.cobra-lado-setas { justify-content: center; }
+.acao-lado .cobra-setas { width: 100%; margin: 0; grid-template-rows: 72px 72px; }
+
+/* Frutas em Linha */
+.frutas { max-width: 520px; }
+.frutas-dica { text-align: center; font-size: .8rem; font-weight: 700; line-height: 1.3; color: var(--texto-suave); margin: 0 0 6px; }
+.frutas-info { display: flex; justify-content: space-between; gap: 6px; margin: 0 4px 4px; font-size: .74rem; font-weight: 700; color: var(--texto-suave); white-space: nowrap; }
+.frutas-info b { font-size: .9rem; color: var(--marca-escura); }
+.frutas-barra { height: 10px; margin: 0 6px 8px; }
+.frutas-caixa { width: 100%; margin: 0 auto; }
+.frutas-tabuleiro { position: relative; width: 100%; height: 0; padding-bottom: 100%; overflow: hidden; background: var(--fundo-2); border-radius: 14px; box-shadow: inset 0 0 0 2px var(--linha); touch-action: manipulation; }
+.frutas-peca { position: absolute; top: 0; left: 0; padding: 2px; cursor: pointer; transition: transform var(--frutas-mov, .3s) ease-in-out; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.frutas-peca i { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-style: normal; line-height: 1; background: #fff; border-radius: 22%; box-shadow: 0 2px 0 rgba(0, 0, 0, .08); transition: transform var(--frutas-sai, .27s) ease-in, opacity var(--frutas-sai, .27s) ease-in, background-color .15s; }
+.frutas-nova { transition: none; }
+.frutas-sai i { transform: scale(.2); opacity: 0; }
+.frutas-escolhida i { background: var(--ambar-claro); box-shadow: inset 0 0 0 3px var(--laranja); transform: scale(1.06); }
+.frutas-pista i { background: #e8f0fe; box-shadow: inset 0 0 0 3px var(--azul); animation: frutas-pulsar 1.6s ease-in-out infinite; }
+.frutas-baralha .frutas-peca i { opacity: .15; transform: scale(.7); }
+@keyframes frutas-pulsar { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+/* altura fixa: uma mensagem mais comprida nunca empurra o ecrã para baixo */
+.frutas-acoes { display: flex; align-items: center; gap: 10px; margin-top: 10px; height: 66px; }
+.frutas-ajuda.btn { flex: none; min-height: 56px; padding: 8px 16px; }
+.frutas-msg { flex: 1 1 auto; min-width: 0; max-height: 100%; overflow: hidden; margin: 0; font-size: .8rem; font-weight: 800; line-height: 1.25; color: var(--verde-escuro); }
+/* tablet deitado: tabuleiro à esquerda, informação e Ajuda à direita */
+.ronda.frutas.acao-deitado { max-width: 900px; display: flex; align-items: flex-start; justify-content: center; gap: 18px; }
+.frutas.acao-deitado .frutas-caixa { flex: none; margin: 0; }
+.frutas-lado { flex: 1 1 0; min-width: 0; max-width: 340px; }
+.frutas-lado .frutas-dica { text-align: left; font-size: .9rem; margin-bottom: 12px; }
+.frutas-lado .frutas-info { flex-direction: column; margin: 0 0 8px; font-size: .9rem; }
+.frutas-lado .frutas-barra { margin: 0 0 12px; }
+.frutas-lado .frutas-acoes { flex-direction: column; align-items: stretch; height: auto; }
+.frutas-lado .frutas-msg { max-height: none; }
+.leve .frutas-pista i { animation: none; }
+@media (prefers-reduced-motion: reduce) { .frutas-pista i { animation: none; } }

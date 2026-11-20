@@ -57,6 +57,7 @@ const desenhos = nome => () => import('./jogos/desenhos.js').then(m => m[nome]);
 const treinoJ = nome => () => import('./jogos/treino.js').then(m => m[nome]);
 const desafios = nome => () => import('./jogos/desafios.js').then(m => m[nome]);
 const tabuleiro = nome => () => import('./jogos/tabuleiro.js').then(m => m[nome]);
+const acao = nome => () => import('./jogos/acao.js').then(m => m[nome]);
 const logica = nome => () => import('./jogos/logica.js').then(m => m[nome]);
 
 const JOGOS = {
@@ -285,6 +286,27 @@ const JOGOS = {
     niveis: ['5 palavras curtas, pistas muito fáceis e a primeira letra já escrita.', '6 palavras até 7 letras, pistas fáceis.', '8 palavras até 9 letras, pistas médias.', '10 a 12 palavras até 11 letras, pistas difíceis e sem ajuda.'],
     carregar: () => import('./jogos/cruzadas.js').then(m => m.cruzadas),
   },
+  frutas: {
+    seccao: 'simples', nome: 'Frutas em Linha', icone: '🍉', cor: '#c2337a',
+    desc: 'Troque frutas vizinhas e junte 3 ou mais iguais em linha. Um jogo calmo, sem pressa.',
+    ajuda: 'Toque numa fruta e depois numa vizinha para as trocar. 3 ou mais iguais em linha desaparecem e dão pontos.',
+    niveis: ['Grelha 6×6 com 4 frutas e 20 jogadas.', 'Grelha 7×7 com 5 frutas e 20 jogadas.', 'Grelha 8×8 com 6 frutas e 18 jogadas.', 'Grelha 8×8 com 7 frutas e só 15 jogadas.'],
+    carregar: acao('frutas'),
+  },
+  tenis: {
+    seccao: 'simples', nome: 'Ténis de Mesa', icone: '🏓', cor: '#1a7f45',
+    desc: 'Devolva a bola com a sua raquete e ganhe ao computador. A bola é lenta e pode fazer pausa.',
+    ajuda: 'Arraste o dedo na mesa ou use os botões ◀ ▶ para mexer a raquete laranja. Ganha quem fizer 5 pontos primeiro.',
+    niveis: ['Bola muito lenta e raquete larga.', 'Bola um pouco mais rápida e computador mais atento.', 'Bola mais rápida e raquete mais estreita.', 'Bola rápida, raquete estreita e computador muito atento.'],
+    carregar: acao('tenis'),
+  },
+  cobra: {
+    seccao: 'simples', nome: 'Cobra', icone: '🐍', cor: '#558b2f',
+    desc: 'Leve a cobra até às maçãs e veja-a crescer, sem tocar na própria cauda.',
+    ajuda: 'Use as setas ou deslize o dedo na grelha. Cada maçã faz a cobra crescer.',
+    niveis: ['Muito devagar e sem paredes (atravessa para o outro lado).', 'Mais rápida e com paredes.', 'Ainda mais rápida, com paredes.', 'Rápida, grelha maior e com paredes.'],
+    carregar: acao('cobra'),
+  },
   sudoku: {
     seccao: 'cabeca', grupo: 'numeros', nome: 'Sudoku', icone: '🔢', cor: '#6d3fd0',
     desc: 'O clássico dos números, do 4×4 ao 9×9. Cada grelha é nova e tem uma só solução.',
@@ -297,6 +319,7 @@ const JOGOS = {
 const SECCOES = {
   fotos: { titulo: 'Fotografias de Portugal', icone: '📷', sub: 'Jogos com fotografias verdadeiras: Sporting, Benfica, FC Porto, ciclismo, cidades, monumentos, natureza, viagens e muito mais.' },
   cartas: { titulo: 'Cartas e Tabuleiro', icone: '🃏', sub: 'Escolha um jogo. Pode jogar ao seu ritmo, sem pressas.' },
+  simples: { titulo: 'Jogos Simples', icone: '🎮', sub: 'Jogos fáceis de aprender, para passar um bom bocado. Todos têm pausa e 4 níveis.' },
   cabeca: { titulo: 'Treino do Cérebro', icone: '💡', sub: 'Exercícios rápidos com recorde, perguntas, contas, palavras e memória. Todos têm 4 níveis, do Tranquilo ao Mestre.' },
 };
 
@@ -480,6 +503,7 @@ function inicio() {
       botaoMenu('laranja destaque', '☀️', 'Treino do Dia', feito ? 'Já está feito! Pode repetir se quiser.' : '4 exercícios rápidos, diferentes todos os dias.', '#/treino', feito ? '✅' : null),
       botaoMenu('azul', '🎯', 'Teste do Cérebro', ultimoTeste() ? `Da última vez: ${ultimoTeste().idade} anos. Consegue melhorar?` : 'Que idade tem o seu cérebro? 3 exercícios rápidos.', '#/teste'),
       botaoMenu('verde', '🃏', 'Cartas e Tabuleiro', 'Paciência, dominó, jogo do galo, 4 em linha, damas e mais.', '#/cartas'),
+      botaoMenu('laranja', '🎮', 'Jogos Simples', 'Frutas em linha, ténis de mesa e a cobra.', '#/simples'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
       botaoMenu('azul', '💡', 'Treino do Cérebro', 'Cultura geral, palavras cruzadas, sudoku, sopa de letras, contas, leitura…', '#/cabeca'),
       botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, poemas e clássicos portugueses.', '#/ler'),
@@ -1311,7 +1335,7 @@ function router() {
   ecraAtual = null;
   if (!partes.length) return inicio();
   const [p0, p1, p2] = partes;
-  if (p0 === 'cartas' || p0 === 'cabeca' || p0 === 'fotos') return seccao(p0);
+  if (p0 === 'cartas' || p0 === 'cabeca' || p0 === 'fotos' || p0 === 'simples') return seccao(p0);
   if (p0 === 'creditos') return creditos();
   if (p0 === 'pessoas') return ecraPessoas();
   if (p0 === 'ler') {
