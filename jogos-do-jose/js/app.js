@@ -307,6 +307,13 @@ const JOGOS = {
     niveis: ['Muito devagar e sem paredes (atravessa para o outro lado).', 'Mais rápida e com paredes.', 'Ainda mais rápida, com paredes.', 'Rápida, grelha maior e com paredes.'],
     carregar: acao('cobra'),
   },
+  blocos: {
+    seccao: 'simples', nome: 'Arrumar Peças', icone: '📦', cor: '#8a5a2b',
+    desc: 'Arrume as peças de madeira que descem devagar e complete linhas, sem pressas.',
+    ajuda: 'Mova e rode as peças que descem com ◀ ▶ e ↻ Rodar, e encha linhas de ponta a ponta para as fazer desaparecer.',
+    niveis: ['Muito devagar, peças pequenas e caixa estreita. Faça 8 linhas.', 'Devagar, já com peças de 4 quadrados. Faça 12 linhas.', 'Um pouco mais rápido, com mais peças de 4. Faça 16 linhas.', 'Mais rápido, com peças de 5 quadrados e sem sombra. Faça 20 linhas.'],
+    carregar: () => import('./jogos/blocos.js').then(m => m.blocos),
+  },
   sudoku: {
     seccao: 'cabeca', grupo: 'numeros', nome: 'Sudoku', icone: '🔢', cor: '#6d3fd0',
     desc: 'O clássico dos números, do 4×4 ao 9×9. Cada grelha é nova e tem uma só solução.',
@@ -441,7 +448,7 @@ function avisoAtualizacao() {
   if (!jaJogava) return null;
   const cartao = el('div', { class: 'painel boas-vindas novidades', role: 'status' },
     el('h3', {}, '🎉 O jogo tem novidades!'),
-    el('p', {}, 'O José Carlos esteve a trabalhar e melhorou muito o jogo: há jogos novos (Sudoku, Palavras Cruzadas, Jogo do Galo, 4 em Linha, Damas e Forca), mais perguntas, temas novos e o nível 🏆 Mestre.'),
+    el('p', {}, 'O José Carlos esteve a trabalhar e melhorou muito o jogo: há jogos novos (Sudoku, Palavras Cruzadas, Jogo do Galo, 4 em Linha, Damas, Forca e uma secção de Jogos Simples), mais perguntas, temas novos e o nível 🏆 Mestre.'),
     el('p', {}, 'Nos próximos tempos ainda se vão apertar os últimos parafusos para ficar tudo pronto e ainda melhor. Se alguma coisa demorar um pouco, tenha só um bocadinho de paciência.'),
     el('p', {}, 'O seu progresso continua todo guardado. Esperamos que goste!'),
     el('button', { class: 'btn verde', type: 'button', onclick: () => cartao.remove() }, '👍 Vamos jogar!'));
@@ -503,7 +510,7 @@ function inicio() {
       botaoMenu('laranja destaque', '☀️', 'Treino do Dia', feito ? 'Já está feito! Pode repetir se quiser.' : '4 exercícios rápidos, diferentes todos os dias.', '#/treino', feito ? '✅' : null),
       botaoMenu('azul', '🎯', 'Teste do Cérebro', ultimoTeste() ? `Da última vez: ${ultimoTeste().idade} anos. Consegue melhorar?` : 'Que idade tem o seu cérebro? 3 exercícios rápidos.', '#/teste'),
       botaoMenu('verde', '🃏', 'Cartas e Tabuleiro', 'Paciência, dominó, jogo do galo, 4 em linha, damas e mais.', '#/cartas'),
-      botaoMenu('laranja', '🎮', 'Jogos Simples', 'Frutas em linha, ténis de mesa e a cobra.', '#/simples'),
+      botaoMenu('laranja', '🎮', 'Jogos Simples', 'Frutas em linha, ténis de mesa, cobra e arrumar peças.', '#/simples'),
       botaoMenu('foto', '📷', 'Fotografias de Portugal', 'Memória, puzzles e adivinhas com fotografias.', '#/fotos'),
       botaoMenu('azul', '💡', 'Treino do Cérebro', 'Cultura geral, palavras cruzadas, sudoku, sopa de letras, contas, leitura…', '#/cabeca'),
       botaoMenu('laranja', '📚', 'Para Ler e Rir', 'Anedotas, fábulas, contos, poemas e clássicos portugueses.', '#/ler'),

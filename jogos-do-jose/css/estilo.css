@@ -1846,3 +1846,96 @@ button.palavra-cartao { cursor: pointer; box-shadow: 0 4px 0 var(--linha); }
 .frutas-lado .frutas-msg { max-height: none; }
 .leve .frutas-pista i { animation: none; }
 @media (prefers-reduced-motion: reduce) { .frutas-pista i { animation: none; } }
+
+/* ================= Jogos simples: Arrumar Peças ================= */
+/* ---------- Arrumar Peças (js/jogos/blocos.js) ---------- */
+/* Caixas de madeira com as cores da app, num caixote de madeira clara. */
+.ronda.blocos-jogo { position: relative; width: 100%; max-width: 520px; }
+
+/* Em cima: linhas feitas, próxima peça e pausa */
+.blocos-topo { display: flex; align-items: stretch; gap: 8px; margin-bottom: 8px; }
+.blocos-chip { flex: 1 1 auto; min-width: 0; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px 8px; border-radius: 16px; background: var(--cartao); box-shadow: var(--sombra); line-height: 1.15; text-align: center; }
+.blocos-chip span { font-size: .62rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--texto-suave); }
+.blocos-chip b { font-size: .95rem; font-weight: 900; color: var(--marca-escura); white-space: nowrap; }
+.blocos-proxima { flex: none; width: 70px; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3px 4px; border-radius: 16px; background: var(--cartao); box-shadow: var(--sombra); }
+.blocos-proxima small { font-size: .55rem; font-weight: 800; line-height: 1.1; color: var(--texto-suave); }
+.blocos-mini { display: grid; gap: 1px; margin-top: 3px; }
+.blocos-mini-casa { display: block; border-radius: 26%; background: var(--c); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .22); }
+.blocos-jogo .btn.pausa.blocos-pausa { min-height: 56px; }
+
+/* O tabuleiro: um caixote de madeira clara com moldura castanha */
+.blocos-caixa { text-align: center; line-height: 0; }
+.blocos-campo { position: relative; display: inline-block; vertical-align: top; line-height: 1.3; border: 5px solid #8a5a2b; border-radius: 14px; background: #f7eedf; box-shadow: var(--sombra), inset 0 0 0 1px rgba(255, 255, 255, .6); overflow: hidden; touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.blocos-grelha { display: grid; gap: 2px; padding: 2px; }
+.blocos-casa { border-radius: 24%; background: rgba(138, 90, 43, .08); }
+/* caixa de madeira: tábuas finas, rebordo claro e sombra em baixo */
+.blocos-cheia {
+  background-color: var(--c);
+  background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, .13) 0, rgba(255, 255, 255, .13) 2px, rgba(255, 255, 255, 0) 2px, rgba(255, 255, 255, 0) 7px);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .22), inset 0 -3px 0 rgba(0, 0, 0, .24);
+}
+.blocos-ativa { box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .35), inset 0 -3px 0 rgba(0, 0, 0, .24), 0 2px 3px rgba(60, 40, 10, .25); }
+/* a sombra clara: onde a peça vai cair */
+.blocos-sombra { background: rgba(255, 255, 255, .7); border: 2px dashed var(--c); }
+.blocos-pequeno .blocos-cheia { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22), inset 0 -2px 0 rgba(0, 0, 0, .24); }
+.blocos-pequeno .blocos-sombra { border-width: 2px; }
+/* linha cheia: brilha, encolhe e desaparece (curto e suave) */
+.blocos-sai { background-color: #ffe08a; transform: scale(.25); opacity: 0; transition: transform .4s ease-in, opacity .4s ease-in, background-color .12s; }
+.blocos-c0 { --c: var(--verde); }
+.blocos-c1 { --c: var(--laranja); }
+.blocos-c2 { --c: var(--azul); }
+.blocos-c3 { --c: var(--roxo); }
+.blocos-c4 { --c: var(--rosa); }
+.blocos-c5 { --c: var(--ambar); }
+
+/* Elogio por cima do tabuleiro (não tapa os toques) */
+.blocos-elogio { position: absolute; top: 20%; left: 6px; right: 6px; padding: 8px 10px; border-radius: 14px; background: rgba(255, 255, 255, .94); color: var(--verde-escuro); font-weight: 900; font-size: .85rem; line-height: 1.25; text-align: center; box-shadow: 0 4px 14px rgba(0, 0, 0, .18); pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; }
+.blocos-elogio.blocos-ver { opacity: 1; visibility: visible; }
+
+/* Botões grandes: ◀ ▶ ↻ Rodar ⬇ Descer */
+.blocos-comandos { display: flex; gap: 6px; margin-top: 8px; }
+.blocos-comandos .btn { flex: 1 1 0; min-width: 0; min-height: 64px; padding: 4px 2px; gap: 0; flex-direction: column; line-height: 1.05; touch-action: manipulation; -webkit-touch-callout: none; }
+.blocos-comandos .btn.blocos-seta { flex-grow: .8; }
+.blocos-seta .blocos-icone { font-size: 1.6rem; }
+.blocos-icone { font-size: 1.35rem; line-height: 1; }
+.blocos-rotulo { font-size: .7rem; font-weight: 800; margin-top: 3px; }
+.btn.blocos-descer { --cor: var(--laranja); --cor-escura: var(--laranja-escuro); }
+
+/* Instruções, pausa e fim: por cima do jogo */
+.blocos-sobre { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 3; display: flex; padding: 8px; border-radius: 16px; background: rgba(16, 38, 26, .45); overflow: auto; -webkit-overflow-scrolling: touch; }
+.blocos-sobre[hidden] { display: none; }
+.blocos-cartao { margin: auto; width: 100%; max-width: 380px; padding: 14px 14px 16px; border-radius: 18px; background: var(--cartao); color: var(--texto); box-shadow: 0 8px 24px rgba(0, 0, 0, .25); font-size: .8rem; line-height: 1.3; }
+.blocos-cartao h2 { font-size: 1.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+.blocos-cartao p { margin-bottom: 8px; }
+.blocos-cartao .blocos-frase { font-size: 1rem; font-weight: 800; color: var(--verde-escuro); }
+.blocos-cartao .btn { width: 100%; min-height: 60px; margin-top: 4px; }
+/* cartão apertado (ecrã baixo ou letra grande): letra um pouco mais pequena, para o botão ficar à vista */
+.blocos-cartao.blocos-justo { padding: 10px 12px 12px; font-size: .72rem; }
+.blocos-cartao.blocos-justo h2 { font-size: .95rem; margin-bottom: 6px; }
+.blocos-cartao.blocos-justo p { margin-bottom: 6px; }
+.blocos-cartao.blocos-justo .btn { min-height: 56px; }
+.blocos-cartao.blocos-justo2 { font-size: .64rem; }
+
+/* Ecrã deitado e baixo (tablet): informação | tabuleiro | botões */
+.ronda.blocos-jogo.blocos-deitado { max-width: 980px; display: flex; align-items: center; justify-content: center; gap: 16px; }
+.blocos-deitado .blocos-caixa { flex: none; }
+.blocos-lado { flex: 1 1 0; min-width: 0; max-width: 260px; display: flex; flex-direction: column; gap: 10px; }
+.blocos-lado .blocos-chip { flex: none; min-height: 64px; padding: 8px; }
+.blocos-lado .blocos-chip span { font-size: .7rem; }
+.blocos-lado .blocos-chip b { font-size: 1.15rem; }
+.blocos-lado .blocos-proxima { width: auto; min-height: 96px; padding: 8px; }
+.blocos-lado .blocos-proxima small { font-size: .7rem; }
+.blocos-lado .btn.pausa.blocos-pausa { width: 100%; }
+.blocos-lado .blocos-comandos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 96px 96px; gap: 10px; margin: 0; }
+.blocos-lado .blocos-comandos .btn { min-height: 0; height: 100%; }
+.blocos-lado .blocos-seta .blocos-icone { font-size: 2rem; }
+.blocos-lado .blocos-icone { font-size: 1.7rem; }
+.blocos-lado .blocos-rotulo { font-size: .85rem; }
+.blocos-deitado .blocos-sobre { border-radius: 18px; }
+
+/* Modo leve: sem animações nem efeitos pesados */
+.leve .blocos-cheia { background-image: none; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .24); }
+.leve .blocos-sai { transition: none; }
+.leve .blocos-elogio { transition: none; }
+.leve .blocos-campo { box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+@media (prefers-reduced-motion: reduce) { .blocos-sai, .blocos-elogio { transition: none; } }
