@@ -1434,6 +1434,11 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
     atualizacaoPronta = true;
     aplicarAtualizacao();
   });
+  // O service worker novo pergunta se esta página sabe atualizar-se sozinha: responde que sim.
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data && e.data.tipo === 'quem-es' && e.ports && e.ports[0]) e.ports[0].postMessage({ tipo: 'atualizo-me' });
+  });
+  if (navigator.serviceWorker.startMessages) navigator.serviceWorker.startMessages();
   // Ao voltar ao jogo (aplicação que ficou aberta em segundo plano), procura novidades.
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible') return;

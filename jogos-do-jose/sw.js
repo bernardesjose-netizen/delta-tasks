@@ -1,4 +1,4 @@
-// Versão publicada: jogos-do-jose-f2-12d036fa5c
+// Versão publicada: jogos-do-jose-f2-9dbd2e59fc
 // Guarda os jogos (e as fotografias) no aparelho para funcionarem mesmo sem internet.
 // Pensado para telemóveis fracos: nunca bloqueia a página, descarrega aos poucos e, nas
 // atualizações, reaproveita as fotografias que já estão guardadas (da mesma geração).
@@ -41,9 +41,23 @@ self.addEventListener('install', e => {
 });
 
 // A ativação é rápida de propósito: enquanto dura, o navegador retém os pedidos da página.
+// Depois de tomar conta, pergunta a cada página aberta se sabe atualizar-se sozinha (as versões recentes
+// respondem e recarregam no ecrã inicial). As páginas antigas não respondem: recarregam já, para a pessoa
+// ver a versão nova sem ter de fechar e abrir o jogo.
 self.addEventListener('activate', e => {
-  e.waitUntil(self.clients.claim());
+  e.waitUntil(self.clients.claim().then(atualizarPaginasAntigas).catch(() => {}));
 });
+async function atualizarPaginasAntigas() {
+  const janelas = await self.clients.matchAll({ type: 'window' });
+  await Promise.all(janelas.map(c => new Promise(fim => {
+    if (typeof c.navigate !== 'function') { fim(); return; }
+    const canal = new MessageChannel();
+    let respondeu = false;
+    canal.port1.onmessage = () => { respondeu = true; fim(); };
+    try { c.postMessage({ tipo: 'quem-es' }, [canal.port2]); } catch (erro) { fim(); return; }
+    setTimeout(() => { if (!respondeu) c.navigate(c.url).catch(() => {}); fim(); }, 1500);
+  })));
+}
 
 self.addEventListener('message', e => {
   if (!e.data) return;
