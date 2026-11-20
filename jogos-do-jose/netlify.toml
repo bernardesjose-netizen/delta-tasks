@@ -1,0 +1,3 @@
+# Site estático: não há passo de compilação. Publica-se esta pasta tal como está.
+[build]
+  publish = "."
